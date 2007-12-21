@@ -38,7 +38,7 @@ define sshd::sshd_config (
                 owner => root,
                 group => 0,
                 mode => 600,
-                source => puppet://$server/sshd/sshd_config/$real_source,
+                source => "puppet://$server/sshd/sshd_config/$real_source",
 		notify => Service[sshd],
         }
 }
