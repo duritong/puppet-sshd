@@ -9,7 +9,6 @@ class sshd {
                 enable => true,
                 ensure => running,
                 require => Package[openssh],
-                subscribe => File[sshd_config]
         }
 
         package{ssh:
@@ -39,7 +38,7 @@ define sshd::sshd_config (
                 owner => root,
                 group => 0,
                 mode => 600,
-                source => $real_source,
+                source => puppet://$server/sshd/sshd_config/$real_source,
 		notify => Service[sshd],
         }
 }
