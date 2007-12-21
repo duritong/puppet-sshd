@@ -40,6 +40,6 @@ define sshd::sshd_config (
                 group => 0,
                 mode => 600,
                 source => $real_source,
-		notify => service[sshd],
+		notify => Service[sshd],
         }
 }
