@@ -26,10 +26,11 @@ class sshd {
 }
 
 define sshd::sshd_config (
-	$source = ""
+	$source = "",
+	$allowed_users => 'root'
 ){
 	$real_source = $source ? {
-		'' => "${operatingsystem}_normal",
+		'' => "${operatingsystem}_normal.erb",
 		default => $source,
 	}
 
@@ -38,7 +39,7 @@ define sshd::sshd_config (
                 owner => root,
                 group => 0,
                 mode => 600,
-                source => "puppet://$server/sshd/sshd_config/$real_source",
+                source => template("sshd/sshd_config/$real_source"),
 		notify => Service[sshd],
         }
 }
