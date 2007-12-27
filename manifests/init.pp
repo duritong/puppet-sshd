@@ -27,7 +27,7 @@ class sshd {
 
 define sshd::sshd_config (
 	$source = "",
-	$allowed_users => 'root'
+	$allowed_users = 'root'
 ){
 	$real_source = $source ? {
 		'' => "${operatingsystem}_normal.erb",
@@ -39,7 +39,7 @@ define sshd::sshd_config (
                 owner => root,
                 group => 0,
                 mode => 600,
-                source => template("sshd/sshd_config/$real_source"),
+                source => template("sshd/sshd_config/${real_source}"),
 		notify => Service[sshd],
         }
 }
