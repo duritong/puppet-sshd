@@ -12,7 +12,7 @@ class sshd {
         			enable => true,
 	                	ensure => running,
         		}
-		},
+		}
 		default: {
 			service{'sshd':
                                 enable => true,
