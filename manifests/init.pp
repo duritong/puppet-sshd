@@ -5,13 +5,16 @@
 modules_dir { "sshd": }
 
 class sshd {
+
+	
+
         service{'sshd':
                 enable => true,
                 ensure => running,
                 require => Package[openssh],
         }
 
-        package{ssh:
+        package{openssh:
                 name =>  $operatingsystem ? {
                         centos => openssh-server,
                         default => openssh,
