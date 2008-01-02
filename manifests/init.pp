@@ -5,27 +5,27 @@
 modules_dir { "sshd": }
 
 class sshd {
-
-	
-
-        service{'sshd':
-                enable => true,
+	service{'sshd':
+        	enable => true,
                 ensure => running,
-                require => Package[openssh],
+	        require => $operatingsystem ? {
+			openbsd => '',
+			default => Package[openssh],
+		}
         }
 
-        package{openssh:
-                name =>  $operatingsystem ? {
-                        centos => openssh-server,
-                        default => openssh,
-                },
-                alias   => 'openssh',
+	package{openssh:
+        	name =>  $operatingsystem ? {
+                	centos => openssh-server,
+                	default => openssh,
+	        },
+        	alias   => 'openssh',
                 category => $operatingsystem ? {
                         gentoo => 'net-misc',
-                        default => '',
-                },
-                ensure => present,
-        }
+	        	default => '',
+        	},
+        	ensure => present,
+	}
 }
 
 define sshd::sshd_config (
