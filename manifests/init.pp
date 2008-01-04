@@ -8,9 +8,9 @@ class sshd {
 
 	case $operatingsystem {
 		OpenBSD: {
-			service{'sshd':
-        			enable => true,
-	                	ensure => running,
+			exec{sshd_refresh:
+        			command => "kill -HUP `cat /var/run/sshd.pid`",
+	                	refreshonly => true,
         		}
 		}
 		default: {
@@ -53,6 +53,9 @@ define sshd::sshd_config (
                 group => 0,
                 mode => 600,
                 content => template("sshd/sshd_config/${real_source}"),
-		notify => Service[sshd],
+		notify => $operatingsystem ? { 
+			openbsd => Exec[sshd_refresh],
+			default => Service[sshd],
+		}
         }
 }
