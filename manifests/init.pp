@@ -9,7 +9,7 @@ class sshd {
 	case $operatingsystem {
 		OpenBSD: {
 			exec{sshd_refresh:
-        			command => "/bin/kill -HUP `cat /var/run/sshd.pid`",
+        			command => "/bin/kill -HUP `/bin/cat /var/run/sshd.pid`",
 	                	refreshonly => true,
         		}
 		}
