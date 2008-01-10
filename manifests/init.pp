@@ -25,7 +25,6 @@ class sshd {
         		        	centos => openssh-server,
                 			default => openssh,
 			        },
-        			alias   => 'openssh',
                 		category => $operatingsystem ? {
 	                	        gentoo => 'net-misc',
 		        		default => '',
