@@ -2,7 +2,7 @@
 # Copyright (C) 2007 admin@immerda.ch
 #
 
-modules_dir { "sshd": }
+#modules_dir { "sshd": }
 
 class sshd {
 
