@@ -15,10 +15,10 @@ class sshd {
 		}
 		default: {
 			service{'sshd':
-                                enable => true,
-                                ensure => running,
+                enable => true,
+                ensure => running,
 				require => Package[openssh],
-                        }
+            }
 			
 			package{openssh:
 		        	name =>  $operatingsystem ? {
