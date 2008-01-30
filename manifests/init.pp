@@ -9,9 +9,9 @@ class sshd {
 	case $operatingsystem {
 		OpenBSD: {
 			exec{sshd_refresh:
-        			command => "/bin/kill -HUP `/bin/cat /var/run/sshd.pid`",
-	                	refreshonly => true,
-        		}
+        	    command => "/bin/kill -HUP `/bin/cat /var/run/sshd.pid`",
+	            refreshonly => true,
+            }
 		}
 		default: {
 			service{'sshd':
@@ -21,20 +21,18 @@ class sshd {
             }
 			
 			package{openssh:
-		        	name =>  $operatingsystem ? {
-        		        	centos => openssh-server,
-                			default => openssh,
-			        },
-                		category => $operatingsystem ? {
-	                	        gentoo => 'net-misc',
-		        		default => '',
-	        		},
-		        	ensure => present,
+		        name =>  $operatingsystem ? {
+        		    centos => openssh-server,
+                	default => openssh,
+			    },
+                category => $operatingsystem ? {
+	                gentoo => 'net-misc',
+		        	default => '',
+	            },
+		        ensure => present,
 			}
 		}
 	}
-
-	
 }
 
 define sshd::sshd_config (
@@ -47,14 +45,14 @@ define sshd::sshd_config (
 	}
 
 	file { 'sshd_config':
-                path => '/etc/ssh/sshd_config',
-                owner => root,
-                group => 0,
-                mode => 600,
-                content => template("sshd/sshd_config/${real_source}"),
+        path => '/etc/ssh/sshd_config',
+        owner => root,
+        group => 0,
+        mode => 600,
+        content => template("sshd/sshd_config/${real_source}"),
 		notify => $operatingsystem ? { 
 			openbsd => Exec[sshd_refresh],
 			default => Service[sshd],
-		}
-        }
+		},
+    }
 }
