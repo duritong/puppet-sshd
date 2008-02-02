@@ -16,7 +16,8 @@ class sshd {
 		default: {
 			service{'sshd':
                 name => $operatingsystem ? {
-                    debian,ubuntu => 'ssh',
+                    debian => 'ssh',
+                    ubuntu => 'ssh',
                     default => 'sshd',
                 },
                 enable => true,
