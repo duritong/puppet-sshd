@@ -15,6 +15,10 @@ class sshd {
 		}
 		default: {
 			service{'sshd':
+                name => $operatingsystem ? {
+                    debian,ubuntu => 'ssh',
+                    default => 'sshd',
+                },
                 enable => true,
                 ensure => running,
 				require => Package[openssh],
@@ -22,7 +26,7 @@ class sshd {
 			
 			package{openssh:
 		        name =>  $operatingsystem ? {
-        		    centos => openssh-server,
+        		    centos,debian,ubuntu => openssh-server,
                 	default => openssh,
 			    },
                 category => $operatingsystem ? {
