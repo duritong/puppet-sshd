@@ -27,11 +27,11 @@ class sshd {
             
 			package{openssh:
                 name => $operatingsystem ? {
-                    debian: => 'openssh-server',
-                    ubuntu: => 'openssh-server',
-                    redhat: => 'openssh-server',
-                    centos: => 'openssh-server',
-                    default: => 'openssh',
+                    debian => 'openssh-server',
+                    ubuntu => 'openssh-server',
+                    redhat => 'openssh-server',
+                    centos => 'openssh-server',
+                    default => 'openssh',
                 },
                 category => $operatingsystem ? {
 	                gentoo => 'net-misc',
