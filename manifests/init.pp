@@ -44,7 +44,7 @@ class sshd {
 	}
 }
 
-define sshd::sshd_config (
+define sshd::sshd_config(
 	$source => ''
 ){
 	$real_source = $source ? {
@@ -52,7 +52,7 @@ define sshd::sshd_config (
 		default => $source,
 	}
 
-    $real_allowed_users = ? $sshd_allowed_users ? {
+    $real_allowed_users = $sshd_allowed_users ? {
         ''  => 'root',
         default => $sshd_allowed_users,
     }
