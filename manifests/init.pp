@@ -45,7 +45,7 @@ class sshd {
 }
 
 define sshd::sshd_config(
-	$source => ''
+    $source = ''	
 ){
 	$real_source = $source ? {
 		'' => "${operatingsystem}_normal.erb",
@@ -71,7 +71,7 @@ define sshd::sshd_config(
 }
 
 define sshd::deploy_auth_key(
-        $source => '', 
+        $source = '', 
         $user = 'root', 
         $target_dir = '/root/.ssh/', 
         $group = '' ) {
