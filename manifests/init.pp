@@ -45,7 +45,7 @@ class sshd {
 }
 
 define sshd::sshd_config (
-	$source => "",
+	$source => ''
 ){
 	$real_source = $source ? {
 		'' => "${operatingsystem}_normal.erb",
