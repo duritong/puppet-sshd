@@ -46,12 +46,16 @@ class sshd {
 
 define sshd::sshd_config (
 	$source = "",
-	$allowed_users = 'root'
 ){
 	$real_source = $source ? {
 		'' => "${operatingsystem}_normal.erb",
 		default => $source,
 	}
+
+    $real_allowed_users = ? $sshd_allowed_users ? {
+        ''  => 'root',
+        default => $sshd_allowed_users,
+    }
 
 	file { 'sshd_config':
         path => '/etc/ssh/sshd_config',
@@ -64,4 +68,41 @@ define sshd::sshd_config (
 			default => Service[sshd],
 		},
     }
+}
+
+define sshd::deploy_auth_key(
+        $source => '', 
+        $user = 'root', 
+        $target_dir = '/root/.ssh/', 
+        $group = '' ) {
+
+        $real_target = $target_dir ? {
+                '' => "/home/$user/.ssh/",
+                default => $target_dir,
+        }
+
+        $real_group = $group ? {
+                '' => 0,
+                default => $group,
+        }
+
+        $real_source = $source ? {
+            '' => "sshd/authorized_keys/${name}",
+            default => $source,
+        }
+
+        file {$real_target:
+                ensure => directory,
+                owner => $user,
+                group => $real_group,
+                mode => 700,
+        }
+
+        file {"authorized_keys_${user}":
+                path => "$real_target/authorized_keys",
+                owner => $user,
+                group => $real_group,
+                mode => 600,
+                source => "puppet://$server/$source",
+        }
 }
