@@ -93,7 +93,7 @@ PasswordAuthentication no
 # override default of no subsystems
 Subsystem	sftp	/usr/libexec/sftp-server
 
-AllowUsers <%= allowed_users %>
+AllowUsers <%= real_sshd_allowed_users %>
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs

@@ -52,7 +52,7 @@ define sshd::sshd_config(
 		default => $source,
 	}
 
-    $real_allowed_users = $sshd_allowed_users ? {
+    $real_sshd_allowed_users = $sshd_allowed_users ? {
         ''  => 'root',
         default => $sshd_allowed_users,
     }
