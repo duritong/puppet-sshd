@@ -86,7 +86,7 @@ define sshd::deploy_auth_key(
 
         $real_source = $source ? {
             '' => [ "sshd/authorized_keys/${name}",
-                    "dist/sshd/authorized_keys/${name}"]
+                    "dist/sshd/authorized_keys/${name}"],
             default => $source,
         }
 
