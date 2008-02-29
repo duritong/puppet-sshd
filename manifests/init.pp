@@ -85,9 +85,9 @@ define sshd::deploy_auth_key(
         }
 
         $real_source = $source ? {
-            '' => [ "sshd/authorized_keys/${name}",
-                    "dist/sshd/authorized_keys/${name}"],
-            default => $source,
+            '' => [ "puppet://$server/sshd/authorized_keys/${name}",
+                    "puppet://$server/dist/sshd/authorized_keys/${name}"],
+            default => "puppet://$server/$source",
         }
 
         file {$real_target:
@@ -102,6 +102,6 @@ define sshd::deploy_auth_key(
                 owner => $user,
                 group => $real_group,
                 mode => 600,
-                source => "puppet://$server/$real_source",
+                source => $real_source,
         }
 }
