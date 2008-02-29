@@ -101,6 +101,6 @@ define sshd::deploy_auth_key(
                 owner => $user,
                 group => $real_group,
                 mode => 600,
-                source => "puppet://$server/$source",
+                source => "puppet://$server/$real_source",
         }
 }
