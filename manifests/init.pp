@@ -42,33 +42,29 @@ class sshd {
 
 		}
 	}
-}
 
-define sshd::sshd_config(
-    $source = ''	
-){
-	$real_source = $source ? {
-		'' => "${operatingsystem}_normal.erb",
-		default => $source,
+	$real_sshd_config_source = $sshd_config_source ? {
+	    '' => "sshd/sshd_config/${operatingsystem}_normal.erb",
+    	default => $source,
 	}
 
     notice("sshd_allowed_users is set to ${sshd_allowed_users}")
 
     $real_sshd_allowed_users = $sshd_allowed_users ? {
         ''  => 'root',
-	    default => $sshd_allowed_users,
+    	default => $sshd_allowed_users,
     }
 
-	file { 'sshd_config':
+    file { 'sshd_config':
         path => '/etc/ssh/sshd_config',
         owner => root,
         group => 0,
         mode => 600,
-        content => template("sshd/sshd_config/${real_source}"),
-		notify => $operatingsystem ? { 
-			openbsd => Exec[sshd_refresh],
-			default => Service[sshd],
-		},
+        content => template("${real_sshd_config_source}"),
+    	notify => $operatingsystem ? { 
+	        openbsd => Exec[sshd_refresh],
+		    default => Service[sshd],
+    	},
     }
 }
 
