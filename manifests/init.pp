@@ -48,7 +48,7 @@ class sshd {
     	default => $source,
 	}
 
-    notice("sshd_allowed_users is set to ${sshd_allowed_users}")
+    #notice("sshd_allowed_users is set to ${sshd_allowed_users}")
 
     $real_sshd_allowed_users = $sshd_allowed_users ? {
         ''  => 'root',
