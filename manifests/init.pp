@@ -15,11 +15,6 @@ class sshd {
 }
 
 
-            
-
-		}
-	}
-
 class sshd::base {
 	$real_sshd_config_source = $sshd_config_source ? {
 	    '' => "sshd/sshd_config/${operatingsystem}_normal.erb",
