@@ -5,50 +5,26 @@
 #modules_dir { "sshd": }
 
 class sshd {
+    case $operatingsystem {
+        gentoo: { include sshd::gentoo }
+        redhat: { include sshd::redhat }
+        centos: { include sshd::centos }
+        openbsd: { include sshd::openbsd }
+        default: { include sshd::default }
+    }
+}
 
-	case $operatingsystem {
-		OpenBSD: {
-			exec{sshd_refresh:
-        	    command => "/bin/kill -HUP `/bin/cat /var/run/sshd.pid`",
-	            refreshonly => true,
-            }
-		}
-		default: {
-			service{'sshd':
-                name => $operatingsystem ? {
-                    debian => 'ssh',
-                    ubuntu => 'ssh',
-                    default => 'sshd',
-                },
-                enable => true,
-                ensure => running,
-				require => Package[openssh],
-            }
+
             
-			package{openssh:
-                name => $operatingsystem ? {
-                    debian => 'openssh-server',
-                    ubuntu => 'openssh-server',
-                    redhat => 'openssh-server',
-                    centos => 'openssh-server',
-                    default => 'openssh',
-                },
-                category => $operatingsystem ? {
-	                gentoo => 'net-misc',
-		        	default => '',
-	            },
-		        ensure => present,
-			}
 
 		}
 	}
 
+class sshd::base {
 	$real_sshd_config_source = $sshd_config_source ? {
 	    '' => "sshd/sshd_config/${operatingsystem}_normal.erb",
     	default => $source,
 	}
-
-    #notice("sshd_allowed_users is set to ${sshd_allowed_users}")
 
     $real_sshd_allowed_users = $sshd_allowed_users ? {
         ''  => 'root',
@@ -61,13 +37,74 @@ class sshd {
         group => 0,
         mode => 600,
         content => template("${real_sshd_config_source}"),
-    	notify => $operatingsystem ? { 
-	        openbsd => Exec[sshd_refresh],
-		    default => Service[sshd],
-    	},
     }
 }
 
+class sshd::linux inherits sshd::base {
+    package{openssh:
+	    ensure => present,
+	}
+    include sshd::service
+    File[sshd_config]{
+        notify => Service[sshd],
+    }
+}
+
+class sshd::gentoo inherits sshd::linux {
+    Package[openssh]{
+        category => 'net-misc',
+    }
+}
+
+class sshd::debian inherits sshd::linux {
+    Package[openssh]{
+        name => 'openssh-server',
+    }
+}
+class sshd::ubuntu inherits sshd::debian {}
+
+class sshd::redhat inherits sshd::linux {
+    Package[openssh]{
+        name => 'openssh-server',
+    }
+}
+class sshd::centos inherits sshd::redhat {}
+
+class sshd::openbsd inherits sshd::base {
+    exec{sshd_refresh:
+        command => "/bin/kill -HUP `/bin/cat /var/run/sshd.pid`",
+	    refreshonly => true,
+    }
+    File[sshd_config]{
+        notify => Exec[sshd_refresh],
+    }
+}
+
+### service stuff 
+class sshd::service {
+    case $operatingsystem {
+        debian: { include sshd::service::debian }
+        ubuntu: { include sshd::service::ubuntu }
+        default: { include sshd::service::base }
+    }
+
+class sshd::service::base {
+    service{'sshd':
+        name => 'sshd',
+        enable => true,
+        ensure => running,
+		require => Package[openssh],
+     }
+}
+
+class sshd::service::debian inherits sshd::service::base {
+    Service[sshd]{
+        name => 'ssh',
+    }
+}
+class sshd::service::ubuntu inherits sshd::service::debian {}
+
+### defines 
 define sshd::deploy_auth_key(
         $source = '', 
         $user = 'root', 
@@ -85,8 +122,8 @@ define sshd::deploy_auth_key(
         }
 
         $real_source = $source ? {
-            '' => [ "puppet://$server/sshd/authorized_keys/${name}",
-                    "puppet://$server/dist/sshd/authorized_keys/${name}"],
+            '' => [ "puppet://$server/files/sshd/authorized_keys/${name}",
+                    "puppet://$server/sshd/authorized_keys/${name}" ]
             default => "puppet://$server/$source",
         }
 
