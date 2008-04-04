@@ -82,6 +82,7 @@ class sshd::service {
         ubuntu: { include sshd::service::ubuntu }
         default: { include sshd::service::base }
     }
+}
 
 class sshd::service::base {
     service{'sshd':
