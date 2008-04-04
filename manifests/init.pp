@@ -118,7 +118,7 @@ define sshd::deploy_auth_key(
 
         $real_source = $source ? {
             '' => [ "puppet://$server/files/sshd/authorized_keys/${name}",
-                    "puppet://$server/sshd/authorized_keys/${name}" ]
+                    "puppet://$server/sshd/authorized_keys/${name}" ],
             default => "puppet://$server/$source",
         }
 
