@@ -10,6 +10,8 @@ class sshd {
         redhat: { include sshd::redhat }
         centos: { include sshd::centos }
         openbsd: { include sshd::openbsd }
+        debian: { include sshd::debian }
+        ubuntu: { include sshd::ubuntu }
         default: { include sshd::default }
     }
 }
