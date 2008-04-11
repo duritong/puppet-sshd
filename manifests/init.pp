@@ -91,6 +91,7 @@ class sshd::service::base {
         name => 'sshd',
         enable => true,
         ensure => running,
+        hasstatus => true,
 		require => Package[openssh],
      }
 }
@@ -98,6 +99,7 @@ class sshd::service::base {
 class sshd::service::debian inherits sshd::service::base {
     Service[sshd]{
         name => 'ssh',
+        hasstatus => false,
     }
 }
 class sshd::service::ubuntu inherits sshd::service::debian {}
