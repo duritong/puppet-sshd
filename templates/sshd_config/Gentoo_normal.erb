@@ -40,6 +40,11 @@ Protocol 2
 #LoginGraceTime 2m
 PermitRootLogin without-password
 #StrictModes yes
+<%- unless real_sshd_permit_root_login.to_s.empty? then %>
+PermitRootLogin <%= real_sshd_permit_root_login %>
+<%- else %>
+PermitRootLogin without-password
+<%- end %>
 #MaxAuthTries 6
 
 #RSAAuthentication yes
@@ -57,7 +62,11 @@ PermitRootLogin without-password
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
+<%- if real_sshd_password_authentication.to_s == 'yes' then %>
+PasswordAuthentication yes
+<%- else %>
 PasswordAuthentication no
+<%- end %>
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
@@ -84,11 +93,19 @@ PasswordAuthentication no
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
+<%- if real_sshd_use_pam.to_s == 'yes' then %>
+UsePAM yes
+<%- else %>
 UsePAM no
+<%- end %>
 
 #AllowTcpForwarding yes
 #GatewayPorts no
-#X11Forwarding no
+<%- if real_sshd_x11_forwarding.to_s == 'yes' then %>
+X11Forwarding yes
+<%- else %>
+X11Forwarding no
+<%- end %>
 #X11DisplayOffset 10
 #X11UseLocalhost yes
 #PrintMotd yes
@@ -117,4 +134,6 @@ Subsystem	sftp	/usr/lib/misc/sftp-server
 #	AllowTcpForwarding no
 #	ForceCommand cvs server
 
+<%- unless real_sshd_allowed_users.to_s.empty? then %>
 AllowUsers <%= real_sshd_allowed_users %>
+<%- end %>

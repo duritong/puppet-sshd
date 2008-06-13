@@ -36,7 +36,11 @@ SyslogFacility AUTHPRIV
 # Authentication:
 
 #LoginGraceTime 2m
+<%- unless real_sshd_permit_root_login.to_s.empty? then %>
+PermitRootLogin <%= real_sshd_permit_root_login %>
+<%- else %>
 PermitRootLogin without-password
+<%- end %>
 #StrictModes yes
 #MaxAuthTries 6
 
@@ -55,7 +59,11 @@ PermitRootLogin without-password
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
+<%- if real_sshd_password_authentication.to_s == 'yes' then %>
+PasswordAuthentication yes
+<%- else %>
 PasswordAuthentication no
+<%- end %>
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
@@ -83,7 +91,11 @@ GSSAPICleanupCredentials yes
 # session checks to run without PAM authentication, then enable this but set 
 # ChallengeResponseAuthentication=no
 #UsePAM no
+<%- if real_sshd_use_pam.to_s == 'yes' then %>
+UsePAM yes
+<%- else %>
 UsePAM no
+<%- end %>
 
 # Accept locale-related environment variables
 AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES 
@@ -92,7 +104,11 @@ AcceptEnv LC_IDENTIFICATION LC_ALL
 #AllowTcpForwarding yes
 #GatewayPorts no
 #X11Forwarding no
+<%- if real_sshd_x11_forwarding.to_s == 'yes' then %>
+X11Forwarding yes
+<%- else %>
 X11Forwarding no
+<%- end %>
 #X11DisplayOffset 10
 #X11UseLocalhost yes
 #PrintMotd yes
@@ -115,4 +131,6 @@ X11Forwarding no
 
 # override default of no subsystems
 Subsystem	sftp	/usr/libexec/openssh/sftp-server
+<%- unless real_sshd_allowed_users.to_s.empty? then %>
 AllowUsers <%= real_sshd_allowed_users %>
+<%- end %>

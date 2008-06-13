@@ -8,8 +8,7 @@
 # possible, but leave them commented.  Uncommented options change a
 # default value.
 
-Port 22
-Port 2222
+#Port 22
 #Protocol 2,1
 #AddressFamily any
 #ListenAddress 0.0.0.0
@@ -33,7 +32,11 @@ Port 2222
 # Authentication:
 
 #LoginGraceTime 2m
-#PermitRootLogin yes
+<%- unless real_sshd_permit_root_login.to_s.empty? then %>
+PermitRootLogin <%= real_sshd_permit_root_login %>
+<%- else %>
+PermitRootLogin without-password
+<%- end %>
 #StrictModes yes
 #MaxAuthTries 6
 
@@ -52,7 +55,11 @@ Port 2222
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
+<%- if real_sshd_password_authentication.to_s == 'yes' then %>
+PasswordAuthentication yes
+<%- else %>
 PasswordAuthentication no
+<%- end %>
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
@@ -70,7 +77,11 @@ PasswordAuthentication no
 
 #AllowTcpForwarding yes
 #GatewayPorts no
-#X11Forwarding no
+<%- if real_sshd_x11_forwarding.to_s == 'yes' then %>
+X11Forwarding yes
+<%- else %>
+X11Forwarding no
+<%- end %>
 #X11DisplayOffset 10
 #X11UseLocalhost yes
 #PrintMotd yes
@@ -93,7 +104,9 @@ PasswordAuthentication no
 # override default of no subsystems
 Subsystem	sftp	/usr/libexec/sftp-server
 
+<%- unless real_sshd_allowed_users.to_s.empty? then %>
 AllowUsers <%= real_sshd_allowed_users %>
+<%- end %>
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs

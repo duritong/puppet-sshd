@@ -2,7 +2,7 @@
 # See the sshd(8) manpage for defails
 
 # What ports, IPs and protocols we listen for
-Port 22
+# Port 22
 # Use these options to restrict which interfaces/protocols sshd will bind to
 #ListenAddress ::
 #ListenAddress 0.0.0.0
@@ -27,7 +27,11 @@ LogLevel INFO
 
 # Authentication:
 LoginGraceTime 600
+<%- unless real_sshd_permit_root_login.to_s.empty? then %>
+PermitRootLogin <%= real_sshd_permit_root_login %>
+<%- else %>
 PermitRootLogin without-password
+<%- end %>
 StrictModes yes
 
 RSAAuthentication yes
@@ -52,8 +56,11 @@ PermitEmptyPasswords no
 #ChallengeResponseAuthentication no
 
 # To disable tunneled clear text passwords, change to no here!
+<%- if real_sshd_password_authentication.to_s == 'yes' then %>
+PasswordAuthentication yes
+<%- else %>
 PasswordAuthentication no
-
+<%- end %>
 
 # To change Kerberos options
 #KerberosAuthentication no
@@ -64,7 +71,11 @@ PasswordAuthentication no
 # Kerberos TGT Passing does only work with the AFS kaserver
 #KerberosTgtPassing yes
 
+<%- if real_sshd_x11_forwarding.to_s == 'yes' then %>
+X11Forwarding yes
+<%- else %>
 X11Forwarding no
+<%- end %>
 X11DisplayOffset 10
 PrintMotd no
 PrintLastLog no
@@ -77,11 +88,17 @@ KeepAlive yes
 
 #Subsystem	sftp	/usr/lib/sftp-server
 
+<%- if real_sshd_use_pam.to_s == 'yes' then %>
+UsePAM yes
+<%- else %>
 UsePAM no
+<%- end %>
 
 HostbasedUsesNameFromPacketOnly yes
 AllowTcpForwarding yes
 
 ChallengeResponseAuthentication no
 
+<%- unless real_sshd_allowed_users.to_s.empty? then %>
 AllowUsers <%= real_sshd_allowed_users %>
+<%- end %>
