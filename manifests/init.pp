@@ -141,6 +141,7 @@ class sshd::openbsd inherits sshd::base {
 
 ### defines 
 define sshd::deploy_auth_key(
+        $source = 'present',
         $user = 'root', 
         $target_dir = '/root/.ssh/', 
         $group = 0 ) {
@@ -157,12 +158,17 @@ define sshd::deploy_auth_key(
                 mode => 700,
         }
 
+        case $source {
+            'present': { $keysource = $name }
+            default: { $keysource = $source }
+        }
+
         file {"authorized_keys_${user}":
                 path => "$real_target/authorized_keys",
                 owner => $user,
                 group => $group,
                 mode => 600,
-                source => [ "puppet://$server/files/sshd/authorized_keys/${name}",
+                source => [ "puppet://$server/files/sshd/authorized_keys/${keysource}",
                     "puppet://$server/files/sshd/authorized_keys/${fqdn}",
                     "puppet://$server/files/sshd/authorized_keys/default",
                     "puppet://$server/sshd/authorized_keys/${name}",
