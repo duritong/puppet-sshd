@@ -14,7 +14,7 @@
 # Deploy authorized_keys file with the define
 #     sshd::deploy_auth_key
 # 
-# shdd-config:
+# sshd-config:
 #
 # The configuration of the sshd is rather strict and
 # might not fit all needs. However there are a bunch 
@@ -45,6 +45,8 @@
 #
 
 class sshd {
+    include sshd::client 
+
     case $operatingsystem {
         gentoo: { include sshd::gentoo }
         redhat: { include sshd::redhat }
@@ -94,7 +96,19 @@ class sshd::base {
         ensure => running,
         hasstatus => true,
 		require => File[sshd_config],
-     }
+    }
+    # Now add the key, if we've got one
+    case $sshrsakey_key {
+        '': { info("no sshrsakey on $fqdn") }
+        default: {
+            @@sshkey{"$hostname.$domain":
+                type => ssh-rsa,
+                key => $sshrsakey_key,
+                ensure => present,
+                require => Package["openssh-client"],
+            }
+        }
+    }
 }
 
 class sshd::linux inherits sshd::base {
