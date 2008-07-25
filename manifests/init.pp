@@ -105,7 +105,7 @@ class sshd::base {
                 type => ssh-rsa,
                 key => $sshrsakey_key,
                 ensure => present,
-                require => Package["openssh-client"],
+                require => Package["openssh-clients"],
             }
         }
     }

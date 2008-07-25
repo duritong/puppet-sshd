@@ -6,10 +6,11 @@
                 value = nil
                 filepath = File.join(dir,file)
                 if FileTest.file?(filepath)
-                    regex = %r{^(\S+) (\S+) (\S+)$}
+                    regex1 = %r{^(\S+) (\S+) (\S+)$}
+                    regex2 = %r{^(\S+) (\S+)(\s+)$}
                     begin
                         line = File.open(filepath).read.chomp
-                        if match = regex.match(line)
+                        if (match = regex1.match(line)) or (match = regex2.match(line))
                             value = match[2]
                         end
                     rescue
