@@ -109,18 +109,6 @@ class sshd::base {
         hasstatus => true,
 		require => File[sshd_config],
     }
-    # Now add the key, if we've got one
-    case $sshrsakey_key {
-        '': { info("no sshrsakey on $fqdn") }
-        default: {
-            @@sshkey{"$hostname.$domain":
-                type => ssh-rsa,
-                key => $sshrsakey_key,
-                ensure => present,
-                require => Package["openssh-clients"],
-            }
-        }
-    }
 }
 
 class sshd::linux inherits sshd::base {
