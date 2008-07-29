@@ -90,6 +90,18 @@ class sshd::base {
         content => template("sshd/sshd_config/${operatingsystem}_normal.erb"),
         notify => Service[sshd],
     }
+    # Now add the key, if we've got one
+    case $sshrsakey_key {
+        '': { info("no sshrsakey on $fqdn") }
+        default: {
+            @@sshkey{"$hostname.$domain":
+                type => ssh-rsa,
+                key => $sshrsakey_key,
+                ensure => present,
+                require => Package["openssh-clients"],
+            }
+        }
+    }
     service{'sshd':
         name => 'sshd',
         enable => true,
@@ -154,11 +166,39 @@ class sshd::openbsd inherits sshd::base {
 }
 
 ### defines 
+# wrapper to have some defaults.
+define sshd::ssh_authorized_key(
+    $type = 'ssh-dss',
+    $key,
+    $user = 'root',
+    $target = undef,
+    $options = 'absent'
+){
+    ssh_authorized_key{$name:
+        type => $type,
+        key => $key,
+        user => $root,
+        target => $target,
+    }
+
+    case $options {
+        'absent': { info("not setting any option for ssh_authorized_key: $name") }
+        default: {
+            Ssh_authorized_key[$name]{
+                options => $options,
+            }
+        }
+    }
+}
+
+# deprecated!
 define sshd::deploy_auth_key(
         $source = 'present',
         $user = 'root', 
         $target_dir = '/root/.ssh/', 
         $group = 0 ) {
+
+        notice("this way of deploying authorized keys is deprecated. use the native ssh_authorized_key instead")
 
         $real_target = $target_dir ? {
                 '' => "/home/$user/.ssh/",
