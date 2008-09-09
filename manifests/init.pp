@@ -165,7 +165,7 @@ define sshd::ssh_authorized_key(
     ssh_authorized_key{$name:
         type => $type,
         key => $key,
-        user => $root,
+        user => $user,
         target => $target,
     }
 
