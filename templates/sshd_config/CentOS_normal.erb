@@ -10,7 +10,12 @@
 # possible, but leave them commented.  Uncommented options change a
 # default value.
 
-#Port 22
+<%- unless real_sshd_port.to_s.empty? then %>
+Port <%= real_sshd_port %>
+<%- else %>
+Port 22
+<%- end %>
+
 #Protocol 2,1
 Protocol 2
 #AddressFamily any

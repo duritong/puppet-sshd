@@ -80,7 +80,9 @@
 # sshd_permit_empty_passwords:	If you want enable PermitEmptyPasswords to allow empty passwords
 # 				Valid Values: yes or no
 #				Default: no
-
+#
+# sshd_port:                    If you want to specify a different port than the default 22
+#                               Default: 22
 
 class sshd {
     include sshd::client 
@@ -158,6 +160,10 @@ class sshd::base {
     $real_sshd_permit_empty_passwords = $sshd_permit_empty_passwords ? {
     	'' => 'no',
 	default => $sshd_permit_empty_passwords
+    }
+    $real_sshd_port = $sshd_port ? {
+      '' => 22,
+      default => $sshd_port
     }
     
     file { 'sshd_config':
