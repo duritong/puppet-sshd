@@ -40,7 +40,7 @@ RSAAuthentication yes
 RSAAuthentication no
 <%- end %>
 
-<%- if real_sshd_sshd_pubkey_authentication.to_s == 'yes' then %>
+<%- if real_sshd_pubkey_authentication.to_s == 'yes' then %>
 PubkeyAuthentication yes
 <%- else %>
 PubkeyAuthentication no
