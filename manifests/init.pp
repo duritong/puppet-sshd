@@ -121,6 +121,10 @@ class sshd::base {
     	'' => 'yes',
 	default => $sshd_strict_modes
     }
+    $real_sshd_ignore_rhosts = $sshd_ignore_rhosts ? {
+        '' => 'yes',
+	default => $sshd_ignore_rhosts
+    }
 
     file { 'sshd_config':
         path => '/etc/ssh/sshd_config',

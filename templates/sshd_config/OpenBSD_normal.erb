@@ -67,8 +67,13 @@ PubkeyAuthentication no
 # Change to yes if you don't trust ~/.ssh/known_hosts for
 # RhostsRSAAuthentication and HostbasedAuthentication
 #IgnoreUserKnownHosts no
+
 # Don't read the user's ~/.rhosts and ~/.shosts files
-#IgnoreRhosts yes
+<%- if real_sshd_pubkey_authentication.to_s == 'yes' then %>
+IgnoreRhosts yes
+<%- else %>
+IgnoreRhosts no
+<% end -%>
 
 # To disable tunneled clear text passwords, change to no here!
 <%- if real_sshd_password_authentication.to_s == 'yes' then %>
