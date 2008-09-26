@@ -43,6 +43,9 @@
 #                               Valid Values: yes or no
 #                               Default: no
 #
+# sshd_agent_forwarding:	If you want to allow ssh-agent forwarding
+# 				Valid Values: yes or no
+#				Default: no
 
 class sshd {
     include sshd::client 
@@ -80,6 +83,10 @@ class sshd::base {
     $real_sshd_x11_forwarding = $sshd_x11_forwarding ? {
         '' => 'no',
         default => $sshd_x11_forwarding
+    }
+    $real_sshd_agent_forwarding = $sshd_agent_forwarding ? {
+    	'' => 'no',
+	default => $sshd_agent_forwarding
     }
 
     file { 'sshd_config':
