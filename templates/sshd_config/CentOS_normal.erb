@@ -94,7 +94,13 @@ PasswordAuthentication yes
 <%- else %>
 PasswordAuthentication no
 <%- end %>
-#PermitEmptyPasswords no
+
+# To enable empty passwords, change to yes (NOT RECOMMENDED)
+<%- if real_sshd_empty_passwords.to_s == 'yes' then %>
+PermitEmptyPasswords yes
+<% else -%>
+PermitEmptyPasswords no
+<% end -%>
 
 # Change to no to disable s/key passwords
 <%- if real_sshd_challenge_response_authentication.to_s == 'yes' then %>

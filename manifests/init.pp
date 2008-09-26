@@ -71,6 +71,11 @@
 # sshd_strict_modes:		If you want to set StrictModes (check file modes/ownership before accepting login)
 # 				Valid Values: yes or no
 #				Default: yes
+#
+# sshd_permit_empty_passwords:	If you want enable PermitEmptyPasswords to allow empty passwords
+# 				Valid Values: yes or no
+#				Default: no
+
 
 class sshd {
     include sshd::client 
@@ -140,6 +145,10 @@ class sshd::base {
     $real_sshd_hostbased_authentication = $sshd_hostbased_authentication ? {
     	'' => 'no',
 	default => $sshd_hostbased_authentication
+    }
+    $real_sshd_permit_empty_passwords = $sshd_permit_empty_passwords ? {
+    	'' => 'no',
+	default => $sshd_permit_empty_passwords
     }
 
     file { 'sshd_config':
