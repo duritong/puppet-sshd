@@ -138,7 +138,13 @@ UsePAM no
 <%- end %>
 
 HostbasedUsesNameFromPacketOnly yes
+
+<%- if real_sshd_tcp_forwarding.to_s == 'yes' then %>
 AllowTcpForwarding yes
+<%- else %>
+AllowTcpForwarding no
+<%- end %>
+
 <%- if real_sshd_agent_forwarding.to_s == 'yes' then %>
 AllowAgentForwarding yes
 <%- else %>

@@ -139,7 +139,12 @@ UsePAM yes
 UsePAM no
 <%- end %>
 
-#AllowTcpForwarding yes
+<%- if real_sshd_tcp_forwarding.to_s == 'yes' then %>
+AllowTcpForwarding yes
+<%- else %>
+AllowTcpForwarding no
+<%- end %>
+
 #GatewayPorts no
 <%- if real_sshd_x11_forwarding.to_s == 'yes' then %>
 X11Forwarding yes

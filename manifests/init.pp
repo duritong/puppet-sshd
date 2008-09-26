@@ -1,6 +1,7 @@
 #
 # ssh module
 #
+# Copyright 2008, micah@riseup.net
 # Copyright 2008, admin(at)immerda.ch
 # Copyright 2008, Puzzle ITC GmbH
 # Marcel Härry haerry+puppet(at)puzzle.ch
@@ -44,6 +45,10 @@
 # 				Valid values: yes or no
 #				Default: no
 # 
+# sshd_tcp_forwarding:		If you want to enable TcpForwarding
+# 				Valid Values: yes or no
+#				Default: no
+#
 # sshd_x11_forwarding:          If you want to enable x11 forwarding 
 #                               Valid Values: yes or no
 #                               Default: no
@@ -109,6 +114,10 @@ class sshd::base {
     $real_sshd_password_authentication = $sshd_password_authentication ? {
         '' => 'no',
         default => $sshd_password_authentication
+    }
+    $real_sshd_tcp_forwarding = $sshd_tcp_forwarding ? {
+    	'' => 'no',
+	default => $sshd_tcp_forwarding
     }
     $real_sshd_x11_forwarding = $sshd_x11_forwarding ? {
         '' => 'no',
