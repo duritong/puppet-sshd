@@ -37,7 +37,13 @@ PermitRootLogin <%= real_sshd_permit_root_login %>
 <%- else %>
 PermitRootLogin without-password
 <%- end %>
-#StrictModes yes
+
+<%- if real_sshd_strict_modes.to_s == 'yes' then %>
+StrictModes yes
+<%- else %>
+StrictModes no
+<%- end %>
+
 #MaxAuthTries 6
 
 <%- if real_sshd_rsa_authentication.to_s == 'yes' then %>

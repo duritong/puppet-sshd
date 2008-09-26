@@ -39,7 +39,13 @@ Protocol 2
 
 #LoginGraceTime 2m
 PermitRootLogin without-password
-#StrictModes yes
+
+<%- if real_sshd_strict_modes.to_s == 'yes' then %>
+StrictModes yes
+<%- else %>
+StrictModes no
+<%- end %>
+
 <%- unless real_sshd_permit_root_login.to_s.empty? then %>
 PermitRootLogin <%= real_sshd_permit_root_login %>
 <%- else %>

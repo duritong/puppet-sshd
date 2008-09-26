@@ -56,9 +56,13 @@
 # 				Valid Values: yes or no
 #				Default: yes
 #
-# sshd_rsa_authentication:	If you wat to enable RSA Authentication
+# sshd_rsa_authentication:	If you want to enable RSA Authentication
 # 				Valid Values: yes or no
 #				Default: no
+#				
+# sshd_strict_modes:		If you want to set StrictModes (check file modes/ownership before accepting login)
+# 				Valid Values: yes or no
+#				Default: yes
 
 class sshd {
     include sshd::client 
@@ -112,6 +116,10 @@ class sshd::base {
     $real_sshd_rsa_authentication = $sshd_rsa_authentication ? {
     	'' => 'no',
 	default => $sshd_rsa_authentication
+    }
+    $real_sshd_strict_modes = $sshd_strict_modes ? {
+    	'' => 'yes',
+	default => $sshd_strict_modes
     }
 
     file { 'sshd_config':
