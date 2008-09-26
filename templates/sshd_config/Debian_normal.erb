@@ -52,8 +52,12 @@ HostbasedAuthentication no
 # To enable empty passwords, change to yes (NOT RECOMMENDED)
 PermitEmptyPasswords no
 
-# Uncomment to disable s/key passwords 
-#ChallengeResponseAuthentication no
+# Change to no to disable s/key passwords
+<%- if real_sshd_challenge_response_authentication.to_s == 'yes' then %>
+ChallengeResponseAuthentication yes
+<%- else %>
+ChallengeResponseAuthentication no
+<%- end %>
 
 # To disable tunneled clear text passwords, change to no here!
 <%- if real_sshd_password_authentication.to_s == 'yes' then %>

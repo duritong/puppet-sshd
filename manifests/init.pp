@@ -38,6 +38,11 @@
 # sshd_password_authentication: If you want to enable password authentication or not
 #                               Valid values: yes or no
 #                               Default: no
+#				
+# sshd_challenge_response_authentication: If you want to enable ChallengeResponseAuthentication or not
+# 				When disabled, s/key passowords are disabled
+# 				Valid values: yes or no
+#				Default: no
 # 
 # sshd_x11_forwarding:          If you want to enable x11 forwarding 
 #                               Valid Values: yes or no
@@ -87,6 +92,10 @@ class sshd::base {
     $real_sshd_agent_forwarding = $sshd_agent_forwarding ? {
     	'' => 'no',
 	default => $sshd_agent_forwarding
+    }
+    $real_sshd_challenge_response_authentication = $sshd_challenge_response_authentication ? {
+        '' => 'no',
+	default => $sshd_challenge_response_authentication
     }
 
     file { 'sshd_config':

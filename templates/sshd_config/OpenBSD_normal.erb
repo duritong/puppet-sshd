@@ -63,7 +63,11 @@ PasswordAuthentication no
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords
-#ChallengeResponseAuthentication yes
+<%- if real_sshd_challenge_response_authentication.to_s == 'yes' then %>
+ChallengeResponseAuthentication yes
+<%- else %>
+ChallengeResponseAuthentication no
+<%- end %>
 
 # Kerberos options
 #KerberosAuthentication no
