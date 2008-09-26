@@ -51,6 +51,10 @@
 # sshd_agent_forwarding:	If you want to allow ssh-agent forwarding
 # 				Valid Values: yes or no
 #				Default: no
+#
+# sshd_pubkey_authentication:	If you want to enable public key authentication
+# 				Valid Values: yes or no
+#				Default: yes
 
 class sshd {
     include sshd::client 
@@ -96,6 +100,10 @@ class sshd::base {
     $real_sshd_challenge_response_authentication = $sshd_challenge_response_authentication ? {
         '' => 'no',
 	default => $sshd_challenge_response_authentication
+    }
+    $real_sshd_pubkey_authentication = $sshd_pubkey_authentication ? {
+    	'' => 'no',
+	default => $sshd_pubkey_authentication
     }
 
     file { 'sshd_config':

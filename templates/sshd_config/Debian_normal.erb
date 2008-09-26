@@ -35,7 +35,12 @@ PermitRootLogin without-password
 StrictModes yes
 
 RSAAuthentication yes
+<%- if real_sshd_sshd_pubkey_authentication.to_s == 'yes' then %>
 PubkeyAuthentication yes
+<%- else %>
+PubkeyAuthentication no
+<%- end %>
+
 #AuthorizedKeysFile	%h/.ssh/authorized_keys
 
 # rhosts authentication should not be used
