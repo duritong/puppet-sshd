@@ -82,7 +82,7 @@ HostbasedAuthentication no
 #IgnoreUserKnownHosts no
 
 # Don't read the user's ~/.rhosts and ~/.shosts files
-<%- if real_sshd_pubkey_authentication.to_s == 'yes' then %>
+<%- if real_sshd_ignore_rhosts.to_s == 'yes' then %>
 IgnoreRhosts yes
 <%- else %>
 IgnoreRhosts no
