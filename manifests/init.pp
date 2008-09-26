@@ -159,7 +159,7 @@ class sshd::base {
     	'' => 'no',
 	default => $sshd_permit_empty_passwords
     }
-
+    
     file { 'sshd_config':
         path => '/etc/ssh/sshd_config',
         owner => root,
@@ -181,11 +181,11 @@ class sshd::base {
         }
     }
     service{'sshd':
-        name => 'sshd',
-        enable => true,
-        ensure => running,
-        hasstatus => true,
-		require => File[sshd_config],
+      name => 'sshd',
+      enable => true,
+      ensure => running,
+      hasstatus => true,
+      require => File[sshd_config],
     }
 }
 
