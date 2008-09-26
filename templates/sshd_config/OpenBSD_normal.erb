@@ -40,7 +40,12 @@ PermitRootLogin without-password
 #StrictModes yes
 #MaxAuthTries 6
 
-#RSAAuthentication yes
+<%- if real_sshd_rsa_authentication.to_s == 'yes' then %>
+RSAAuthentication yes
+<%- else %>
+RSAAuthentication no
+<%- end %>
+
 <%- if real_sshd_sshd_pubkey_authentication.to_s == 'yes' then %>
 PubkeyAuthentication yes
 <%- else %>

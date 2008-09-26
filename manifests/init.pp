@@ -55,6 +55,10 @@
 # sshd_pubkey_authentication:	If you want to enable public key authentication
 # 				Valid Values: yes or no
 #				Default: yes
+#
+# sshd_rsa_authentication:	If you wat to enable RSA Authentication
+# 				Valid Values: yes or no
+#				Default: no
 
 class sshd {
     include sshd::client 
@@ -104,6 +108,10 @@ class sshd::base {
     $real_sshd_pubkey_authentication = $sshd_pubkey_authentication ? {
     	'' => 'no',
 	default => $sshd_pubkey_authentication
+    }
+    $real_sshd_rsa_authentication = $sshd_rsa_authentication ? {
+    	'' => 'no',
+	default => $sshd_rsa_authentication
     }
 
     file { 'sshd_config':
