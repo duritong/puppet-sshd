@@ -60,6 +60,14 @@
 # 				Valid Values: yes or no
 #				Default: no
 #				
+# sshd_rhosts_rsa_authentication:	If you want to enable rhosts RSA Authentication
+# 				Valid Values: yes or no
+#				Default: no
+#
+# sshd_hostbased_authentication: If you want to enable HostbasedAuthentication
+# 				 Valid Values: yes or no
+#				 Default: no
+#				
 # sshd_strict_modes:		If you want to set StrictModes (check file modes/ownership before accepting login)
 # 				Valid Values: yes or no
 #				Default: yes
@@ -124,6 +132,14 @@ class sshd::base {
     $real_sshd_ignore_rhosts = $sshd_ignore_rhosts ? {
         '' => 'yes',
 	default => $sshd_ignore_rhosts
+    }
+    $real_sshd_rhosts_rsa_authentication = $sshd_rhosts_rsa_authentication ? {
+    	'' => 'no',
+	default => $sshd_rhosts_rsa_authentication
+    }
+    $real_sshd_hostbased_authentication = $sshd_hostbased_authentication ? {
+    	'' => 'no',
+	default => $sshd_hostbased_authentication
     }
 
     file { 'sshd_config':
