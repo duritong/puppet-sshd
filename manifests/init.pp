@@ -22,6 +22,11 @@
 # of variables, which you might consider to configure. 
 # Checkout the following:
 #
+# sshd_listen_address:          specify the addresses sshd should listen on
+#                               set this to "10.0.0.1 192.168.0.1" to have it listen on both
+#                               addresses, or leave it unset to listen on all
+#                               Default: empty -> results in listening on 0.0.0.0
+#
 # sshd_allowed_users:           list of usernames separated by spaces. 
 #                               set this for example to "foobar root"
 #                               to ensure that only user foobar and root
@@ -104,7 +109,11 @@ class sshd {
 
 
 class sshd::base {
-    # prepare variables to use in templates 
+    # prepare variables to use in templates
+    $real_sshd_listen_address = $sshd_sshd_listen_address ? {
+      '' => '',
+      default => $sshd_sshd_listen_address
+    }
     $real_sshd_allowed_users = $sshd_allowed_users ? {
         ''  => '',
         default => $sshd_allowed_users

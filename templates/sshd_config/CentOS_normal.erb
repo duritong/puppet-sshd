@@ -16,12 +16,13 @@ Port <%= real_sshd_port %>
 Port 22
 <%- end %>
 
+# Use these options to restrict which interfaces/protocols sshd will bind to
+<% for address in real_sshd_listen_address -%>
+ListenAddress <%= address %>
+<% end -%>
+#AddressFamily any
 #Protocol 2,1
 Protocol 2
-#AddressFamily any
-#ListenAddress 0.0.0.0
-#ListenAddress ::
-
 # HostKey for protocol version 1
 #HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2

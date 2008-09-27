@@ -16,9 +16,11 @@ Port <%= real_sshd_port %>
 Port 22
 <%- end %>
 
+# Use these options to restrict which interfaces/protocols sshd will bind to
+<% for address in real_sshd_listen_address -%>
+ListenAddress <%= address %>
+<% end -%>
 #AddressFamily any
-#ListenAddress 0.0.0.0
-#ListenAddress ::
 
 # Disable legacy (protocol version 1) support in the server for new
 # installations. In future the default will change to require explicit
