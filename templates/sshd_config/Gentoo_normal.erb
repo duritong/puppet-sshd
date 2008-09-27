@@ -109,7 +109,7 @@ PasswordAuthentication no
 <%- end %>
 
 # To enable empty passwords, change to yes (NOT RECOMMENDED)
-<%- if real_sshd_empty_passwords.to_s == 'yes' then %>
+<%- if real_sshd_permit_empty_passwords.to_s == 'yes' then %>
 PermitEmptyPasswords yes
 <% else -%>
 PermitEmptyPasswords no
