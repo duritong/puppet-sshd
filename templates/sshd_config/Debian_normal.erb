@@ -2,7 +2,7 @@
 # See the sshd(8) manpage for details
 
 # What ports, IPs and protocols we listen for
-<%- unless real_sshd_port.to_s.empty? then %>
+<%- unless real_sshd_port.to_s.empty? then -%>
 Port <%= real_sshd_port -%>
 <%- else -%>
 Port 22
@@ -33,52 +33,52 @@ LogLevel INFO
 
 # Authentication:
 LoginGraceTime 600
-<%- unless real_sshd_permit_root_login.to_s.empty? then %>
+<%- unless real_sshd_permit_root_login.to_s.empty? then -%>
 PermitRootLogin <%= real_sshd_permit_root_login -%>
 <%- else -%>
 PermitRootLogin without-password
 <%- end -%>
 
-<%- if real_sshd_strict_modes.to_s == 'yes' then %>
+<%- if real_sshd_strict_modes.to_s == 'yes' then -%>
 StrictModes yes
 <%- else -%>
 StrictModes no
 <%- end -%>
 
-<%- if real_sshd_rsa_authentication.to_s == 'yes' then %>
+<%- if real_sshd_rsa_authentication.to_s == 'yes' then -%>
 RSAAuthentication yes
 <%- else -%>
 RSAAuthentication no
 <%- end -%>
 
-<%- if real_sshd_pubkey_authentication.to_s == 'yes' then %>
+<%- if real_sshd_pubkey_authentication.to_s == 'yes' then -%>
 PubkeyAuthentication yes
 <%- else -%>
 PubkeyAuthentication no
 <%- end -%>
 
-<%- unless real_sshd_authorized_keys_file.to_s.empty? then %>
+<%- unless real_sshd_authorized_keys_file.to_s.empty? then -%>
 AuthorizedKeysFile <%= real_sshd_authorized_keys_file %>
 <%- else -%>
 AuthorizedKeysFile %h/.ssh/authorized_keys
 <%- end -%>
 
 # For this to work you will also need host keys in /etc/ssh_known_hosts
-<%- if real_sshd_rhosts_rsa_authentication.to_s == 'yes' then %>
+<%- if real_sshd_rhosts_rsa_authentication.to_s == 'yes' then -%>
 RhostsRSAAuthentication yes
 <%- else -%>
 RhostsRSAAuthentication no
 <% end -%>
 
 # Don't read the user's ~/.rhosts and ~/.shosts files
-<%- if real_sshd_ignore_rhosts.to_s == 'yes' then %>
+<%- if real_sshd_ignore_rhosts.to_s == 'yes' then -%>
 IgnoreRhosts yes
 <%- else -%>
 IgnoreRhosts no
 <% end -%>
 
 # similar for protocol version 2
-<%- if real_sshd_hostbased_authentication.to_s == 'yes' then %>
+<%- if real_sshd_hostbased_authentication.to_s == 'yes' then -%>
 HostbasedAuthentication yes
 <%- else -%>
 HostbasedAuthentication no
@@ -88,21 +88,21 @@ HostbasedAuthentication no
 #IgnoreUserKnownHosts yes
 
 # To enable empty passwords, change to yes (NOT RECOMMENDED)
-<%- if real_sshd_permit_empty_passwords.to_s == 'yes' then %>
+<%- if real_sshd_permit_empty_passwords.to_s == 'yes' then -%>
 PermitEmptyPasswords yes
 <% else -%>
 PermitEmptyPasswords no
 <% end -%>
 
 # Change to no to disable s/key passwords
-<%- if real_sshd_challenge_response_authentication.to_s == 'yes' then %>
+<%- if real_sshd_challenge_response_authentication.to_s == 'yes' then -%>
 ChallengeResponseAuthentication yes
 <%- else -%>
 ChallengeResponseAuthentication no
 <%- end -%>
 
 # To disable tunneled clear text passwords, change to no here!
-<%- if real_sshd_password_authentication.to_s == 'yes' then %>
+<%- if real_sshd_password_authentication.to_s == 'yes' then -%>
 PasswordAuthentication yes
 <%- else -%>
 PasswordAuthentication no
@@ -117,7 +117,7 @@ PasswordAuthentication no
 # Kerberos TGT Passing does only work with the AFS kaserver
 #KerberosTgtPassing yes
 
-<%- if real_sshd_x11_forwarding.to_s == 'yes' then %>
+<%- if real_sshd_x11_forwarding.to_s == 'yes' then -%>
 X11Forwarding yes
 <%- else -%>
 X11Forwarding no
@@ -141,7 +141,7 @@ KeepAlive yes
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
-<%- if real_sshd_use_pam.to_s == 'yes' then %>
+<%- if real_sshd_use_pam.to_s == 'yes' then -%>
 UsePAM yes
 <%- else -%>
 UsePAM no
@@ -149,13 +149,13 @@ UsePAM no
 
 HostbasedUsesNameFromPacketOnly yes
 
-<%- if real_sshd_tcp_forwarding.to_s == 'yes' then %>
+<%- if real_sshd_tcp_forwarding.to_s == 'yes' then -%>
 AllowTcpForwarding yes
 <%- else -%>
 AllowTcpForwarding no
 <%- end -%>
 
-<%- if real_sshd_agent_forwarding.to_s == 'yes' then %>
+<%- if real_sshd_agent_forwarding.to_s == 'yes' then -%>
 AllowAgentForwarding yes
 <%- else -%>
 AllowAgentForwarding no
@@ -163,7 +163,7 @@ AllowAgentForwarding no
 
 ChallengeResponseAuthentication no
 
-<%- unless real_sshd_allowed_users.to_s.empty? then %>
+<%- unless real_sshd_allowed_users.to_s.empty? then -%>
 AllowUsers <%= real_sshd_allowed_users -%>
 <%- end -%>
 
