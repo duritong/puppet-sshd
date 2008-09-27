@@ -188,7 +188,10 @@ class sshd::base {
         owner => root,
         group => 0,
         mode => 600,
-        content => template("sshd/sshd_config/${operatingsystem}_normal.erb"),
+        content => $lsbdistcodename ? {
+          '' => template("sshd/sshd_config/${operatingsystem}.erb"),
+          default => template ("sshd/sshd_config/${operatingsystem}_${lsbdistcodename}.erb"),
+        }
         notify => Service[sshd],
     }
     # Now add the key, if we've got one
