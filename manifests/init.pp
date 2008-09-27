@@ -83,6 +83,10 @@
 #
 # sshd_port:                    If you want to specify a different port than the default 22
 #                               Default: 22
+#
+# sshd_authorized_keys_file:    Set this to the location of the AuthorizedKeysFile (e.g. /etc/ssh/authorized_keys/%u)
+#                               Default: AuthorizedKeysFile	%h/.ssh/authorized_keys
+#
 
 class sshd {
     include sshd::client 
@@ -165,7 +169,11 @@ class sshd::base {
       '' => 22,
       default => $sshd_port
     }
-    
+    $real_sshd_authorized_keys_file = $sshd_authorized_keys_file ? {
+      '' => "%h/.ssh/authorized_keys",
+      default => $sshd_authorized_keys_file
+    }
+      
     file { 'sshd_config':
         path => '/etc/ssh/sshd_config',
         owner => root,
