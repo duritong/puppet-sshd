@@ -147,7 +147,7 @@ class sshd::base {
 	default => $sshd_challenge_response_authentication
     }
     $real_sshd_pubkey_authentication = $sshd_pubkey_authentication ? {
-    	'' => 'no',
+    	'' => 'yes',
 	default => $sshd_pubkey_authentication
     }
     $real_sshd_rsa_authentication = $sshd_rsa_authentication ? {
