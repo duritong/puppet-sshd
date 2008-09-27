@@ -23,7 +23,7 @@
 # Checkout the following:
 #
 # sshd_listen_address:          specify the addresses sshd should listen on
-#                               set this to "10.0.0.1 192.168.0.1" to have it listen on both
+#                               set this to ['10.0.0.1 192.168.0.1'] to have it listen on both
 #                               addresses, or leave it unset to listen on all
 #                               Default: empty -> results in listening on 0.0.0.0
 #
@@ -111,7 +111,7 @@ class sshd {
 class sshd::base {
     # prepare variables to use in templates
     $real_sshd_listen_address = $sshd_listen_address ? {
-      '' => '',
+      '' => [ '0.0.0.0', '::' ],
       default => $sshd_listen_address
     }
     $real_sshd_allowed_users = $sshd_allowed_users ? {
