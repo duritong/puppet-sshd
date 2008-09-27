@@ -110,9 +110,9 @@ class sshd {
 
 class sshd::base {
     # prepare variables to use in templates
-    $real_sshd_listen_address = $sshd_sshd_listen_address ? {
+    $real_sshd_listen_address = $sshd_listen_address ? {
       '' => '',
-      default => $sshd_sshd_listen_address
+      default => $sshd_listen_address
     }
     $real_sshd_allowed_users = $sshd_allowed_users ? {
         ''  => '',
