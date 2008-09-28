@@ -17,10 +17,18 @@
 # 
 # sshd-config:
 #
-# The configuration of the sshd is rather strict and
-# might not fit all needs. However there are a bunch 
-# of variables, which you might consider to configure. 
-# Checkout the following:
+# The configuration of the sshd is rather strict and might not fit all
+# needs. However there are a bunch of variables, which you might
+# consider configuring.
+#
+# To set any of the following, simply set them as variables in your manifests
+# before the class is included, for example:
+#
+# $sshd_listen_address = ['10.0.0.1 192.168.0.1']
+# $sshd_use_pam = yes
+# include sshd::debian
+#
+# The following is a list of the currently available variables:
 #
 # sshd_listen_address:          specify the addresses sshd should listen on
 #                               set this to ['10.0.0.1 192.168.0.1'] to have it listen on both
