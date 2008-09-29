@@ -210,7 +210,6 @@ class sshd::base {
                 type => ssh-rsa,
                 key => $sshrsakey_key,
                 ensure => present,
-                require => Package["openssh-clients"],
             }
         }
     }
@@ -229,6 +228,9 @@ class sshd::linux inherits sshd::base {
 	}
     File[sshd_config]{
         require +> Package[openssh],
+    }
+    Sshkey["$hostname.$domain"]{
+        require => Package["openssh-clients"],
     }
 }
 
