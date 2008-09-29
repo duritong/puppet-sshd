@@ -229,9 +229,6 @@ class sshd::linux inherits sshd::base {
     File[sshd_config]{
         require +> Package[openssh],
     }
-    Sshkey["$hostname.$domain"]{
-        require => Package["openssh-clients"],
-    }
 }
 
 class sshd::gentoo inherits sshd::linux {
