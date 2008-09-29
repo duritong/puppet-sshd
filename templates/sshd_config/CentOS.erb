@@ -10,13 +10,19 @@
 # possible, but leave them commented.  Uncommented options change a
 # default value.
 
-#Port 22
+<%- unless real_sshd_port.to_s.empty? then %>
+Port <%= real_sshd_port %>
+<%- else %>
+Port 22
+<%- end %>
+
+# Use these options to restrict which interfaces/protocols sshd will bind to
+<% for address in real_sshd_listen_address -%>
+ListenAddress <%= address %>
+<% end -%>
+#AddressFamily any
 #Protocol 2,1
 Protocol 2
-#AddressFamily any
-#ListenAddress 0.0.0.0
-#ListenAddress ::
-
 # HostKey for protocol version 1
 #HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2
@@ -41,22 +47,57 @@ PermitRootLogin <%= real_sshd_permit_root_login %>
 <%- else %>
 PermitRootLogin without-password
 <%- end %>
-#StrictModes yes
+
+<%- if real_sshd_strict_modes.to_s == 'yes' then %>
+StrictModes yes
+<%- else %>
+StrictModes no
+<%- end %>
+
 #MaxAuthTries 6
 
-#RSAAuthentication yes
-#PubkeyAuthentication yes
-#AuthorizedKeysFile	.ssh/authorized_keys
+<%- if real_sshd_rsa_authentication.to_s == 'yes' then %>
+RSAAuthentication yes
+<%- else %>
+RSAAuthentication no
+<%- end %>
+
+<%- if real_sshd_pubkey_authentication.to_s == 'yes' then %>
+PubkeyAuthentication yes
+<%- else %>
+PubkeyAuthentication no
+<%- end %>
+
+<%- unless real_sshd_authorized_keys_file.to_s.empty? then %>
+AuthorizedKeysFile <%= real_sshd_authorized_keys_file %>
+<%- else %>
+AuthorizedKeysFile %h/.ssh/authorized_keys
+<%- end %>
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
-#RhostsRSAAuthentication no
+<%- if real_sshd_rhosts_rsa_authentication.to_s == 'yes' then %>
+RhostsRSAAuthentication yes
+<%- else %>
+RhostsRSAAuthentication no
+<% end -%>
+
 # similar for protocol version 2
-#HostbasedAuthentication no
+<%- if real_sshd_hostbased_authentication.to_s == 'yes' then %>
+HostbasedAuthentication yes
+<%- else %>
+HostbasedAuthentication no
+<% end -%>
+
 # Change to yes if you don't trust ~/.ssh/known_hosts for
 # RhostsRSAAuthentication and HostbasedAuthentication
 #IgnoreUserKnownHosts no
+
 # Don't read the user's ~/.rhosts and ~/.shosts files
-#IgnoreRhosts yes
+<%- if real_sshd_ignore_rhosts.to_s == 'yes' then %>
+IgnoreRhosts yes
+<%- else %>
+IgnoreRhosts no
+<% end -%>
 
 # To disable tunneled clear text passwords, change to no here!
 <%- if real_sshd_password_authentication.to_s == 'yes' then %>
@@ -64,11 +105,20 @@ PasswordAuthentication yes
 <%- else %>
 PasswordAuthentication no
 <%- end %>
-#PermitEmptyPasswords no
+
+# To enable empty passwords, change to yes (NOT RECOMMENDED)
+<%- if real_sshd_permit_empty_passwords.to_s == 'yes' then %>
+PermitEmptyPasswords yes
+<% else -%>
+PermitEmptyPasswords no
+<% end -%>
 
 # Change to no to disable s/key passwords
-#ChallengeResponseAuthentication yes
+<%- if real_sshd_challenge_response_authentication.to_s == 'yes' then %>
+ChallengeResponseAuthentication yes
+<%- else %>
 ChallengeResponseAuthentication no
+<%- end %>
 
 # Kerberos options
 #KerberosAuthentication no
@@ -101,7 +151,13 @@ UsePAM no
 AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES 
 AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT 
 AcceptEnv LC_IDENTIFICATION LC_ALL
-#AllowTcpForwarding yes
+
+<%- if real_sshd_tcp_forwarding.to_s == 'yes' then %>
+AllowTcpForwarding yes
+<%- else %>
+AllowTcpForwarding no
+<%- end %>
+
 #GatewayPorts no
 #X11Forwarding no
 <%- if real_sshd_x11_forwarding.to_s == 'yes' then %>
