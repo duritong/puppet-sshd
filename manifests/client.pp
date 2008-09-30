@@ -28,7 +28,7 @@ class sshd::client::linux inherits sshd::client::base {
     }
 }
 
-class sshd::client::debian inherits sshd::client::base {
+class sshd::client::debian inherits sshd::client::linux {
     Package['openssh-clients']{
         name => 'openssh-client',
     }
