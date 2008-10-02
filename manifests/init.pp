@@ -13,7 +13,7 @@
 # the Free Software Foundation.
 #
 # Deploy authorized_keys file with the define
-#     sshd::deploy_auth_key
+#     sshd::ssh_authorized_key
 # 
 # sshd-config:
 #
@@ -292,44 +292,4 @@ define sshd::ssh_authorized_key(
             }
         }
     }
-}
-
-# deprecated!
-define sshd::deploy_auth_key(
-        $source = 'present',
-        $user = 'root', 
-        $target_dir = '/root/.ssh/', 
-        $group = 0 ) {
-
-        notice("this way of deploying authorized keys is deprecated. use the native ssh_authorized_key instead")
-
-        $real_target = $target_dir ? {
-                '' => "/home/$user/.ssh/",
-                default => $target_dir,
-        }
-
-        file {$real_target:
-                ensure => directory,
-                owner => $user,
-                group => $group,
-                mode => 700,
-        }
-
-        case $source {
-            'present': { $keysource = $name }
-            default: { $keysource = $source }
-        }
-
-        file {"authorized_keys_${user}":
-                path => "$real_target/authorized_keys",
-                owner => $user,
-                group => $group,
-                mode => 600,
-                source => [ "puppet://$server/files/sshd/authorized_keys/${keysource}",
-                    "puppet://$server/files/sshd/authorized_keys/${fqdn}",
-                    "puppet://$server/files/sshd/authorized_keys/default",
-                    "puppet://$server/sshd/authorized_keys/${name}",
-                    "puppet://$server/sshd/authorized_keys/${fqdn}",
-                    "puppet://$server/sshd/authorized_keys/default" ],
-        }
 }
