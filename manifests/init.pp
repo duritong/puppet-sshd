@@ -13,7 +13,7 @@
 # the Free Software Foundation.
 #
 # Deploy authorized_keys file with the define
-#     sshd::deploy_auth_key
+#     sshd::ssh_authorized_key
 # 
 # sshd-config:
 #
@@ -40,6 +40,15 @@
 #                               to ensure that only user foobar and root
 #                               might login. 
 #                               Default: empty -> no restriction is set
+#
+# sshd_allowed_groups           list of groups separated by spaces.
+#                               set this for example to "wheel sftponly"
+#                               to ensure that only users in the groups
+#                               wheel and sftponly might login.
+#                               Default: empty -> no restriction is set
+#                               Note: This is set after sshd_allowed_users,
+#                                     take care of the behaviour if you use
+#                                     these 2 options together.
 # 
 # sshd_use_pam:                 if you want to use pam or not for authenticaton
 #                               Values: no or yes. 
@@ -100,6 +109,14 @@
 # sshd_authorized_keys_file:    Set this to the location of the AuthorizedKeysFile (e.g. /etc/ssh/authorized_keys/%u)
 #                               Default: AuthorizedKeysFile	%h/.ssh/authorized_keys
 #
+# sshd_sftp_subsystem:  Set a different sftp-subystem than the default one.
+#                       Might be interesting for sftponly usage
+#                       Default: empty -> no change of the default
+#
+# sshd_additional_options:  Set this to any additional sshd_options which aren't listed above.
+#                           As well this option might be usefull to define complexer Match Blocks
+#                           This string is going to be included, like it is defined. So take care!
+#                           Default: empty -> not added.
 
 class sshd {
     include sshd::client 
@@ -118,77 +135,68 @@ class sshd {
 
 class sshd::base {
     # prepare variables to use in templates
-    $real_sshd_listen_address = $sshd_listen_address ? {
-      '' => [ '0.0.0.0', '::' ],
-      default => $sshd_listen_address
+    case $sshd_listen_address {
+      '': { $sshd_listen_address = [ '0.0.0.0', '::' ] }
     }
-    $real_sshd_allowed_users = $sshd_allowed_users ? {
-        ''  => '',
-        default => $sshd_allowed_users
+    case $sshd_allowed_users {
+        '': { $sshd_allowed_users = '' }
     }
-    $real_sshd_use_pam = $sshd_use_pam ? {
-        '' => 'no',
-        default => $sshd_use_pam
+    case $sshd_allowed_groups {
+      '': { $sshd_allowed_groups = '' }
     }
-    $real_sshd_permit_root_login = $sshd_permit_root_login ? {
-        '' => 'without-password',
-        default => $sshd_permit_root_login
+    case $sshd_use_pam {
+        '': { $sshd_use_pam = 'no' }
     }
-    $real_sshd_password_authentication = $sshd_password_authentication ? {
-        '' => 'no',
-        default => $sshd_password_authentication
+    case $sshd_permit_root_login {
+        '': { $sshd_permit_root_login = 'without-password' }
     }
-    $real_sshd_tcp_forwarding = $sshd_tcp_forwarding ? {
-    	'' => 'no',
-	default => $sshd_tcp_forwarding
+    case $sshd_password_authentication {
+        '': { $sshd_password_authentication = 'no' }
     }
-    $real_sshd_x11_forwarding = $sshd_x11_forwarding ? {
-        '' => 'no',
-        default => $sshd_x11_forwarding
+    case $sshd_tcp_forwarding {
+    	'': { $sshd_tcp_forwarding = 'no' }
     }
-    $real_sshd_agent_forwarding = $sshd_agent_forwarding ? {
-    	'' => 'no',
-	default => $sshd_agent_forwarding
+    case $sshd_x11_forwarding {
+        '': { $sshd_x11_forwarding = 'no' }
     }
-    $real_sshd_challenge_response_authentication = $sshd_challenge_response_authentication ? {
-        '' => 'no',
-	default => $sshd_challenge_response_authentication
+    case $sshd_agent_forwarding {
+    	'': { $sshd_agent_forwarding = 'no' }
     }
-    $real_sshd_pubkey_authentication = $sshd_pubkey_authentication ? {
-    	'' => 'yes',
-	default => $sshd_pubkey_authentication
+    case $sshd_challenge_response_authentication {
+        '': { $sshd_challenge_response_authentication = 'no' }
     }
-    $real_sshd_rsa_authentication = $sshd_rsa_authentication ? {
-    	'' => 'no',
-	default => $sshd_rsa_authentication
+    case $sshd_pubkey_authentication {
+    	'': { $sshd_pubkey_authentication = 'yes' }
     }
-    $real_sshd_strict_modes = $sshd_strict_modes ? {
-    	'' => 'yes',
-	default => $sshd_strict_modes
+    case $sshd_rsa_authentication {
+    	'': { $sshd_rsa_authentication = 'no' }
     }
-    $real_sshd_ignore_rhosts = $sshd_ignore_rhosts ? {
-        '' => 'yes',
-	default => $sshd_ignore_rhosts
+    case $sshd_strict_modes {
+    	'': { $sshd_strict_modes = 'yes' }
     }
-    $real_sshd_rhosts_rsa_authentication = $sshd_rhosts_rsa_authentication ? {
-    	'' => 'no',
-	default => $sshd_rhosts_rsa_authentication
+    case $sshd_ignore_rhosts {
+        '': { $sshd_ignore_rhosts = 'yes' }
     }
-    $real_sshd_hostbased_authentication = $sshd_hostbased_authentication ? {
-    	'' => 'no',
-	default => $sshd_hostbased_authentication
+    case $sshd_rhosts_rsa_authentication {
+    	'': { $sshd_rhosts_rsa_authentication = 'no' }
     }
-    $real_sshd_permit_empty_passwords = $sshd_permit_empty_passwords ? {
-    	'' => 'no',
-	default => $sshd_permit_empty_passwords
+    case $sshd_hostbased_authentication {
+    	'': { $sshd_hostbased_authentication = 'no' }
     }
-    $real_sshd_port = $sshd_port ? {
-      '' => 22,
-      default => $sshd_port
+    case $sshd_permit_empty_passwords {
+    	'': { $sshd_permit_empty_passwords = 'no' }
     }
-    $real_sshd_authorized_keys_file = $sshd_authorized_keys_file ? {
-      '' => "%h/.ssh/authorized_keys",
-      default => $sshd_authorized_keys_file
+    case $sshd_port {
+      '': { $sshd_port = 22 }
+    }
+    case $sshd_authorized_keys_file {
+      '': { $sshd_authorized_keys_file = "%h/.ssh/authorized_keys" }
+    }
+    case $sshd_sftp_subsystem {
+        '': { $sshd_sftp_subsystem = '' }
+    }
+    case $sshd_additional_options {
+        '': { $sshd_additional_options = '' }
     }
       
     file { 'sshd_config':
@@ -292,44 +300,4 @@ define sshd::ssh_authorized_key(
             }
         }
     }
-}
-
-# deprecated!
-define sshd::deploy_auth_key(
-        $source = 'present',
-        $user = 'root', 
-        $target_dir = '/root/.ssh/', 
-        $group = 0 ) {
-
-        notice("this way of deploying authorized keys is deprecated. use the native ssh_authorized_key instead")
-
-        $real_target = $target_dir ? {
-                '' => "/home/$user/.ssh/",
-                default => $target_dir,
-        }
-
-        file {$real_target:
-                ensure => directory,
-                owner => $user,
-                group => $group,
-                mode => 700,
-        }
-
-        case $source {
-            'present': { $keysource = $name }
-            default: { $keysource = $source }
-        }
-
-        file {"authorized_keys_${user}":
-                path => "$real_target/authorized_keys",
-                owner => $user,
-                group => $group,
-                mode => 600,
-                source => [ "puppet://$server/files/sshd/authorized_keys/${keysource}",
-                    "puppet://$server/files/sshd/authorized_keys/${fqdn}",
-                    "puppet://$server/files/sshd/authorized_keys/default",
-                    "puppet://$server/sshd/authorized_keys/${name}",
-                    "puppet://$server/sshd/authorized_keys/${fqdn}",
-                    "puppet://$server/sshd/authorized_keys/default" ],
-        }
 }
