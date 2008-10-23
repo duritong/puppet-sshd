@@ -247,7 +247,8 @@ class sshd::debian inherits sshd::linux {
     }
     Service[sshd]{
         name => 'ssh',
-        hasstatus => false,
+        hasstatus => true,
+        hasrestart => true,
     }
 }
 class sshd::ubuntu inherits sshd::debian {}
