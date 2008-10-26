@@ -253,10 +253,17 @@ class sshd::debian inherits sshd::linux {
   Package[openssh]{
     name => 'openssh-server',
   }
+
+  $ssh_hasrestart = $debian_version ? {
+    etch => false,
+    lenny => true,
+    default => false
+  }
+
   Service[sshd]{
     name => 'ssh',
     hasstatus => true,
-    hasrestart => true,
+    hasrestart => $ssh_hasrestart,
   }
 }
 class sshd::ubuntu inherits sshd::debian {}
