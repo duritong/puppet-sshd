@@ -254,7 +254,7 @@ class sshd::debian inherits sshd::linux {
     name => 'openssh-server',
   }
 
-  $ssh_hasrestart = $lsbdistcodename ? {
+  $sshd_restartandstatus = $lsbdistcodename ? {
     etch => false,
     lenny => true,
     default => false
@@ -262,8 +262,9 @@ class sshd::debian inherits sshd::linux {
 
   Service[sshd]{
     name => 'ssh',
-    hasstatus => true,
-    hasrestart => $ssh_hasrestart,
+    pattern => 'sshd',
+    hasstatus => $sshd_restartandstatus,
+    hasrestart => $sshd_restartandstatus,
   }
 }
 class sshd::ubuntu inherits sshd::debian {}
