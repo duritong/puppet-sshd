@@ -254,7 +254,7 @@ class sshd::debian inherits sshd::linux {
     name => 'openssh-server',
   }
 
-  $ssh_hasrestart = $debian_version ? {
+  $ssh_hasrestart = $lsbdistcodename ? {
     etch => false,
     lenny => true,
     default => false
