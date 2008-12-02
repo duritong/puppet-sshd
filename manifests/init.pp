@@ -290,16 +290,29 @@ class sshd::openbsd inherits sshd::base {
 define sshd::ssh_authorized_key(
   $type = 'ssh-dss',
   $key,
-  $user = 'root',
+  $user = '',
   $target = undef,
   $options = 'absent'
   )
 {
+  $real_user = $user ? {
+    false => $name,
+    "" => $name,
+    default => $user,
+   }
+  case $target {
+    undef: {
+      $real_target = "/home/$real_user/.ssh/authorized_keys"
+    }
+    default: {
+      $real_target = $target
+    }
+  }
   ssh_authorized_key{$name:
     type => $type,
     key => $key,
-    user => $user,
-    target => $target,
+    user => $real_user,
+    target => $real_target,
   }
   
   case $options {
