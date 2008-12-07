@@ -212,9 +212,14 @@ class sshd::base {
   }
   # Now add the key, if we've got one
   case $sshrsakey {
-    '': { info("no sshrsakey on $fqdn") }
+    '': { warning("no sshrsakey on $fqdn") }
     default: {
       @@sshkey{"$hostname.$domain":
+        type => ssh-rsa,
+        key => $sshrsakey,
+        ensure => present,
+      }
+      @@sshkey{"$ipaddress":
         type => ssh-rsa,
         key => $sshrsakey,
         ensure => present,
