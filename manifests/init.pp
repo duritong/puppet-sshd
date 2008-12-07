@@ -228,6 +228,13 @@ class sshd::base {
     hasstatus => true,
     require => File[sshd_config],
   }
+  
+  if $use_nagios {
+    case $nagios_check_ssh {
+      'false': { info("We don't do nagioschecks for ssh on ${fqdn}" ) }
+      default: { nagios::service{ "ssh_${fqdn}_port_${sshd_port}": check_command => "ssh_port!$sshd_port" } }
+    }
+  }
 }
 
 class sshd::linux inherits sshd::base {
