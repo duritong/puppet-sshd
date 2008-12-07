@@ -131,7 +131,7 @@ KeepAlive yes
 #ReverseMappingCheck yes
 
 <%- if sshd_sftp_subsystem.to_s.empty? then %>
-#Subsystem	sftp	/usr/lib/sftp-server
+Subsystem	sftp	/usr/lib/openssh/sftp-server
 <%- else %>
 Subsystem      sftp    <%= sshd_sftp_subsystem %>
 <%- end %>
