@@ -229,9 +229,8 @@ class sshd::base {
 		require => File[sshd_config],
     }
     if $use_nagios {
-        case $nagios_check_ssh {
-            false: { info("We don't do nagioschecks for ssh on ${fqdn}" ) }
-            default: { nagios::service{ "ssh_${fqdn}_port_${sshd_port}": check_command => "ssh_port!$sshd_port" } }
+        if $nagios_check_ssh {
+            nagios::service{ "ssh_${fqdn}_port_${sshd_port}": check_command => "ssh_port!$sshd_port" }
         }
     }
 }
