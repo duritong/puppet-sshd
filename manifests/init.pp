@@ -290,10 +290,23 @@ define sshd::ssh_authorized_key(
     $target = 'absent',
     $options = 'absent'
 ){
+
+    case $target {
+        'absent': { 
+            case $user {
+                'root': { $real_target = '/root/.ssh/authorized_keys' }
+                'default': { $real_target = "/home/${user}/.ssh/authorized_keys" }
+            }
+        }
+        default: {
+            $real_target = $target
+        }
+    }
     ssh_authorized_key{$name:
         type => $type,
         key => $key,
         user => $user,
+        target => $real_target,
     }
 
     case $options {
@@ -301,14 +314,6 @@ define sshd::ssh_authorized_key(
         default: {
             Ssh_authorized_key[$name]{
                 options => $options,
-            }
-        }
-    }
-    case $target {
-        'absent': { info("not setting any target for ssh_authorized_key: $name") }
-        default: {
-            Ssh_authorized_key[$name]{
-                target => $target,
             }
         }
     }
