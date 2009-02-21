@@ -287,14 +287,13 @@ define sshd::ssh_authorized_key(
     $type = 'ssh-dss',
     $key,
     $user = 'root',
-    $target = undef,
+    $target = 'absent',
     $options = 'absent'
 ){
     ssh_authorized_key{$name:
         type => $type,
         key => $key,
         user => $user,
-        target => $target,
     }
 
     case $options {
@@ -302,6 +301,14 @@ define sshd::ssh_authorized_key(
         default: {
             Ssh_authorized_key[$name]{
                 options => $options,
+            }
+        }
+    }
+    case $target {
+        'absent': { info("not setting any target for ssh_authorized_key: $name") }
+        default: {
+            Ssh_authorized_key[$name]{
+                target => $target,
             }
         }
     }
