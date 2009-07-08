@@ -1,6 +1,10 @@
 # Package generated configuration file
 # See the sshd(8) manpage for details
 
+<%- unless sshd_head_additional_options.to_s.empty? then %>
+<%= sshd_head_additional_options %>
+<%- end %>
+
 # What ports, IPs and protocols we listen for
 <%- unless sshd_port.to_s.empty? then -%>
 Port <%= sshd_port -%>
@@ -170,7 +174,7 @@ AllowGroups <%= sshd_allowed_groups %>
 
 PrintMotd no
 
-<%- unless sshd_additional_options.to_s.empty? then %>
-<%= sshd_additional_options %>
+<%- unless sshd_tail_additional_options.to_s.empty? then %>
+<%= sshd_tail_additional_options %>
 <%- end %>
 

@@ -113,10 +113,17 @@
 #                       Might be interesting for sftponly usage
 #                       Default: empty -> no change of the default
 #
-# sshd_additional_options:  Set this to any additional sshd_options which aren't listed above.
-#                           As well this option might be usefull to define complexer Match Blocks
-#                           This string is going to be included, like it is defined. So take care!
-#                           Default: empty -> not added.
+# sshd_head_additional_options:  Set this to any additional sshd_options which aren't listed above.
+#                                Anything set here will be added to the beginning of the sshd_config file.
+#                                This option might be useful to define complicated Match Blocks
+#                                This string is going to be included, like it is defined. So take care!
+#                                Default: empty -> not added.
+#
+# sshd_tail_additional_options:  Set this to any additional sshd_options which aren't listed above.
+#                                Anything set here will be added to the end of the sshd_config file.
+#                                This option might be useful to define complicated Match Blocks
+#                                This string is going to be included, like it is defined. So take care!
+#                                Default: empty -> not added.
 
 class sshd {
   include sshd::client 
@@ -195,8 +202,12 @@ class sshd::base {
   case $sshd_sftp_subsystem {
     '': { $sshd_sftp_subsystem = '' }
   }
-  case $sshd_additional_options {
-    '': { $sshd_additional_options = '' }
+  case $sshd_head_additional_options {
+    '': { $sshd_head_additional_options = '' }
+  }
+  case $sshd_tail_additional_options {
+    '': { $sshd_tail_additional_options = '' }
+  }
   }
   
   file { 'sshd_config':
