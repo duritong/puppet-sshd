@@ -32,9 +32,6 @@ class sshd::client::base {
 }
 
 class sshd::client::linux inherits sshd::client::base {
-    package {'openssh-clients':
-        ensure => installed,
-    }
 }
 
 class sshd::client::debian inherits sshd::client::linux {
