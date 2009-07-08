@@ -7,7 +7,11 @@
 
 # What ports, IPs and protocols we listen for
 <%- unless sshd_port.to_s.empty? then -%>
+<%- if sshd_port.to_s == 'off' then -%>
+#Port -- disabled by puppet
+<% else -%>
 Port <%= sshd_port -%>
+<% end -%>
 <%- else -%>
 Port 22
 <%- end -%>
