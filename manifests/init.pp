@@ -208,6 +208,12 @@ class sshd::base {
   case $sshd_tail_additional_options {
     '': { $sshd_tail_additional_options = '' }
   }
+  case $sshd_ensure_version {
+    '': { $sshd_ensure_version = "present" }
+  }
+
+  package{openssh:
+    ensure => $sshd_ensure_version,
   }
   
   file { 'sshd_config':
