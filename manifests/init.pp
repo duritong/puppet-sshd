@@ -28,6 +28,13 @@
 # $sshd_use_pam = yes
 # include sshd::debian
 #
+# If you need to install a version of the ssh daemon or client package other than
+# the default one that would be installed by 'ensure => installed', then you can
+# set the following variables:
+#
+# $sshd_ensure_version = "1:5.2p2-6"
+# $ssh_ensure_version = "1:5.2p2-6"
+#
 # The following is a list of the currently available variables:
 #
 # sshd_listen_address:          specify the addresses sshd should listen on
@@ -212,10 +219,6 @@ class sshd::base {
     '': { $sshd_ensure_version = "present" }
   }
 
-  package{openssh:
-    ensure => $sshd_ensure_version,
-  }
-  
   file { 'sshd_config':
     path => '/etc/ssh/sshd_config',
     owner => root,
@@ -260,6 +263,10 @@ class sshd::base {
 }
 
 class sshd::linux inherits sshd::base {
+  if $sshd_ensure_version == '' { $sshd_ensure_version = 'installed' }
+     package {'openssh':
+         ensure => $sshd_ensure_version,
+  }
   File[sshd_config]{
     require +> Package[openssh],
   }

@@ -14,14 +14,6 @@ class sshd::client {
 
 class sshd::client::base {
 
-  case $sshd_ensure_version {
-    '': { $sshd_ensure_version = "present" }
-  }
-  
-  package{openssh-clients:
-    ensure => $sshd_ensure_version,
-  }
-
   # this is needed because the gid might have changed
   file { '/etc/ssh/ssh_known_hosts':
     mode => 0644, owner => root, group => 0;
@@ -32,9 +24,13 @@ class sshd::client::base {
 }
 
 class sshd::client::linux inherits sshd::client::base {
+     if $ssh_ensure_version == '' { $ssh_ensure_version = 'installed' }
+     package {'openssh-clients':
+         ensure => $ssh_ensure_version,
+     }
 }
 
-class sshd::client::debian inherits sshd::client::linux {
+class sshd::client::debian inherits sshd::client::linux {  
     Package['openssh-clients']{
         name => 'openssh-client',
     }
