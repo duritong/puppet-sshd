@@ -263,9 +263,10 @@ class sshd::base {
 }
 
 class sshd::linux inherits sshd::base {
-  if $sshd_ensure_version == '' { $sshd_ensure_version = 'installed' }
-     package {'openssh':
-         ensure => $sshd_ensure_version,
+  if $sshd_ensure_version == '' { $sshd_ensure_version = 'installed' } {
+    package {'openssh':
+      ensure => $sshd_ensure_version,
+    }
   }
   File[sshd_config]{
     require +> Package[openssh],
