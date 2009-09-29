@@ -10,26 +10,7 @@ class sshd::client {
             }
         }
     }
-}
-
-class sshd::client::base {
-    # this is needed because the gid might have changed
-    file { '/etc/ssh/ssh_known_hosts':
-            mode => 0644, owner => root, group => 0;
-    }
-    
-    # Now collect all server keys
-    Sshkey <<||>>
-}
-
-class sshd::client::linux inherits sshd::client::base {
-    package {'openssh-clients':
-        ensure => installed,
-    }
-}
-
-class sshd::client::debian inherits sshd::client::linux {
-    Package['openssh-clients']{
-        name => 'openssh-client',
+    if $use_shorewall{
+      include shorewall::rules::out::ssh
     }
 }
