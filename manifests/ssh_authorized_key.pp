@@ -9,13 +9,13 @@ define sshd::ssh_authorized_key(
 
   $real_user = $user ? {
     false => $name,
-    "" => $name,
+    '' => $name,
     default => $user,
   }
 
   case $target {
-    undef: {
-      case $user {
+    undef,'': {
+      case $real_user {
         'root': { $real_target = '/root/.ssh/authorized_keys' }
         default: { $real_target = "/home/${user}/.ssh/authorized_keys" }
       }
