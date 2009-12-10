@@ -1,10 +1,7 @@
 class sshd::debian inherits sshd::linux {
 
   # the templates for Debian need lsbdistcodename
-  include lsb
-  File['sshd_config']{
-    require +> Package['lsb']
-  }
+  require lsb
 
   Package[openssh]{
     name => 'openssh-server',
