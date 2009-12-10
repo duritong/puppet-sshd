@@ -221,4 +221,8 @@ class sshd {
       default: { nagios::service{ "ssh_${fqdn}_port_${sshd_port}": check_command => "ssh_port!$sshd_port" } }
     }
   }
+
+  if $use_shorewall{
+    include shorewall::rules::ssh
+  }
 }
