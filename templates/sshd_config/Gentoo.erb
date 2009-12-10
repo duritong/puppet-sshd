@@ -10,11 +10,19 @@
 # possible, but leave them commented.  Uncommented options change a
 # default value.
 
-<%- unless sshd_port.to_s.empty? then %>
-Port <%= sshd_port %>
-<%- else %>
-Port 22
+<%- unless sshd_head_additional_options.to_s.empty? then %>
+<%= sshd_head_additional_options %>
 <%- end %>
+
+<%- unless sshd_port.to_s.empty? then -%>
+<%- if sshd_port.to_s == 'off' then -%>
+#Port -- disabled by puppet
+<% else -%>
+Port <%= sshd_port -%>
+<% end -%>
+<%- else -%>
+Port 22
+<%- end -%>
 
 # Use these options to restrict which interfaces/protocols sshd will bind to
 <% for address in sshd_listen_address -%>
@@ -203,8 +211,8 @@ AllowGroups <%= sshd_allowed_groups %>
 <%- end %>
 
 
-<%- unless sshd_additional_options.to_s.empty? then %>
-<%= sshd_additional_options %>
+<%- unless sshd_tail_additional_options.to_s.empty? then %>
+<%= sshd_tail_additional_options %>
 <%- end %>
 
 

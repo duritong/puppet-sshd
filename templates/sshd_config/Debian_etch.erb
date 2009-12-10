@@ -1,9 +1,17 @@
 # Package generated configuration file
 # See the sshd(8) manpage for details
 
+<%- unless sshd_head_additional_options.to_s.empty? then %>
+<%= sshd_head_additional_options %>
+<%- end %>
+
 # What ports, IPs and protocols we listen for
 <%- unless sshd_port.to_s.empty? then -%>
+<%- if sshd_port.to_s == 'off' then -%>
+#Port -- disabled by puppet
+<% else -%>
 Port <%= sshd_port -%>
+<% end -%>
 <%- else -%>
 Port 22
 <%- end -%>
@@ -131,7 +139,7 @@ KeepAlive yes
 #ReverseMappingCheck yes
 
 <%- if sshd_sftp_subsystem.to_s.empty? then %>
-#Subsystem	sftp	/usr/lib/sftp-server
+Subsystem	sftp	/usr/lib/openssh/sftp-server
 <%- else %>
 Subsystem      sftp    <%= sshd_sftp_subsystem %>
 <%- end %>
@@ -168,9 +176,9 @@ AllowUsers <%= sshd_allowed_users -%>
 AllowGroups <%= sshd_allowed_groups %>
 <%- end %>
 
+PrintMotd no
 
-<%- unless sshd_additional_options.to_s.empty? then %>
-<%= sshd_additional_options %>
+<%- unless sshd_tail_additional_options.to_s.empty? then %>
+<%= sshd_tail_additional_options %>
 <%- end %>
-
 
