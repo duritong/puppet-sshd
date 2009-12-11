@@ -14,6 +14,8 @@
 <%= sshd_head_additional_options %>
 <%- end %>
 
+# only protocol 2
+Protocol 2
 <%- unless sshd_port.to_s.empty? then -%>
 <%- if sshd_port.to_s == 'off' then -%>
 #Port -- disabled by puppet
