@@ -2,11 +2,15 @@
 define sshd::ssh_authorized_key(
     $ensure = 'present',
     $type = 'ssh-dss',
-    $key,
+    $key = 'absent',
     $user = 'root',
     $target = undef,
     $options = 'absent'
 ){
+
+  if ($ensure=='present') and ($key=='absent') {
+    fail("You have to set \$key for Sshd::Ssh_authorized_key[${name}]!")
+  }
 
   $real_user = $user ? {
     false => $name,
