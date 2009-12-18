@@ -1,5 +1,6 @@
 # wrapper to have some defaults.
 define sshd::ssh_authorized_key(
+    $ensure = 'present',
     $type = 'ssh-dss',
     $key,
     $user = 'root',
@@ -25,6 +26,7 @@ define sshd::ssh_authorized_key(
     }
   }
   ssh_authorized_key{$name:
+    ensure => $ensure,
     type => $type,
     key => $key,
     user => $real_user,
