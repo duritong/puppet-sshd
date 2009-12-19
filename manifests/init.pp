@@ -1,7 +1,7 @@
 #
 # ssh module
 #
-# Copyright 2008, micah@riseup.net
+# Copyright 2008-2009, micah@riseup.net
 # Copyright 2008, admin(at)immerda.ch
 # Copyright 2008, Puzzle ITC GmbH
 # Marcel Härry haerry+puppet(at)puzzle.ch
@@ -26,7 +26,7 @@
 #
 # $sshd_listen_address = ['10.0.0.1 192.168.0.1']
 # $sshd_use_pam = yes
-# include sshd::debian
+# include sshd
 #
 # If you need to install a version of the ssh daemon or client package other than
 # the default one that would be installed by 'ensure => installed', then you can
