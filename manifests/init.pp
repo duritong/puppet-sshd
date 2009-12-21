@@ -35,6 +35,14 @@
 # $sshd_ensure_version = "1:5.2p2-6"
 # $ssh_ensure_version = "1:5.2p2-6"
 #
+# To have nagios checks setup automatically for sshd services, simply
+# set $use_nagios = true before the class is included. If you want to
+# disable ssh nagios checking for a particular node (such as when ssh
+# is firewalled), then you can set $nagios_check_ssh to false and that
+# node will not be monitored.
+# NOTE: this requires that you are using the nagios puppet module
+# which supports the nagios native types via nagios::service 
+#
 # The following is a list of the currently available variables:
 #
 # sshd_listen_address:          specify the addresses sshd should listen on
