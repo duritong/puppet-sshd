@@ -14,14 +14,20 @@ class sshd::base {
     '': { info("no sshrsakey on $fqdn") }
     default: {
       @@sshkey{"$hostname.$domain":
-        type => ssh-rsa,
-        key => $sshrsakey_key,
+        tag    => "fqdn",
+        type   => ssh-rsa,
+        key    => $sshrsakey_key,
         ensure => present,
       }
-      @@sshkey{"$ipaddress":
-        type => ssh-rsa,
-        key => $sshrsakey,
-        ensure => present,
+      # In case the node has an internal network address,
+      # we don't define a sshkey resource using an IP address
+      if $sshd_internal_ip == "no" {
+        @@sshkey{"$ipaddress":
+          tag    => "ipaddress",
+          type   => ssh-rsa,
+          key    => $sshrsakey,
+          ensure => present,
+        }
       }
     }
   }
