@@ -211,6 +211,9 @@ class sshd {
   case $sshd_ensure_version {
     '': { $sshd_ensure_version = "present" }
   }
+  case $sshd_print_motd {
+    '': { $sshd_print_motd = "yes" }
+  }
 
   include sshd::client 
 

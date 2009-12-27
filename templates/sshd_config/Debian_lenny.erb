@@ -182,7 +182,9 @@ AllowUsers <%= sshd_allowed_users -%>
 AllowGroups <%= sshd_allowed_groups %>
 <%- end %>
 
+<%- if sshd_print_motd.to_s == 'no' then -%>
 PrintMotd no
+<%- end -%>
 
 <%- unless sshd_tail_additional_options.to_s.empty? then %>
 <%= sshd_tail_additional_options %>
