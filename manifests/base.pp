@@ -10,13 +10,13 @@ class sshd::base {
   }
 
   # Now add the key, if we've got one
-  case $sshrsakey_key {
+  case $sshrsakey {
     '': { info("no sshrsakey on $fqdn") }
     default: {
       @@sshkey{"$hostname.$domain":
         tag    => "fqdn",
         type   => ssh-rsa,
-        key    => $sshrsakey_key,
+        key    => $sshrsakey,
         ensure => present,
       }
       # In case the node has an internal network address,
