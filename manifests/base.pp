@@ -13,7 +13,7 @@ class sshd::base {
   case $sshrsakey {
     '': { info("no sshrsakey on $fqdn") }
     default: {
-      @@sshkey{"$hostname.$domain":
+      @@sshkey{"$fqdn":
         tag    => "fqdn",
         type   => ssh-rsa,
         key    => $sshrsakey,
