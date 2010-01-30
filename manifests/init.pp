@@ -214,8 +214,8 @@ class sshd {
   case $sshd_print_motd {
     '': { $sshd_print_motd = "yes" }
   }
-  case $sshd_internal_ip {
-    '': { $sshd_internal_ip = "no" }
+  case $sshd_shared_ip {
+    '': { $sshd_shared_ip = "no" }
   }
 
   include sshd::client 

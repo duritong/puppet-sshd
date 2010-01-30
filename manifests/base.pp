@@ -19,9 +19,9 @@ class sshd::base {
         key    => $sshrsakey,
         ensure => present,
       }
-      # In case the node has an internal network address,
+      # In case the node has uses a shared network address,
       # we don't define a sshkey resource using an IP address
-      if $sshd_internal_ip == "no" {
+      if $sshd_shared_ip == "no" {
         @@sshkey{"$ipaddress":
           tag    => "ipaddress",
           type   => ssh-rsa,

@@ -5,7 +5,7 @@ class sshd::client::base {
   }
 
   # Now collect all server keys
-  case $sshd_internal_ip {
+  case $sshd_shared_ip {
     no:  { Sshkey <<||>> }
     yes: { Sshkey <<| tag == "fqdn" |>> }
   }
