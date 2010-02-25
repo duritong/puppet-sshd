@@ -232,7 +232,7 @@ class sshd {
   if $use_nagios {
     case $nagios_check_ssh {
       false: { info("We don't do nagioschecks for ssh on ${fqdn}" ) }
-      default: { nagios::service{ "ssh_port_${sshd_port}": check_command => "ssh_port!$sshd_port" } }
+      default: { nagios::service{ "ssh_port_${sshd_port}": check_command => "check_ssh_port!$sshd_port" } }
     }
   }
 
