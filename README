@@ -1,0 +1,5 @@
+# sshd module for Puppet
+
+## Dependencies
+
+- shared-common: git://labs.riseup.net/shared-common
