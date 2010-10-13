@@ -9,8 +9,7 @@ class sshd::debian inherits sshd::linux {
 
   $sshd_restartandstatus = $lsbdistcodename ? {
     etch => false,
-    lenny => true,
-    default => false
+    default => true
   }
 
   Service[sshd]{
