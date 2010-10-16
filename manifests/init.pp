@@ -238,7 +238,7 @@ class sshd {
     }
     case $nagios_check_ssh {
       false: { info("We don't do nagioschecks for ssh on ${fqdn}" ) }
-      default: { sshd::nagios($sshd_ports:) }
+      default: { sshd::nagios{$sshd_ports:} }
     }
   }
 
