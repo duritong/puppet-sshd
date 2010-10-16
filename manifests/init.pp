@@ -118,8 +118,11 @@
 # 				Valid Values: yes or no
 #				Default: no
 #
-# sshd_port:                    If you want to specify a different port than the default 22
-#                               Default: 22
+# sshd_port:                    Deprecated, use sshd_ports instead.
+#
+# sshd_ports:                   If you want to specify a list of ports other than the default 22
+#                               Default: [22]
+#
 #
 # sshd_authorized_keys_file:    Set this to the location of the AuthorizedKeysFile (e.g. /etc/ssh/authorized_keys/%u)
 #                               Default: AuthorizedKeysFile	%h/.ssh/authorized_keys
@@ -193,8 +196,14 @@ class sshd {
   case $sshd_permit_empty_passwords {
     '': { $sshd_permit_empty_passwords = 'no' }
   }
-  case $sshd_port {
-    '': { $sshd_port = 22 }
+  if ( $sshd_port != '' ) && ( $sshd_ports != []) {
+      err("Cannot use sshd_port and sshd_ports at the same time.")
+  }
+  if $sshd_port != '' {
+      $sshd_ports = [ $sshd_port ]
+  }
+  elsif $sshd_port == [] {
+      $sshd_ports = [ 22 ]
   }
   case $sshd_authorized_keys_file {
     '': { $sshd_authorized_keys_file = "%h/.ssh/authorized_keys" }
@@ -224,9 +233,12 @@ class sshd {
   }
 
   if $use_nagios {
+    define sshd::nagios {
+        nagios::service{ "ssh_port_${name}": check_command => "check_ssh_port!$name" }
+    }
     case $nagios_check_ssh {
       false: { info("We don't do nagioschecks for ssh on ${fqdn}" ) }
-      default: { nagios::service{ "ssh_port_${sshd_port}": check_command => "check_ssh_port!$sshd_port" } }
+      default: { sshd::nagios($sshd_ports:) }
     }
   }
 

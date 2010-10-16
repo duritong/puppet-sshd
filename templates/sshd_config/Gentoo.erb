@@ -14,11 +14,13 @@
 <%= sshd_head_additional_options %>
 <%- end %>
 
-<%- if sshd_port.to_s == 'off' then -%>
+<%- sshd_ports.each do |port| -%>
+<%- if port.to_s == 'off' then -%>
 #Port -- disabled by puppet
 <% else -%>
-Port <%= sshd_port -%>
+Port <%= port -%>
 <% end -%>
+<%- end -%>
 
 # Use these options to restrict which interfaces/protocols sshd will bind to
 <% for address in sshd_listen_address -%>
