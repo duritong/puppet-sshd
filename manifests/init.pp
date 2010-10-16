@@ -196,7 +196,7 @@ class sshd {
   case $sshd_permit_empty_passwords {
     '': { $sshd_permit_empty_passwords = 'no' }
   }
-  if ( $sshd_port != '' ) && ( $sshd_ports != []) {
+  if ( $sshd_port != '' ) and ( $sshd_ports != []) {
       err("Cannot use sshd_port and sshd_ports at the same time.")
   }
   if $sshd_port != '' {
