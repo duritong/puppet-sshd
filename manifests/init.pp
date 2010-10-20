@@ -201,8 +201,7 @@ class sshd {
   }
   if $sshd_port != '' {
       $sshd_ports = [ $sshd_port ]
-  }
-  elsif ! $sshd_ports {
+  } elsif ! $sshd_ports {
       $sshd_ports = [ 22 ]
   }
   case $sshd_authorized_keys_file {
@@ -235,7 +234,15 @@ class sshd {
   if $use_nagios {
     case $nagios_check_ssh {
       false: { info("We don't do nagioschecks for ssh on ${fqdn}" ) }
-      default: { sshd::nagios{$sshd_ports:} }
+      default: {
+        sshd::nagios{$sshd_ports:
+          check_hostname => $nagios_check_ssh_hostname ? {
+            '' => 'absent',
+            undef => 'absent',
+            default => $nagios_check_ssh_hostname
+          }
+        }
+      }
     }
   }
 
