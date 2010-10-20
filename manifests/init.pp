@@ -247,6 +247,8 @@ class sshd {
   }
 
   if $use_shorewall{
-    include shorewall::rules::ssh
+    class{'shorewall::rules::ssh':
+      ports => $sshd_ports,
+    }
   }
 }
