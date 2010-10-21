@@ -136,6 +136,9 @@ KeepAlive yes
 #Banner /etc/issue.net
 #ReverseMappingCheck yes
 
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
 <%- if sshd_sftp_subsystem.to_s.empty? then %>
 Subsystem	sftp	/usr/lib/openssh/sftp-server
 <%- else %>
