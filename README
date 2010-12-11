@@ -3,3 +3,4 @@
 ## Dependencies
 
 - shared-common: git://labs.riseup.net/shared-common
+- shared-lsb: git://labs.riseup.net/shared-lsb
