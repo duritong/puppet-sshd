@@ -84,11 +84,6 @@
 #                               Valid values: yes or no
 #                               Default: no
 #
-# sshd_kerberos_getafstoken:    If AFS is active and user has a Kerberos 5 TGT, attempt to
-#                               acquire an AFS token before accessing the user's home directory.
-#                               Valid values: yes or no
-#                               Default: no
-#
 # sshd_kerberos_orlocalpasswd:  If password authentication through Kerberos fails, then the password
 #                               will be validated via any additional local mechanism.
 #                               Valid values: yes or no
@@ -191,9 +186,6 @@ class sshd {
   }
   case $sshd_kerberos_authentication {
     '': { $sshd_kerberos_authentication = 'no' }
-  }
-  case $sshd_kerberos_getafstoken {
-    '': { $sshd_kerberos_getafstoken = 'no' }
   }
   case $sshd_kerberos_orlocalpasswd {
     '': { $sshd_kerberos_orlocalpasswd = 'yes' }

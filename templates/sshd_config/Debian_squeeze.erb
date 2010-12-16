@@ -117,11 +117,6 @@ KerberosAuthentication yes
 <%- else -%>
 KerberosAuthentication no
 <%- end -%>
-<%- if sshd_kerberos_getafstoken.to_s == 'yes' then -%>
-KerberosGetAFSToken yes
-<%- else -%>
-KerberosGetAFSToken no
-<%- end -%>
 <%- if sshd_kerberos_orlocalpasswd.to_s == 'yes' then -%>
 KerberosOrLocalPasswd yes
 <%- else -%>
