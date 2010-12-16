@@ -190,3 +190,7 @@ PrintMotd no
 <%= sshd_tail_additional_options %>
 <%- end %>
 
+<%- if sshd_perfect_forward_secrecy.to_s == 'yes' then -%>
+Ciphers aes256-ctr
+MACs hmac-sha1
+<%- end %>

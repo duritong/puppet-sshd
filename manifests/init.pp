@@ -217,6 +217,9 @@ class sshd {
   case $sshd_shared_ip {
     '': { $sshd_shared_ip = "no" }
   }
+  case $sshd_perfect_forward_secrecy {
+    '': { $sshd_perfect_forward_secrecy = "no" }
+  }
 
   include sshd::client 
 
