@@ -6,7 +6,7 @@ Puppet::Parser::Functions::newfunction(:ssh_keygen, :type => :rvalue, :doc =>
   It accepts only fully qualified paths, everything else will fail.") do |args|
     raise Puppet::ParseError, "Wrong number of arguments" unless args.to_a.length == 1
     private_key_path = args
-    raise Puppet::ParseError, "Only fully qualified paths are accepted" unless private_key_path =~ /^\/.+/
+    raise Puppet::ParseError, "Only fully qualified paths are accepted (#{private_key_path})" unless private_key_path =~ /^\/.+/
     public_key_path = "#{private_key_path}.pub"
     raise Puppet::ParseError, "Either only the private or only the public key exists" if File.exists?(private_key_path) ^ File.exists?(public_key_path)
     [private_key_path,public_key_path].each do |path|
