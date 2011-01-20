@@ -22,7 +22,7 @@ define sshd::ssh_authorized_key(
     undef,'': {
       case $real_user {
         'root': { $real_target = '/root/.ssh/authorized_keys' }
-        default: { $real_target = "/home/${user}/.ssh/authorized_keys" }
+        default: { $real_target = "/home/${real_user}/.ssh/authorized_keys" }
       }
     }
     default: {
