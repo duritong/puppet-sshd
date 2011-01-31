@@ -167,8 +167,6 @@ AllowTcpForwarding yes
 AllowTcpForwarding no
 <%- end -%>
 
-ChallengeResponseAuthentication no
-
 <%- unless sshd_allowed_users.to_s.empty? then -%>
 AllowUsers <%= sshd_allowed_users -%>
 <%- end -%>
