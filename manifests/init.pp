@@ -76,7 +76,31 @@
 # sshd_password_authentication: If you want to enable password authentication or not
 #                               Valid values: yes or no
 #                               Default: no
-#				
+#
+# sshd_kerberos_authentication: If you want the password that is provided by the user to be
+#                               validated through the Kerberos KDC. To use this option the
+#                               server needs a Kerberos servtab which allows the verification of
+#                               the KDC's identity.
+#                               Valid values: yes or no
+#                               Default: no
+#
+# sshd_kerberos_orlocalpasswd:  If password authentication through Kerberos fails, then the password
+#                               will be validated via any additional local mechanism.
+#                               Valid values: yes or no
+#                               Default: yes
+#
+# sshd_kerberos_ticketcleanup:  Destroy the user's ticket cache file on logout?
+#                               Valid values: yes or no
+#                               Default: yes
+#
+# sshd_gssapi_authentication:   Authenticate users based on GSSAPI?
+#                               Valid values: yes or no
+#                               Default: no
+#
+# sshd_gssapi_cleanupcredentials: Destroy user's credential cache on logout?
+#                                 Valid values: yes or no
+#                                 Default: yes
+#
 # sshd_challenge_response_authentication: If you want to enable ChallengeResponseAuthentication or not
 # 				When disabled, s/key passowords are disabled
 # 				Valid values: yes or no
@@ -159,6 +183,21 @@ class sshd {
   }
   case $sshd_password_authentication {
     '': { $sshd_password_authentication = 'no' }
+  }
+  case $sshd_kerberos_authentication {
+    '': { $sshd_kerberos_authentication = 'no' }
+  }
+  case $sshd_kerberos_orlocalpasswd {
+    '': { $sshd_kerberos_orlocalpasswd = 'yes' }
+  }
+  case $sshd_kerberos_ticketcleanup {
+    '': { $sshd_kerberos_ticketcleanup = 'yes' }
+  }
+  case $sshd_gssapi_authentication {
+    '': { $sshd_gssapi_authentication = 'no' }
+  }
+  case $sshd_gssapi_cleanupcredentials {
+    '': { $sshd_gssapi_cleanupcredentials = 'yes' }
   }
   case $sshd_tcp_forwarding {
     '': { $sshd_tcp_forwarding = 'no' }
