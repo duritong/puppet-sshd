@@ -1,5 +1,7 @@
+# This file is managed by Puppet, all local modifications will be overwritten
+#
 # Package generated configuration file
-# See the sshd_config(5) manpage for details
+# See the sshd(8) manpage for details
 
 <%- unless sshd_head_additional_options.to_s.empty? then %>
 <%= sshd_head_additional_options %>
@@ -71,21 +73,18 @@ IgnoreRhosts yes
 <%- else -%>
 IgnoreRhosts no
 <% end -%>
-
 # For this to work you will also need host keys in /etc/ssh_known_hosts
 <%- if sshd_rhosts_rsa_authentication.to_s == 'yes' then -%>
 RhostsRSAAuthentication yes
 <%- else -%>
 RhostsRSAAuthentication no
 <% end -%>
-
 # similar for protocol version 2
 <%- if sshd_hostbased_authentication.to_s == 'yes' then -%>
 HostbasedAuthentication yes
 <%- else -%>
 HostbasedAuthentication no
 <% end -%>
-
 # Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
 #IgnoreUserKnownHosts yes
 
@@ -104,7 +103,7 @@ ChallengeResponseAuthentication yes
 ChallengeResponseAuthentication no
 <%- end -%>
 
-# Change to no to disable tunnelled clear text passwords
+# To disable tunneled clear text passwords, change to no here!
 <%- if sshd_password_authentication.to_s == 'yes' then -%>
 PasswordAuthentication yes
 <%- else -%>
@@ -112,14 +111,33 @@ PasswordAuthentication no
 <%- end -%>
 
 # Kerberos options
-#KerberosAuthentication no
-#KerberosGetAFSToken no
-#KerberosOrLocalPasswd yes
-#KerberosTicketCleanup yes
+<%- if sshd_kerberos_authentication.to_s == 'yes' then -%>
+KerberosAuthentication yes
+<%- else -%>
+KerberosAuthentication no
+<%- end -%>
+<%- if sshd_kerberos_orlocalpasswd.to_s == 'yes' then -%>
+KerberosOrLocalPasswd yes
+<%- else -%>
+KerberosOrLocalPasswd no
+<%- end -%>
+<%- if sshd_kerberos_ticketcleanup.to_s == 'yes' then -%>
+KerberosTicketCleanup yes
+<%- else -%>
+KerberosTicketCleanup no
+<%- end -%>
 
 # GSSAPI options
-#GSSAPIAuthentication no
-#GSSAPICleanupCredentials yes
+<%- if sshd_gssapi_authentication.to_s == 'yes' then -%>
+GSSAPIAuthentication yes
+<%- else -%>
+GSSAPIAuthentication no
+<%- end -%>
+<%- if sshd_gssapi_authentication.to_s == 'yes' then -%>
+GSSAPICleanupCredentials yes
+<%- else -%>
+GSSAPICleanupCredentials yes
+<%- end -%>
 
 <%- if sshd_x11_forwarding.to_s == 'yes' then -%>
 X11Forwarding yes
@@ -130,6 +148,7 @@ X11DisplayOffset 10
 PrintMotd no
 PrintLastLog yes
 TCPKeepAlive yes
+
 #UseLogin no
 
 #MaxStartups 10:30:60
@@ -172,8 +191,6 @@ AllowAgentForwarding yes
 <%- else -%>
 AllowAgentForwarding no
 <%- end -%>
-
-ChallengeResponseAuthentication no
 
 <%- unless sshd_allowed_users.to_s.empty? then -%>
 AllowUsers <%= sshd_allowed_users -%>
