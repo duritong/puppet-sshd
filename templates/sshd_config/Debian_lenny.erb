@@ -160,8 +160,6 @@ UsePAM yes
 UsePAM no
 <%- end -%>
 
-HostbasedUsesNameFromPacketOnly yes
-
 <%- if sshd_tcp_forwarding.to_s == 'yes' then -%>
 AllowTcpForwarding yes
 <%- else -%>
