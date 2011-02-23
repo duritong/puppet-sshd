@@ -190,6 +190,6 @@ PrintMotd no
 <%- end %>
 
 <%- if sshd_use_strong_ciphers.to_s == 'yes' then -%>
-Ciphers aes256-ctr
+Ciphers aes128-ctr
 MACs hmac-sha1
 <%- end %>
