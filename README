@@ -170,6 +170,10 @@ The following is a list of the currently available variables:
     (e.g. /etc/ssh/authorized_keys/%u). Default: AuthorizedKeysFile
     %h/.ssh/authorized_keys
 
+ $sshd_hardened_ssl
+    Use only strong SSL ciphers and MAC.
+    Values: no or yes; Default: no.
+
  $sshd_sftp_subsystem
     Set a different sftp-subystem than the default one. Might be interesting for
     sftponly usage. Default: empty -> no change of the default

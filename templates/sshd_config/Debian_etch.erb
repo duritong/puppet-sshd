@@ -172,6 +172,11 @@ AllowGroups <%= sshd_allowed_groups %>
 
 PrintMotd no
 
+<%- if sshd_hardened_ssl.to_s == 'yes' then -%>
+Ciphers aes256-ctr
+MACs hmac-sha1
+<%- end -%>
+
 <%- unless sshd_tail_additional_options.to_s.empty? then %>
 <%= sshd_tail_additional_options %>
 <%- end %>

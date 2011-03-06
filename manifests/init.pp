@@ -77,6 +77,9 @@ class sshd {
   case $sshd_authorized_keys_file {
     '': { $sshd_authorized_keys_file = "%h/.ssh/authorized_keys" }
   }
+  case $sshd_hardened_ssl {
+    '': { $sshd_hardened_ssl = 'no' }
+  }
   case $sshd_sftp_subsystem {
     '': { $sshd_sftp_subsystem = '' }
   }
