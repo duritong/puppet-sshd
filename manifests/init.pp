@@ -93,7 +93,7 @@ class sshd {
     '': { $sshd_ensure_version = "present" }
   }
 
-  include sshd::client 
+  include sshd::client
 
   case $operatingsystem {
     gentoo: { include sshd::gentoo }
@@ -101,7 +101,7 @@ class sshd {
     centos: { include sshd::centos }
     openbsd: { include sshd::openbsd }
     debian,ubuntu: { include sshd::debian }
-    default: { include sshd::default }
+    default: { include sshd::base }
   }
 
   if $use_nagios {
