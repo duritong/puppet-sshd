@@ -191,8 +191,3 @@ MACs hmac-sha1
 <%- unless sshd_tail_additional_options.to_s.empty? then %>
 <%= sshd_tail_additional_options %>
 <%- end %>
-
-<%- if sshd_use_strong_ciphers.to_s == 'yes' then -%>
-Ciphers aes128-ctr
-MACs hmac-sha1
-<%- end %>
