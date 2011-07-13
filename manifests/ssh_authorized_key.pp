@@ -3,7 +3,7 @@ define sshd::ssh_authorized_key(
     $ensure = 'present',
     $type = 'ssh-dss',
     $key = 'absent',
-    $user = 'root',
+    $user = '',
     $target = undef,
     $options = 'absent'
 ){
@@ -22,7 +22,7 @@ define sshd::ssh_authorized_key(
     undef,'': {
       case $real_user {
         'root': { $real_target = '/root/.ssh/authorized_keys' }
-        default: { $real_target = "/home/${user}/.ssh/authorized_keys" }
+        default: { $real_target = "/home/${real_user}/.ssh/authorized_keys" }
       }
     }
     default: {
