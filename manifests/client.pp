@@ -1,6 +1,11 @@
 # manifests/client.pp
 
 class sshd::client {
+
+  case $sshd_shared_ip {
+    '': { $sshd_shared_ip = "no" }
+  }
+
   case $operatingsystem {
     debian,ubuntu: { include sshd::client::debian }
     default: {
@@ -10,7 +15,9 @@ class sshd::client {
       }
     }
   }
+
   if $use_shorewall{
     include shorewall::rules::out::ssh
   }
+
 }
