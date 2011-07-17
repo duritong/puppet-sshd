@@ -194,6 +194,11 @@ The following is a list of the currently available variables:
     be useful to define complicated Match Blocks. This string is going to be
     included, like it is defined. So take care! Default: empty -> not added.
 
+ $sshd_shared_ip
+    Whether the server uses a shared network IP address. If it does, then we
+    don't want it to export an rsa key for its IP address.
+    Values: no or yes; Default: no
+
 
 Defines and functions
 ---------------------
