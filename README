@@ -174,6 +174,9 @@ The following is a list of the currently available variables:
     Use only strong SSL ciphers and MAC.
     Values: no or yes; Default: no.
 
+ $sshd_print_motd
+    Show the Message of the day when a user logs in.
+
  $sshd_sftp_subsystem
     Set a different sftp-subystem than the default one. Might be interesting for
     sftponly usage. Default: empty -> no change of the default
