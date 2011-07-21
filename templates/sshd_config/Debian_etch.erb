@@ -170,9 +170,7 @@ AllowUsers <%= sshd_allowed_users -%>
 AllowGroups <%= sshd_allowed_groups %>
 <%- end %>
 
-<%- if sshd_print_motd.to_s == 'no' then -%>
-  PrintMotd no
-<%- end -%>
+PrintMotd <%= sshd_print_motd %>
 
 <%- if sshd_hardened_ssl.to_s == 'yes' then -%>
 Ciphers aes256-ctr

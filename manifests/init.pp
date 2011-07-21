@@ -93,7 +93,12 @@ class sshd {
     '': { $sshd_ensure_version = "present" }
   }
   case $sshd_print_motd {
-    '': { $sshd_print_motd = "yes" }
+    '': {
+      case $operatingsystem {
+        debian,ubuntu: { $sshd_print_motd = "no" }
+        default: { $sshd_print_motd = "yes" }
+      }
+    }
   }
   case $sshd_shared_ip {
     '': { $sshd_shared_ip = "no" }
