@@ -170,6 +170,13 @@ The following is a list of the currently available variables:
     (e.g. /etc/ssh/authorized_keys/%u). Default: AuthorizedKeysFile
     %h/.ssh/authorized_keys
 
+ $sshd_hardened_ssl
+    Use only strong SSL ciphers and MAC.
+    Values: no or yes; Default: no.
+
+ $sshd_print_motd
+    Show the Message of the day when a user logs in.
+
  $sshd_sftp_subsystem
     Set a different sftp-subystem than the default one. Might be interesting for
     sftponly usage. Default: empty -> no change of the default
@@ -186,6 +193,11 @@ The following is a list of the currently available variables:
     set here will be added to the end of the sshd_config file. This option might
     be useful to define complicated Match Blocks. This string is going to be
     included, like it is defined. So take care! Default: empty -> not added.
+
+ $sshd_shared_ip
+    Whether the server uses a shared network IP address. If it does, then we
+    don't want it to export an rsa key for its IP address.
+    Values: no or yes; Default: no
 
 
 Defines and functions

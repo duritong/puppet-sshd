@@ -147,7 +147,7 @@ X11Forwarding no
 <%- end %>
 #X11DisplayOffset 10
 #X11UseLocalhost yes
-#PrintMotd yes
+PrintMotd <%= sshd_print_motd %>
 #PrintLastLog yes
 #TCPKeepAlive yes
 #UseLogin no
@@ -183,6 +183,11 @@ AllowGroups <%= sshd_allowed_groups %>
 #	X11Forwarding no
 #	AllowTcpForwarding no
 #	ForceCommand cvs server
+
+<%- if sshd_hardened_ssl.to_s == 'yes' then -%>
+Ciphers aes256-ctr
+MACs hmac-sha1
+<%- end -%>
 
 <%- unless sshd_tail_additional_options.to_s.empty? then %>
 <%= sshd_tail_additional_options %>

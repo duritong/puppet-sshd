@@ -1,21 +1,26 @@
-#	$OpenBSD: sshd_config,v 1.73 2005/12/06 22:38:28 reyk Exp $
+#	$OpenBSD: sshd_config,v 1.81 2009/10/08 14:03:41 markus Exp $
+#	$FreeBSD: src/crypto/openssh/sshd_config,v 1.49.2.2.2.1 2010/06/14 02:09:06 kensmith Exp $
 
 # This is the sshd server system-wide configuration file.  See
 # sshd_config(5) for more information.
 
-# This sshd was compiled with PATH=/usr/local/bin:/bin:/usr/bin
+# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
 
 # The strategy used for options in the default sshd_config shipped with
 # OpenSSH is to specify options with their default value where
 # possible, but leave them commented.  Uncommented options change a
 # default value.
 
+# Note that some of FreeBSD's defaults differ from OpenBSD's, and
+# FreeBSD has a few additional options.
+
+#VersionAddendum FreeBSD-20100308
+
 <%- unless sshd_head_additional_options.to_s.empty? then %>
 <%= sshd_head_additional_options %>
 <%- end %>
 
-# only protocol 2
-Protocol 2
+# What ports, IPs and protocols we listen for
 <%- sshd_ports.each do |port| -%>
 <%- if port.to_s == 'off' then -%>
 #Port -- disabled by puppet
@@ -24,32 +29,34 @@ Port <%= port %>
 <% end -%>
 <%- end -%>
 
-# Use these options to restrict which interfaces/protocols sshd will bind to
+#AddressFamily any
 <% for address in sshd_listen_address -%>
 ListenAddress <%= address %>
 <% end -%>
 
+# The default requires explicit activation of protocol 1
+Protocol 2
+
 # HostKey for protocol version 1
 #HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2
-#HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
 
 # Lifetime and size of ephemeral version 1 server key
 #KeyRegenerationInterval 1h
-#ServerKeyBits 768
+#ServerKeyBits 1024
 
 # Logging
 # obsoletes QuietMode and FascistLogging
-#SyslogFacility AUTH
-SyslogFacility AUTHPRIV
-#LogLevel INFO
+SyslogFacility AUTH
+LogLevel INFO
 
 # Authentication:
 
-#LoginGraceTime 2m
+LoginGraceTime 600
 <%- unless sshd_permit_root_login.to_s.empty? then -%>
-PermitRootLogin <%= sshd_permit_root_login %>
+PermitRootLogin <%= sshd_permit_root_login -%>
 <%- else -%>
 PermitRootLogin without-password
 <%- end -%>
@@ -61,6 +68,7 @@ StrictModes no
 <%- end -%>
 
 #MaxAuthTries 6
+#MaxSessions 10
 
 <%- if sshd_rsa_authentication.to_s == 'yes' then -%>
 RSAAuthentication yes
@@ -97,29 +105,23 @@ HostbasedAuthentication no
 # Change to yes if you don't trust ~/.ssh/known_hosts for
 # RhostsRSAAuthentication and HostbasedAuthentication
 #IgnoreUserKnownHosts no
-
 # Don't read the user's ~/.rhosts and ~/.shosts files
-<%- if sshd_ignore_rhosts.to_s == 'yes' then -%>
-IgnoreRhosts yes
-<%- else -%>
-IgnoreRhosts no
-<% end -%>
+#IgnoreRhosts yes
 
-# To disable tunneled clear text passwords, change to no here!
+# Change to yes to enable built-in password authentication.
 <%- if sshd_password_authentication.to_s == 'yes' then -%>
 PasswordAuthentication yes
 <%- else -%>
 PasswordAuthentication no
 <%- end -%>
 
-# To enable empty passwords, change to yes (NOT RECOMMENDED)
 <%- if sshd_permit_empty_passwords.to_s == 'yes' then -%>
 PermitEmptyPasswords yes
 <% else -%>
 PermitEmptyPasswords no
 <% end -%>
 
-# Change to no to disable s/key passwords
+# Change to no to disable PAM authentication
 <%- if sshd_challenge_response_authentication.to_s == 'yes' then -%>
 ChallengeResponseAuthentication yes
 <%- else -%>
@@ -127,34 +129,54 @@ ChallengeResponseAuthentication no
 <%- end -%>
 
 # Kerberos options
-#KerberosAuthentication no
-#KerberosOrLocalPasswd yes
-#KerberosTicketCleanup yes
-#KerberosGetAFSToken no
+<%- if sshd_kerberos_authentication.to_s == 'yes' then -%>
+KerberosAuthentication yes
+<%- else -%>
+KerberosAuthentication no
+<%- end -%>
+<%- if sshd_kerberos_orlocalpasswd.to_s == 'yes' then -%>
+KerberosOrLocalPasswd yes
+<%- else -%>
+KerberosOrLocalPasswd no
+<%- end -%>
+<%- if sshd_kerberos_ticketcleanup.to_s == 'yes' then -%>
+KerberosTicketCleanup yes
+<%- else -%>
+KerberosTicketCleanup no
+<%- end -%>
 
 # GSSAPI options
-#GSSAPIAuthentication no
-#GSSAPICleanupCredentials yes
+<%- if sshd_gssapi_authentication.to_s == 'yes' then -%>
+GSSAPIAuthentication yes
+<%- else -%>
+GSSAPIAuthentication no
+<%- end -%>
+<%- if sshd_gssapi_authentication.to_s == 'yes' then -%>
+GSSAPICleanupCredentials yes
+<%- else -%>
+GSSAPICleanupCredentials yes
+<%- end -%>
 
-# Set this to 'yes' to enable PAM authentication, account processing, 
+# Set this to 'no' to disable PAM authentication, account processing,
 # and session processing. If this is enabled, PAM authentication will 
-# be allowed through the ChallengeResponseAuthentication mechanism. 
-# Depending on your PAM configuration, this may bypass the setting of 
-# PasswordAuthentication, PermitEmptyPasswords, and 
-# "PermitRootLogin without-password". If you just want the PAM account and 
-# session checks to run without PAM authentication, then enable this but set 
-# ChallengeResponseAuthentication=no
-#UsePAM no
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
 <%- if sshd_use_pam.to_s == 'yes' then -%>
 UsePAM yes
 <%- else -%>
 UsePAM no
 <%- end -%>
 
-# Accept locale-related environment variables
-AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES 
-AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT 
-AcceptEnv LC_IDENTIFICATION LC_ALL
+<%- if sshd_agent_forwarding.to_s == 'yes' then -%>
+AllowAgentForwarding yes
+<%- else -%>
+AllowAgentForwarding no
+<%- end -%>
 
 <%- if sshd_tcp_forwarding.to_s == 'yes' then -%>
 AllowTcpForwarding yes
@@ -163,24 +185,23 @@ AllowTcpForwarding no
 <%- end -%>
 
 #GatewayPorts no
-#X11Forwarding no
 <%- if sshd_x11_forwarding.to_s == 'yes' then -%>
 X11Forwarding yes
 <%- else -%>
 X11Forwarding no
 <%- end -%>
-#X11DisplayOffset 10
+
+X11DisplayOffset 10
 #X11UseLocalhost yes
 PrintMotd <%= sshd_print_motd %>
 #PrintLastLog yes
-#TCPKeepAlive yes
+TCPKeepAlive yes
 #UseLogin no
 #UsePrivilegeSeparation yes
 #PermitUserEnvironment no
 #Compression delayed
 #ClientAliveInterval 0
 #ClientAliveCountMax 3
-#ShowPatchLevel no
 #UseDNS yes
 #PidFile /var/run/sshd.pid
 #MaxStartups 10
@@ -188,21 +209,28 @@ PrintMotd <%= sshd_print_motd %>
 #ChrootDirectory none
 
 # no default banner path
-#Banner /some/path
+#Banner none
 
 # override default of no subsystems
-<%- if sshd_sftp_subsystem.to_s.empty? then -%>
-Subsystem	sftp	/usr/libexec/openssh/sftp-server
-<%- else -%>
+<%- if sshd_sftp_subsystem.to_s.empty? then %>
+Subsystem	sftp	/usr/libexec/sftp-server
+<%- else %>
 Subsystem      sftp    <%= sshd_sftp_subsystem %>
-<%- end -%>
+<%- end %>
+
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#	X11Forwarding no
+#	AllowTcpForwarding no
+#	ForceCommand cvs server
 
 <%- unless sshd_allowed_users.to_s.empty? then -%>
-AllowUsers <%= sshd_allowed_users %>
+AllowUsers <%= sshd_allowed_users -%>
 <%- end -%>
-<%- unless sshd_allowed_groups.to_s.empty? then -%>
+
+<%- unless sshd_allowed_groups.to_s.empty? then %>
 AllowGroups <%= sshd_allowed_groups %>
-<%- end -%>
+<%- end %>
 
 <%- if sshd_hardened_ssl.to_s == 'yes' then -%>
 Ciphers aes256-ctr
@@ -212,3 +240,4 @@ MACs hmac-sha1
 <%- unless sshd_tail_additional_options.to_s.empty? then %>
 <%= sshd_tail_additional_options %>
 <%- end %>
+

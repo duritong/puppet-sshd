@@ -77,6 +77,9 @@ class sshd {
   case $sshd_authorized_keys_file {
     '': { $sshd_authorized_keys_file = "%h/.ssh/authorized_keys" }
   }
+  case $sshd_hardened_ssl {
+    '': { $sshd_hardened_ssl = 'no' }
+  }
   case $sshd_sftp_subsystem {
     '': { $sshd_sftp_subsystem = '' }
   }
@@ -89,8 +92,19 @@ class sshd {
   case $sshd_ensure_version {
     '': { $sshd_ensure_version = "present" }
   }
+  case $sshd_print_motd {
+    '': {
+      case $operatingsystem {
+        debian,ubuntu: { $sshd_print_motd = "no" }
+        default: { $sshd_print_motd = "yes" }
+      }
+    }
+  }
+  case $sshd_shared_ip {
+    '': { $sshd_shared_ip = "no" }
+  }
 
-  include sshd::client 
+  include sshd::client
 
   case $operatingsystem {
     gentoo: { include sshd::gentoo }
@@ -98,7 +112,7 @@ class sshd {
     centos: { include sshd::centos }
     openbsd: { include sshd::openbsd }
     debian,ubuntu: { include sshd::debian }
-    default: { include sshd::default }
+    default: { include sshd::base }
   }
 
   if $use_nagios {

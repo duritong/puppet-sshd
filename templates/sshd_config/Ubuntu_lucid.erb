@@ -157,11 +157,21 @@ UsePAM yes
 UsePAM no
 <%- end -%>
 
+HostbasedUsesNameFromPacketOnly yes
+
 <%- if sshd_tcp_forwarding.to_s == 'yes' then -%>
 AllowTcpForwarding yes
 <%- else -%>
 AllowTcpForwarding no
 <%- end -%>
+
+<%- if sshd_agent_forwarding.to_s == 'yes' then -%>
+AllowAgentForwarding yes
+<%- else -%>
+AllowAgentForwarding no
+<%- end -%>
+
+ChallengeResponseAuthentication no
 
 <%- unless sshd_allowed_users.to_s.empty? then -%>
 AllowUsers <%= sshd_allowed_users -%>
@@ -172,11 +182,11 @@ AllowGroups <%= sshd_allowed_groups %>
 
 PrintMotd <%= sshd_print_motd %>
 
-<%- if sshd_hardened_ssl.to_s == 'yes' then -%>
-Ciphers aes256-ctr
-MACs hmac-sha1
-<%- end -%>
-
 <%- unless sshd_tail_additional_options.to_s.empty? then %>
 <%= sshd_tail_additional_options %>
+<%- end %>
+
+<%- if sshd_hardened_ssl.to_s == 'yes' then -%>
+Ciphers aes128-ctr
+MACs hmac-sha1
 <%- end %>
