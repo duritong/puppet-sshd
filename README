@@ -210,7 +210,7 @@ Generate a public/private keypair with the ssh_keygen function. For example, the
 following will generate ssh keys and put the different parts of the key into
 variables:
 
-$ssh_keys = ssh_keygen("${$ssh_key_basepath}/backup/keys/${fqdn}/${backup_host}")
+$ssh_keys = ssh_keygen("${$ssh_key_basepath}/backup/keys/${::fqdn}/${backup_host}")
 $public_key = split($ssh_keys[1],' ')
 $sshkey_type => $public_key[0]
 $sshkey => $public_key[1]
