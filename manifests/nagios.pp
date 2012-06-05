@@ -11,7 +11,7 @@ define sshd::nagios(
     'absent': {
       nagios::service{"ssh_port_${name}":
         ensure => $ensure,
-        check_command => "check_ssh_port!$real_port"
+        check_command => "check_ssh_port!${real_port}"
       }
     }
     default: {

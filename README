@@ -24,11 +24,12 @@ Nagios
 ------
 
 To have nagios checks setup automatically for sshd services, simply set
-$use_nagios = true before the class is included. If you want to disable ssh
+use_nagios to true in hiera. If you want to disable ssh
 nagios checking for a particular node (such as when ssh is firewalled), then you
-can set $nagios_check_ssh to false and that node will not be monitored.  
+can set the class parameter nagios_check_ssh to false and that node will not bei
+monitored.  
 
-Nagios will automatically check the ports defined in $sshd_ports, and the
+Nagios will automatically check the ports defined in $sshd::ports, and the
 hostname specified by $nagios_check_ssh_hostname.
 
 NOTE: this requires that you are using the shared-nagios puppet module which
