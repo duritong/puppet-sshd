@@ -74,7 +74,7 @@ describe "the ssh_keygen function" do
       File.stubs(:exists?).with("/tmp/a/b/c").returns(false)
       File.stubs(:exists?).with("/tmp/a/b/c.pub").returns(false)
       File.stubs(:directory?).with("/tmp/a/b").returns(false)
-      Puppet::Util.expects(:recmkdir).with("/tmp/a/b",0700)
+      FileUtils.expects(:mkdir_p).with("/tmp/a/b", :mode => 0700)
       Puppet::Util.expects(:execute).returns("")
       result = @scope.function_ssh_keygen('/tmp/a/b/c')
       result.length.should == 2

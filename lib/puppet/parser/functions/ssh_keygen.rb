@@ -14,7 +14,10 @@ Puppet::Parser::Functions::newfunction(:ssh_keygen, :type => :rvalue, :doc =>
     end
 
     dir = File.dirname(private_key_path)
-    Puppet::Util.recmkdir(dir,0700) unless File.directory?(dir)
+    unless File.directory?(dir)
+      require 'fileutils'
+      FileUtils.mkdir_p(dir, :mode => 0700)
+    end
     unless [private_key_path,public_key_path].all?{|path| File.exists?(path) }
       output = Puppet::Util.execute(['/usr/bin/ssh-keygen','-t', 'rsa', '-b', '4096', '-f', private_key_path, '-P', '', '-q'])
       raise Puppet::ParseError, "Something went wrong during key generation! Output: #{output}" unless output.empty?

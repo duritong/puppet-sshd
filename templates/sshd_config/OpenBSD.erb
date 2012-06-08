@@ -95,7 +95,7 @@ AllowTcpForwarding <%= scope.lookupvar('sshd::tcp_forwarding') %>
 X11Forwarding <%= scope.lookupvar('sshd::x11_forwarding') %>
 #X11DisplayOffset 10
 #X11UseLocalhost yes
-PrintMotd <%= sshd_print_motd %>
+PrintMotd <%= scope.lookupvar('sshd::sshd_print_motd') %>
 #PrintLastLog yes
 #TCPKeepAlive yes
 #UseLogin no
