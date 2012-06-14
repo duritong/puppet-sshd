@@ -1,8 +1,9 @@
 # manifests/client.pp
 
 class sshd::client(
-  $shared_ip = hiera('sshd_shared_ip','no'),
-  $ensure_version = hiera('sshd_ensure_version','installed')
+  $shared_ip = 'no',
+  $ensure_version = 'installed',
+  $manage_shorewall = false
 ) {
 
   case $::operatingsystem {
@@ -15,7 +16,7 @@ class sshd::client(
     }
   }
 
-  if hiera('use_shorewall',false) {
+  if $manage_shorewall{
     include shorewall::rules::out::ssh
   }
 }

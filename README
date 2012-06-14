@@ -24,7 +24,7 @@ Nagios
 ------
 
 To have nagios checks setup automatically for sshd services, simply set
-use_nagios to true in hiera. If you want to disable ssh
+manage_nagios to true for that class. If you want to disable ssh
 nagios checking for a particular node (such as when ssh is firewalled), then you
 can set the class parameter nagios_check_ssh to false and that node will not bei
 monitored.  
