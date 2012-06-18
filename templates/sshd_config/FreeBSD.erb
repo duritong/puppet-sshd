@@ -90,7 +90,7 @@ ChallengeResponseAuthentication <%= scope.lookupvar('sshd::challenge_response_au
 
 # Kerberos options
 KerberosAuthentication <%= scope.lookupvar('sshd::kerberos_authentication') %>
-KerberosOrLocalPasswd <%= scope.lookupvar('sshd::kerberos_aorlocalpasswd') %>
+KerberosOrLocalPasswd <%= scope.lookupvar('sshd::kerberos_orlocalpasswd') %>
 KerberosTicketCleanup <%= scope.lookupvar('sshd::kerberos_ticketcleanup') %>
 
 # GSSAPI options
