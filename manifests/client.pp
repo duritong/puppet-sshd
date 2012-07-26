@@ -2,6 +2,8 @@
 
 class sshd::client {
 
+  include common::moduledir
+
   case $sshd_shared_ip {
     '': { $sshd_shared_ip = "no" }
   }
