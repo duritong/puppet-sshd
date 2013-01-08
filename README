@@ -3,6 +3,13 @@ Introduction
 
 This puppet module manages OpenSSH configuration and services.
 
+!! Upgrade Notice (01/2013) !!
+
+This module now uses parameterized classes, where it used global variables
+before. So please whatch out before pulling, you need to change the 
+class declarations in your manifest !
+
+
 Dependencies
 ------------
 
