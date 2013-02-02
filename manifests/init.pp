@@ -37,8 +37,8 @@ class sshd(
 ) {
 
   class{'sshd::client':
-    shared_ip => $sshd::shared_ip,
-    ensure_version => $sshd::ensure_version,
+    shared_ip        => $sshd::shared_ip,
+    ensure_version   => $sshd::ensure_version,
     manage_shorewall => $manage_shorewall,
   }
 
@@ -58,7 +58,7 @@ class sshd(
 
   if $manage_shorewall {
     class{'shorewall::rules::ssh':
-      ports => $ports,
+      ports  => $ports,
       source => $shorewall_source
     }
   }
