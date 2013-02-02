@@ -8,14 +8,14 @@ class sshd::debian inherits sshd::linux {
   }
 
   $sshd_restartandstatus = $::lsbdistcodename ? {
-    etch => false,
+    etch    => false,
     default => true
   }
 
   Service[sshd]{
-    name => 'ssh',
-    pattern => 'sshd',
-    hasstatus => $sshd_restartandstatus,
+    name       => 'ssh',
+    pattern    => 'sshd',
+    hasstatus  => $sshd_restartandstatus,
     hasrestart => $sshd_restartandstatus,
   }
 }
