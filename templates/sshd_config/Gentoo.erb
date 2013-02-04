@@ -1,3 +1,5 @@
+# This file is managed by Puppet, all local modifications will be overwritten
+#
 #	$OpenBSD: sshd_config,v 1.75 2007/03/19 01:01:29 djm Exp $
 
 # This is the sshd server system-wide configuration file.  See
@@ -155,4 +157,3 @@ MACs hmac-sha1
 <% unless (s=scope.lookupvar('sshd::tail_additional_options')).empty? -%>
 <%= s %>
 <% end -%>
-

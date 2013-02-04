@@ -1,5 +1,7 @@
-#	$OpenBSD: sshd_config,v 1.81 2009/10/08 14:03:41 markus Exp $
-#	$FreeBSD: src/crypto/openssh/sshd_config,v 1.49.2.2.2.1 2010/06/14 02:09:06 kensmith Exp $
+# This file is managed by Puppet, all local modifications will be overwritten
+#
+# $OpenBSD: sshd_config,v 1.82 2010/09/06 17:10:19 naddy Exp $
+# $FreeBSD: stable/9/crypto/openssh/sshd_config 224638 2011-08-03 19:14:22Z brooks $
 
 # This is the sshd server system-wide configuration file.  See
 # sshd_config(5) for more information.
@@ -14,7 +16,7 @@
 # Note that some of FreeBSD's defaults differ from OpenBSD's, and
 # FreeBSD has a few additional options.
 
-#VersionAddendum FreeBSD-20100308
+#VersionAddendum FreeBSD-20110503
 
 <% unless (s=scope.lookupvar('sshd::head_additional_options')).empty? -%>
 <%= s %>
@@ -35,13 +37,14 @@ ListenAddress <%= address %>
 <% end -%>
 
 # The default requires explicit activation of protocol 1
-Protocol 2
+#Protocol 2
 
 # HostKey for protocol version 1
 #HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2
-HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_dsa_key
+#HostKey /etc/ssh/ssh_host_rsa_key
+#HostKey /etc/ssh/ssh_host_dsa_key
+#HostKey /etc/ssh/ssh_host_ecdsa_key
 
 # Lifetime and size of ephemeral version 1 server key
 #KeyRegenerationInterval 1h
@@ -49,31 +52,25 @@ HostKey /etc/ssh/ssh_host_dsa_key
 
 # Logging
 # obsoletes QuietMode and FascistLogging
-SyslogFacility AUTH
-LogLevel INFO
+#SyslogFacility AUTH
+#LogLevel INFO
 
 # Authentication:
 
-LoginGraceTime 600
+#LoginGraceTime 2m
 PermitRootLogin <%= scope.lookupvar('sshd::permit_root_login') %>
-
 StrictModes <%= scope.lookupvar('sshd::strict_modes') %>
-
 #MaxAuthTries 6
 #MaxSessions 10
 
 RSAAuthentication <%= scope.lookupvar('sshd::rsa_authentication') %>
-
 PubkeyAuthentication <%= scope.lookupvar('sshd::pubkey_authentication') %>
-
 AuthorizedKeysFile <%= scope.lookupvar('sshd::authorized_keys_file') %>
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
 RhostsRSAAuthentication <%= scope.lookupvar('sshd::rhosts_rsa_authentication') %>
-
 # similar for protocol version 2
 HostbasedAuthentication <%= scope.lookupvar('sshd::hostbased_authentication') %>
-
 # Change to yes if you don't trust ~/.ssh/known_hosts for
 # RhostsRSAAuthentication and HostbasedAuthentication
 #IgnoreUserKnownHosts no
@@ -82,7 +79,6 @@ HostbasedAuthentication <%= scope.lookupvar('sshd::hostbased_authentication') %>
 
 # Change to yes to enable built-in password authentication.
 PasswordAuthentication <%= scope.lookupvar('sshd::password_authentication') %>
-
 PermitEmptyPasswords <%= scope.lookupvar('sshd::permit_empty_passwords') %>
 
 # Change to no to disable PAM authentication
@@ -109,17 +105,15 @@ GSSAPICleanupCredentials <%= scope.lookupvar('sshd::gssapi_cleanupcredentials') 
 UsePAM <%= scope.lookupvar('sshd::use_pam') %>
 
 AllowAgentForwarding <%= scope.lookupvar('sshd::agent_forwarding') %>
-
 AllowTcpForwarding <%= scope.lookupvar('sshd::tcp_forwarding') %>
 
 #GatewayPorts no
 X11Forwarding <%= scope.lookupvar('sshd::x11_forwarding') %>
-
 X11DisplayOffset 10
 #X11UseLocalhost yes
 PrintMotd <%= sshd_print_motd %>
 #PrintLastLog yes
-TCPKeepAlive yes
+#TCPKeepAlive yes
 #UseLogin no
 #UsePrivilegeSeparation yes
 #PermitUserEnvironment no
@@ -136,7 +130,19 @@ TCPKeepAlive yes
 #Banner none
 
 # override default of no subsystems
-Subsystem      sftp    <%= (s=scope.lookupvar('sshd::sftp_subsystem')).empty? ? '/usr/libexec/sftp-server' : s %>
+Subsystem sftp <%= (s=scope.lookupvar('sshd::sftp_subsystem')).empty? ? '/usr/libexec/sftp-server' : s %>
+
+# Disable HPN tuning improvements.
+#HPNDisabled no
+
+# Buffer size for HPN to non-HPN connections.
+#HPNBufferSize 2048
+
+# TCP receive socket buffer polling for HPN.  Disable on non autotuning kernels.
+#TcpRcvBufPoll yes
+
+# Allow the use of the NONE cipher.
+#NoneEnabled no
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs
