@@ -13,8 +13,8 @@ define sshd::ssh_authorized_key(
   }
 
   $real_user = $user ? {
-    false => $name,
-    '' => $name,
+    false   => $name,
+    ''      => $name,
     default => $user,
   }
 
@@ -31,14 +31,14 @@ define sshd::ssh_authorized_key(
   }
   ssh_authorized_key{$name:
     ensure => $ensure,
-    type => $type,
-    key => $key,
-    user => $real_user,
+    type   => $type,
+    key    => $key,
+    user   => $real_user,
     target => $real_target,
   }
 
   case $options {
-    'absent': { info("not setting any option for ssh_authorized_key: $name") }
+    'absent': { info("not setting any option for ssh_authorized_key: ${name}") }
     default: {
       Ssh_authorized_key[$name]{
         options => $options,
