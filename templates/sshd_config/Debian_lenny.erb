@@ -1,3 +1,5 @@
+# This file is managed by Puppet, all local modifications will be overwritten
+#
 # Package generated configuration file
 # See the sshd(8) manpage for details
 
@@ -38,7 +40,7 @@ SyslogFacility AUTH
 LogLevel INFO
 
 # Authentication:
-LoginGraceTime 600
+LoginGraceTime 120
 PermitRootLogin <%= scope.lookupvar('sshd::permit_root_login') %>
 
 StrictModes <%= scope.lookupvar('sshd::strict_modes') %>

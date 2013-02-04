@@ -1,12 +1,11 @@
 # This file is managed by Puppet, all local modifications will be overwritten
 #
 # Package generated configuration file
-# See the sshd(8) manpage for details
+# See the sshd_config(5) manpage for details
 
 <% unless (s=scope.lookupvar('sshd::head_additional_options')).empty? -%>
 <%= s %>
 <% end -%>
-
 # What ports, IPs and protocols we listen for
 <% scope.lookupvar('sshd::ports').to_a.each do |port| -%>
 <% if port == 'off' -%>
@@ -15,7 +14,6 @@
 Port <%= port %>
 <% end -%>
 <% end -%>
-
 # Use these options to restrict which interfaces/protocols sshd will bind to
 <% scope.lookupvar('sshd::listen_address').to_a.each do |address| -%>
 ListenAddress <%= address %>
@@ -24,6 +22,7 @@ Protocol 2
 # HostKeys for protocol version 2
 HostKey /etc/ssh/ssh_host_rsa_key
 HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
 #Privilege Separation is turned on for security
 UsePrivilegeSeparation yes
 
@@ -38,13 +37,10 @@ LogLevel INFO
 # Authentication:
 LoginGraceTime 120
 PermitRootLogin <%= scope.lookupvar('sshd::permit_root_login') %>
-
 StrictModes <%= scope.lookupvar('sshd::strict_modes') %>
 
 RSAAuthentication <%= scope.lookupvar('sshd::rsa_authentication') %>
-
 PubkeyAuthentication <%= scope.lookupvar('sshd::pubkey_authentication') %>
-
 AuthorizedKeysFile <%= scope.lookupvar('sshd::authorized_keys_file') %>
 
 # Don't read the user's ~/.rhosts and ~/.shosts files
@@ -63,7 +59,7 @@ PermitEmptyPasswords <%= scope.lookupvar('sshd::permit_empty_passwords') %>
 # some PAM modules and threads)
 ChallengeResponseAuthentication <%= scope.lookupvar('sshd::challenge_response_authentication') %>
 
-# To disable tunneled clear text passwords, change to no here!
+# Change to no to disable tunnelled clear text passwords
 PasswordAuthentication <%= scope.lookupvar('sshd::password_authentication') %>
 
 # Kerberos options
@@ -80,7 +76,6 @@ X11DisplayOffset 10
 PrintMotd <%= scope.lookupvar('sshd::print_motd') %>
 PrintLastLog yes
 TCPKeepAlive yes
-
 #UseLogin no
 
 #MaxStartups 10:30:60
@@ -103,21 +98,17 @@ Subsystem      sftp    <%= (s=scope.lookupvar('sshd::sftp_subsystem')).empty? ? 
 UsePAM <%= scope.lookupvar('sshd::use_pam') %>
 
 AllowTcpForwarding <%= scope.lookupvar('sshd::tcp_forwarding') %>
-
 AllowAgentForwarding <%= scope.lookupvar('sshd::agent_forwarding') %>
-
 <% unless (s=scope.lookupvar('sshd::allowed_users')).empty? -%>
 AllowUsers <%= s %>
 <% end -%>
 <% unless (s=scope.lookupvar('sshd::allowed_groups')).empty? -%>
 AllowGroups <%= s %>
 <%- end -%>
-
 <% if scope.lookupvar('sshd::hardened_ssl') == 'yes' -%>
 Ciphers aes256-ctr
 MACs hmac-sha1
 <% end -%>
-
 <% unless (s=scope.lookupvar('sshd::tail_additional_options')).empty? -%>
 <%= s %>
 <% end -%>
