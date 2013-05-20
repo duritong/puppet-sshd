@@ -1,8 +1,8 @@
 class sshd::openbsd inherits sshd::base {
   Service[sshd]{
-    restart   => '/bin/kill -HUP `/bin/cat /var/run/sshd.pid`',
-    stop      => '/bin/kill `/bin/cat /var/run/sshd.pid`',
-    start     => '/usr/sbin/sshd',
-    hasstatus => false,
+    restart => '/bin/kill -HUP `/bin/cat /var/run/sshd.pid`',
+    stop    => '/bin/kill `/bin/cat /var/run/sshd.pid`',
+    start   => '/usr/sbin/sshd',
+    status  => '/usr/bin/pgrep -P `/bin/cat /var/run/sshd.pid`',
   }
 }
