@@ -1,5 +1,5 @@
 class sshd(
-  $manage_nagios = true,
+  $manage_nagios = false,
   $nagios_check_ssh_hostname = 'absent',
   $ports = [ 22 ],
   $shared_ip = 'no',
