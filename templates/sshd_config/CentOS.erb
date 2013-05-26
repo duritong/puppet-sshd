@@ -10,22 +10,22 @@
 # possible, but leave them commented.  Uncommented options change a
 # default value.
 
-<%- unless sshd_head_additional_options.to_s.empty? then %>
-<%= sshd_head_additional_options %>
-<%- end %>
+<% unless (s=scope.lookupvar('sshd::head_additional_options')).empty? -%>
+<%= s %>
+<% end -%>
 
 # only protocol 2
 Protocol 2
-<%- sshd_ports.each do |port| -%>
-<%- if port.to_s == 'off' then -%>
+<% scope.lookupvar('sshd::ports').to_a.each do |port| -%>
+<% if port == 'off' -%>
 #Port -- disabled by puppet
 <% else -%>
 Port <%= port %>
 <% end -%>
-<%- end -%>
+<% end -%>
 
 # Use these options to restrict which interfaces/protocols sshd will bind to
-<% for address in sshd_listen_address -%>
+<% scope.lookupvar('sshd::listen_address').to_a.each do |address| -%>
 ListenAddress <%= address %>
 <% end -%>
 
@@ -48,83 +48,39 @@ SyslogFacility AUTHPRIV
 # Authentication:
 
 #LoginGraceTime 2m
-<%- unless sshd_permit_root_login.to_s.empty? then -%>
-PermitRootLogin <%= sshd_permit_root_login %>
-<%- else -%>
-PermitRootLogin without-password
-<%- end -%>
+PermitRootLogin <%= scope.lookupvar('sshd::permit_root_login') %>
 
-<%- if sshd_strict_modes.to_s == 'yes' then -%>
-StrictModes yes
-<%- else -%>
-StrictModes no
-<%- end -%>
+StrictModes <%= scope.lookupvar('sshd::strict_modes') %>
 
 #MaxAuthTries 6
 
-<%- if sshd_rsa_authentication.to_s == 'yes' then -%>
-RSAAuthentication yes
-<%- else -%>
-RSAAuthentication no
-<%- end -%>
+RSAAuthentication <%= scope.lookupvar('sshd::rsa_authentication') %>
 
-<%- if sshd_pubkey_authentication.to_s == 'yes' then -%>
-PubkeyAuthentication yes
-<%- else -%>
-PubkeyAuthentication no
-<%- end -%>
+PubkeyAuthentication <%= scope.lookupvar('sshd::pubkey_authentication') %>
 
-<%- unless sshd_authorized_keys_file.to_s.empty? then -%>
-AuthorizedKeysFile <%= sshd_authorized_keys_file %>
-<%- else -%>
-AuthorizedKeysFile %h/.ssh/authorized_keys
-<%- end -%>
+AuthorizedKeysFile <%= scope.lookupvar('sshd::authorized_keys_file') %>
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
-<%- if sshd_rhosts_rsa_authentication.to_s == 'yes' then -%>
-RhostsRSAAuthentication yes
-<%- else -%>
-RhostsRSAAuthentication no
-<% end -%>
+RhostsRSAAuthentication <%= scope.lookupvar('sshd::rhosts_rsa_authentication') %>
 
 # similar for protocol version 2
-<%- if sshd_hostbased_authentication.to_s == 'yes' then -%>
-HostbasedAuthentication yes
-<%- else -%>
-HostbasedAuthentication no
-<% end -%>
+HostbasedAuthentication <%= scope.lookupvar('sshd::hostbased_authentication') %>
 
 # Change to yes if you don't trust ~/.ssh/known_hosts for
 # RhostsRSAAuthentication and HostbasedAuthentication
 #IgnoreUserKnownHosts no
 
 # Don't read the user's ~/.rhosts and ~/.shosts files
-<%- if sshd_ignore_rhosts.to_s == 'yes' then -%>
-IgnoreRhosts yes
-<%- else -%>
-IgnoreRhosts no
-<% end -%>
+IgnoreRhosts <%= scope.lookupvar('sshd::ignore_rhosts') %>
 
 # To disable tunneled clear text passwords, change to no here!
-<%- if sshd_password_authentication.to_s == 'yes' then -%>
-PasswordAuthentication yes
-<%- else -%>
-PasswordAuthentication no
-<%- end -%>
+PasswordAuthentication <%= scope.lookupvar('sshd::password_authentication') %>
 
 # To enable empty passwords, change to yes (NOT RECOMMENDED)
-<%- if sshd_permit_empty_passwords.to_s == 'yes' then -%>
-PermitEmptyPasswords yes
-<% else -%>
-PermitEmptyPasswords no
-<% end -%>
+PermitEmptyPasswords <%= scope.lookupvar('sshd::permit_empty_passwords') %>
 
 # Change to no to disable s/key passwords
-<%- if sshd_challenge_response_authentication.to_s == 'yes' then -%>
-ChallengeResponseAuthentication yes
-<%- else -%>
-ChallengeResponseAuthentication no
-<%- end -%>
+ChallengeResponseAuthentication <%= scope.lookupvar('sshd::challenge_response_authentication') %>
 
 # Kerberos options
 #KerberosAuthentication no
@@ -145,33 +101,21 @@ ChallengeResponseAuthentication no
 # session checks to run without PAM authentication, then enable this but set 
 # ChallengeResponseAuthentication=no
 #UsePAM no
-<%- if sshd_use_pam.to_s == 'yes' then -%>
-UsePAM yes
-<%- else -%>
-UsePAM no
-<%- end -%>
+UsePAM <%= scope.lookupvar('sshd::use_pam') %>
 
 # Accept locale-related environment variables
 AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES 
 AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT 
 AcceptEnv LC_IDENTIFICATION LC_ALL
 
-<%- if sshd_tcp_forwarding.to_s == 'yes' then -%>
-AllowTcpForwarding yes
-<%- else -%>
-AllowTcpForwarding no
-<%- end -%>
+AllowTcpForwarding <%= scope.lookupvar('sshd::tcp_forwarding') %>
 
 #GatewayPorts no
 #X11Forwarding no
-<%- if sshd_x11_forwarding.to_s == 'yes' then -%>
-X11Forwarding yes
-<%- else -%>
-X11Forwarding no
-<%- end -%>
+X11Forwarding <%= scope.lookupvar('sshd::x11_forwarding') %>
 #X11DisplayOffset 10
 #X11UseLocalhost yes
-PrintMotd <%= sshd_print_motd %>
+PrintMotd <%= scope.lookupvar('sshd::print_motd') %>
 #PrintLastLog yes
 #TCPKeepAlive yes
 #UseLogin no
@@ -191,24 +135,20 @@ PrintMotd <%= sshd_print_motd %>
 #Banner /some/path
 
 # override default of no subsystems
-<%- if sshd_sftp_subsystem.to_s.empty? then -%>
-Subsystem	sftp	/usr/libexec/openssh/sftp-server
-<%- else -%>
-Subsystem      sftp    <%= sshd_sftp_subsystem %>
+Subsystem      sftp    <%= (s=scope.lookupvar('sshd::sftp_subsystem')).empty? ? '/usr/libexec/openssh/sftp-server' : s %> 
+
+<% unless (s=scope.lookupvar('sshd::allowed_users')).empty? -%>
+AllowUsers <%= s %>
+<% end -%>
+<% unless (s=scope.lookupvar('sshd::allowed_groups')).empty? -%>
+AllowGroups <%= s %>
 <%- end -%>
 
-<%- unless sshd_allowed_users.to_s.empty? then -%>
-AllowUsers <%= sshd_allowed_users %>
-<%- end -%>
-<%- unless sshd_allowed_groups.to_s.empty? then -%>
-AllowGroups <%= sshd_allowed_groups %>
-<%- end -%>
-
-<%- if sshd_hardened_ssl.to_s == 'yes' then -%>
+<% if scope.lookupvar('sshd::hardened_ssl') == 'yes' -%>
 Ciphers aes256-ctr
 MACs hmac-sha1
-<%- end -%>
+<% end -%>
 
-<%- unless sshd_tail_additional_options.to_s.empty? then %>
-<%= sshd_tail_additional_options %>
-<%- end %>
+<% unless (s=scope.lookupvar('sshd::tail_additional_options')).empty? -%>
+<%= s %>
+<% end -%>

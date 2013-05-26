@@ -7,7 +7,7 @@ class sshd::debian inherits sshd::linux {
     name => 'openssh-server',
   }
 
-  $sshd_restartandstatus = $lsbdistcodename ? {
+  $sshd_restartandstatus = $::lsbdistcodename ? {
     etch => false,
     default => true
   }

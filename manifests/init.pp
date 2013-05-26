@@ -1,138 +1,65 @@
-class sshd {
-   # prepare variables to use in templates
-  case $sshd_listen_address {
-    '': { $sshd_listen_address = [ '0.0.0.0', '::' ] }
-  }
-  case $sshd_allowed_users {
-    '': { $sshd_allowed_users = '' }
-  }
-  case $sshd_allowed_groups {
-    '': { $sshd_allowed_groups = '' }
-  }
-  case $sshd_use_pam {
-    '': { $sshd_use_pam = 'no' }
-  }
-  case $sshd_permit_root_login {
-    '': { $sshd_permit_root_login = 'without-password' }
-  }
-  case $sshd_password_authentication {
-    '': { $sshd_password_authentication = 'no' }
-  }
-  case $sshd_kerberos_authentication {
-    '': { $sshd_kerberos_authentication = 'no' }
-  }
-  case $sshd_kerberos_orlocalpasswd {
-    '': { $sshd_kerberos_orlocalpasswd = 'yes' }
-  }
-  case $sshd_kerberos_ticketcleanup {
-    '': { $sshd_kerberos_ticketcleanup = 'yes' }
-  }
-  case $sshd_gssapi_authentication {
-    '': { $sshd_gssapi_authentication = 'no' }
-  }
-  case $sshd_gssapi_cleanupcredentials {
-    '': { $sshd_gssapi_cleanupcredentials = 'yes' }
-  }
-  case $sshd_tcp_forwarding {
-    '': { $sshd_tcp_forwarding = 'no' }
-  }
-  case $sshd_x11_forwarding {
-    '': { $sshd_x11_forwarding = 'no' }
-  }
-  case $sshd_agent_forwarding {
-    '': { $sshd_agent_forwarding = 'no' }
-  }
-  case $sshd_challenge_response_authentication {
-    '': { $sshd_challenge_response_authentication = 'no' }
-  }
-  case $sshd_pubkey_authentication {
-    '': { $sshd_pubkey_authentication = 'yes' }
-  }
-  case $sshd_rsa_authentication {
-    '': { $sshd_rsa_authentication = 'no' }
-  }
-  case $sshd_strict_modes {
-    '': { $sshd_strict_modes = 'yes' }
-  }
-  case $sshd_ignore_rhosts {
-    '': { $sshd_ignore_rhosts = 'yes' }
-  }
-  case $sshd_rhosts_rsa_authentication {
-    '': { $sshd_rhosts_rsa_authentication = 'no' }
-  }
-  case $sshd_hostbased_authentication {
-    '': { $sshd_hostbased_authentication = 'no' }
-  }
-  case $sshd_permit_empty_passwords {
-    '': { $sshd_permit_empty_passwords = 'no' }
-  }
-  if ( $sshd_port != '' ) and ( $sshd_ports != []) {
-      err("Cannot use sshd_port and sshd_ports at the same time.")
-  }
-  if $sshd_port != '' {
-      $sshd_ports = [ $sshd_port ]
-  } elsif ! $sshd_ports {
-      $sshd_ports = [ 22 ]
-  }
-  case $sshd_authorized_keys_file {
-    '': { $sshd_authorized_keys_file = "%h/.ssh/authorized_keys" }
-  }
-  case $sshd_hardened_ssl {
-    '': { $sshd_hardened_ssl = 'no' }
-  }
-  case $sshd_sftp_subsystem {
-    '': { $sshd_sftp_subsystem = '' }
-  }
-  case $sshd_head_additional_options {
-    '': { $sshd_head_additional_options = '' }
-  }
-  case $sshd_tail_additional_options {
-    '': { $sshd_tail_additional_options = '' }
-  }
-  case $sshd_ensure_version {
-    '': { $sshd_ensure_version = "present" }
-  }
-  case $sshd_print_motd {
-    '': {
-      case $operatingsystem {
-        debian,ubuntu: { $sshd_print_motd = "no" }
-        default: { $sshd_print_motd = "yes" }
-      }
-    }
-  }
-  case $sshd_shared_ip {
-    '': { $sshd_shared_ip = "no" }
+class sshd(
+  $manage_nagios = true,
+  $nagios_check_ssh_hostname = 'absent',
+  $ports = [ 22 ],
+  $shared_ip = 'no',
+  $ensure_version = 'installed',
+  $listen_address = [ '0.0.0.0', '::' ],
+  $allowed_users = '',
+  $allowed_groups = '',
+  $use_pam = 'no',
+  $permit_root_login = 'without-password',
+  $password_authentication = 'no',
+  $kerberos_authentication = 'no',
+  $kerberos_orlocalpasswd = 'yes',
+  $kerberos_ticketcleanup = 'yes',
+  $gssapi_authentication = 'no',
+  $gssapi_cleanupcredentials = 'yes',
+  $tcp_forwarding = 'no',
+  $x11_forwarding = 'no',
+  $agent_forwarding = 'no',
+  $challenge_response_authentication = 'no',
+  $pubkey_authentication = 'yes',
+  $rsa_authentication = 'no',
+  $strict_modes = 'yes',
+  $ignore_rhosts = 'yes',
+  $rhosts_rsa_authentication = 'no',
+  $hostbased_authentication = 'no',
+  $permit_empty_passwords = 'no',
+  $authorized_keys_file = '%h/.ssh/authorized_keys',
+  $hardened_ssl = 'no',
+  $sftp_subsystem = '',
+  $head_additional_options = '',
+  $tail_additional_options = '',
+  $print_motd = 'yes',
+  $manage_shorewall = false,
+  $shorewall_source = 'net'
+) {
+
+  class{'sshd::client':
+    shared_ip => $sshd::shared_ip,
+    ensure_version => $sshd::ensure_version,
+    manage_shorewall => $manage_shorewall,
   }
 
-  include sshd::client
-
-  case $operatingsystem {
+  case $::operatingsystem {
     gentoo: { include sshd::gentoo }
     redhat,centos: { include sshd::redhat }
-    centos: { include sshd::centos }
     openbsd: { include sshd::openbsd }
     debian,ubuntu: { include sshd::debian }
     default: { include sshd::base }
   }
 
-  if $use_nagios {
-    case $nagios_check_ssh {
-      false: { info("We don't do nagioschecks for ssh on ${fqdn}" ) }
-      default: {
-        sshd::nagios{$sshd_ports:
-          check_hostname => $nagios_check_ssh_hostname ? {
-            '' => 'absent',
-            undef => 'absent',
-            default => $nagios_check_ssh_hostname
-          }
-        }
-      }
+  if $manage_nagios {
+    sshd::nagios{$ports:
+      check_hostname => $nagios_check_ssh_hostname
     }
   }
 
-  if $use_shorewall{
+  if $manage_shorewall {
     class{'shorewall::rules::ssh':
-      ports => $sshd_ports,
+      ports => $ports,
+      source => $shorewall_source
     }
   }
 }

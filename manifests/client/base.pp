@@ -1,10 +1,11 @@
 class sshd::client::base {
   # this is needed because the gid might have changed
-  config_file { '/etc/ssh/ssh_known_hosts':
+  file { '/etc/ssh/ssh_known_hosts':
+    mode => 0644, owner => root, group => 0;
   }
 
   # Now collect all server keys
-  case $sshd_shared_ip {
+  case $sshd::client::shared_ip {
     no:  { Sshkey <<||>> }
     yes: { Sshkey <<| tag == "fqdn" |>> }
   }

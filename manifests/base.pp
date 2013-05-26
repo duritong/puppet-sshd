@@ -1,31 +1,31 @@
-class sshd::base {     
+class sshd::base {
   file { 'sshd_config':
     path => '/etc/ssh/sshd_config',
-    content => $lsbdistcodename ? {
-      '' => template("sshd/sshd_config/${operatingsystem}.erb"),
-      default => template ("sshd/sshd_config/${operatingsystem}_${lsbdistcodename}.erb"),
+    content => $::lsbdistcodename ? {
+      '' => template("sshd/sshd_config/${::operatingsystem}.erb"),
+      default => template ("sshd/sshd_config/${::operatingsystem}_${::lsbdistcodename}.erb"),
     },
     notify => Service[sshd],
     owner => root, group => 0, mode => 600;
   }
 
   # Now add the key, if we've got one
-  case $sshrsakey {
-    '': { info("no sshrsakey on $fqdn") }
+  case $::sshrsakey {
+    '': { info("no sshrsakey on ${::fqdn}") }
     default: {
-      @@sshkey{"$fqdn":
+      @@sshkey{$::fqdn:
         tag    => "fqdn",
         type   => ssh-rsa,
-        key    => $sshrsakey,
+        key    => $::sshrsakey,
         ensure => present,
       }
       # In case the node has uses a shared network address,
       # we don't define a sshkey resource using an IP address
-      if $sshd_shared_ip == "no" {
-        @@sshkey{"$ipaddress":
+      if $sshd::shared_ip == "no" {
+        @@sshkey{$::ipaddress:
           tag    => "ipaddress",
           type   => ssh-rsa,
-          key    => $sshrsakey,
+          key    => $::sshrsakey,
           ensure => present,
         }
       }
