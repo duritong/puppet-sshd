@@ -5,7 +5,6 @@ class sshd::client(
   $ensure_version = 'installed',
   $manage_shorewall = false
 ) {
-  include common::moduledir
 
   case $::operatingsystem {
     debian,ubuntu: { include sshd::client::debian }
