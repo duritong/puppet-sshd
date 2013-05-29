@@ -3,6 +3,6 @@ class sshd::openbsd inherits sshd::base {
     restart => '/bin/kill -HUP `/bin/cat /var/run/sshd.pid`',
     stop    => '/bin/kill `/bin/cat /var/run/sshd.pid`',
     start   => '/usr/sbin/sshd',
-    status  => '/usr/bin/pgrep -P `/bin/cat /var/run/sshd.pid`',
+    status  => '/usr/bin/pgrep -f /usr/sbin/sshd',
   }
 }
