@@ -1,10 +1,8 @@
 # puppet-sshd
 
-## Introduction
-
 This puppet module manages OpenSSH configuration and services.
 
-!! Upgrade Notice (01/2013) !!
+**!! Upgrade Notice (01/2013) !!**
 
 This module now uses parameterized classes, where it used global variables
 before. So please whatch out before pulling, you need to change the
@@ -16,8 +14,8 @@ class declarations in your manifest !
 This module requires puppet => 2.6, and the following modules are required
 pre-dependencies:
 
-- shared-common: git://labs.riseup.net/shared-common
-- shared-lsb: git://labs.riseup.net/shared-lsb
+- shared-common: `git://labs.riseup.net/shared-common`
+- shared-lsb: `git://labs.riseup.net/shared-lsb`
 
 ## OpenSSH Server
 
@@ -29,7 +27,7 @@ class { 'sshd': }
 ```
 
 on that node. If you need to configure any aspects of
-sshd_config, set the variables before the include. See 'Configurable Variables'
+sshd_config, set the variables before the include. See Configurable Variables
 below for what you can set.
 
 ### Nagios
@@ -40,8 +38,8 @@ nagios checking for a particular node (such as when ssh is firewalled), then you
 can set the class parameter `nagios_check_ssh` to `false` and that node will not be
 monitored.
 
-Nagios will automatically check the ports defined in $sshd::ports, and the
-hostname specified by `$nagios_check_ssh_hostname`.
+Nagios will automatically check the ports defined in `ports`, and the
+hostname specified by `nagios_check_ssh_hostname`.
 
 NOTE: this requires that you are using the shared-nagios puppet module which
 supports the nagios native types via `nagios::service`:
@@ -50,7 +48,7 @@ git://labs.riseup.net/shared-nagios
 ### Firewall
 
 If you wish to have firewall rules setup automatically for you, using shorewall,
-you will need to set: `$use_shorewall = true`. The `$sshd_ports` that you have
+you will need to set: `use_shorewall => true`. The `ports` that you have
 specified will automatically be used.
 
 NOTE: This requires that you are using the shared-shorewall puppet module:
@@ -100,13 +98,15 @@ The following is a list of the currently available variables:
     `allowed_users`, take care of the behaviour if you use these 2 options
     together.
 
-  - `use_pam`
-    if you want to use pam or not for authenticaton. Values: `'no'` or `'yes'`; Default:
-    `'no'`
+  - `use_pam` if you want to use pam or not for authenticaton. Values:
+    - `no` (default)
+    - `yes`
 
-  - `permit_root_login`
-    If you want to allow root logins or not. Valid values: `yes`, `no`,
-    `without-password`, `forced-commands-only`; Default: `without-password`
+  - `permit_root_login` If you want to allow root logins or not. Valid values:
+    - `yes`
+    - `no`
+    - `without-password` (default)
+    - `forced-commands-only`
 
   - `password_authentication`
     If you want to enable password authentication or not. Valid values: `yes` or
@@ -239,14 +239,13 @@ class{'sshd::client':
 
 in the node definition. This will install the appropriate package.
 
-
 ## License
 
-Copyright 2008-2011, Riseup Labs micah@riseup.net
-Copyright 2008, admin(at)immerda.ch
-Copyright 2008, Puzzle ITC GmbH
-Marcel Härry haerry+puppet(at)puzzle.ch
-Simon Josi josi+puppet(at)puzzle.ch
+ - Copyright 2008-2011, Riseup Labs micah@riseup.net
+ - Copyright 2008, admin(at)immerda.ch
+ - Copyright 2008, Puzzle ITC GmbH
+ - Marcel Härry haerry+puppet(at)puzzle.ch
+ - Simon Josi josi+puppet(at)puzzle.ch
 
 This program is free software; you can redistribute
 it and/or modify it under the terms of the GNU
