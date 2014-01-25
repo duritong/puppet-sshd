@@ -1,4 +1,4 @@
-# puppet-sshd
+# Puppet SSH Module
 
 This puppet module manages OpenSSH configuration and services.
 
@@ -26,9 +26,16 @@ include
 class { 'sshd': }
 ```
 
-on that node. If you need to configure any aspects of
-sshd_config, set the variables before the include. See Configurable Variables
-below for what you can set.
+on that node. If you need to configure any aspects of sshd_config, set the variables before the include. Or you can adjust many parameters:
+
+```puppet
+class { 'sshd':
+  ports             => [ 20002 ],
+  permit_root_login => 'no',
+}
+```
+
+See Configurable Variables below for what you can set.
 
 ### Nagios
 
