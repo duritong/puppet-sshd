@@ -16,7 +16,6 @@ class declarations in your manifest !
 This module requires puppet => 2.6, and the following modules are required
 pre-dependencies:
 
-- shared-common: `git://labs.riseup.net/shared-common`
 - [puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib) >= 2.x
 
 ## OpenSSH Server
