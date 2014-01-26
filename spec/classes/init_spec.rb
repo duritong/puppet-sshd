@@ -8,11 +8,11 @@ describe 'sshd' do
     it { should contain_class('sshd') }
     it { should contain_class('sshd::client') }
 
-    it { should contain_service('sshd').with(
+    it { should contain_service('sshd').with({
       :ensure     => 'running',
       :enable     => true,
-      :hasstatus  => true,
-    )}
+      :hasstatus  => true
+    })}
 
     it { should contain_file('sshd_config').with(
       {
@@ -50,9 +50,9 @@ describe 'sshd' do
       it_behaves_like "a Linux OS"
       it { should contain_package('lsb-release') }
       it { should contain_package('openssh') }
-      it { should contain_service('sshd').with(
+      it { should contain_service('sshd').with({
         :hasrestart => true
-      )}
+      })}
     end
   end
 
