@@ -7,4 +7,4 @@ summary 'ssh daemon configuration'
 description 'Manages sshd_config'
 project_page 'https://github.com/duritong/puppet-sshd'
 
-#dependency 'puppetlabs/stdlib', '>= 0.1.6'
+dependency 'puppetlabs/stdlib', '>= 2.0.0'
