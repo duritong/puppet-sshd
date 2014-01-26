@@ -1,5 +1,7 @@
 # Puppet SSH Module
 
+[![Build Status](https://travis-ci.org/duritong/puppet-sshd.png?branch=master)](https://travis-ci.org/duritong/puppet-sshd)
+
 This puppet module manages OpenSSH configuration and services.
 
 **!! Upgrade Notice (01/2013) !!**
