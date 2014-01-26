@@ -41,7 +41,6 @@ describe 'sshd' do
       }
     end
     it_behaves_like "a Linux OS"
-    it { should contain_package('lsb-release') }
     it { should contain_package('openssh') }
     it { should contain_class('sshd::debian') }
     it { should contain_service('sshd').with(
@@ -56,7 +55,6 @@ describe 'sshd' do
         }
       end
       it_behaves_like "a Linux OS"
-      it { should contain_package('lsb-release') }
       it { should contain_package('openssh') }
       it { should contain_service('sshd').with({
         :hasrestart => true
