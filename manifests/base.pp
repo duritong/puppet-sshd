@@ -6,6 +6,7 @@ class sshd::base {
   }
 
   file { 'sshd_config':
+    ensure  => present,
     path    => '/etc/ssh/sshd_config',
     content => $sshd_config_content,
     notify  => Service[sshd],
