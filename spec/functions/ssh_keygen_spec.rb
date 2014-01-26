@@ -80,34 +80,34 @@ describe 'ssh_keygen' do
       result[1].should == 'publickey'
     end
 
-    xit "should create the directory path if it does not exist" do
+    it "should create the directory path if it does not exist" do
       File.stubs(:exists?).with("/tmp/a/b/c").returns(false)
       File.stubs(:exists?).with("/tmp/a/b/c.pub").returns(false)
       File.stubs(:directory?).with("/tmp/a/b").returns(false)
       FileUtils.expects(:mkdir_p).with("/tmp/a/b", :mode => 0700)
-      Puppet::Util.expects(:execute).returns("")
+      Puppet::Util::Execution.expects(:execute).returns("")
       result = scope.function_ssh_keygen(['/tmp/a/b/c'])
       result.length.should == 2
       result[0].should == 'privatekey'
       result[1].should == 'publickey'
     end
 
-    xit "should generate the key if the keyfiles do not exist" do
+    it "should generate the key if the keyfiles do not exist" do
       File.stubs(:exists?).with("/tmp/a/b/c").returns(false)
       File.stubs(:exists?).with("/tmp/a/b/c.pub").returns(false)
       File.stubs(:directory?).with("/tmp/a/b").returns(true)
-      Puppet::Util.expects(:execute).with(['/usr/bin/ssh-keygen','-t', 'rsa', '-b', '4096', '-f', '/tmp/a/b/c', '-P', '', '-q']).returns("")
+      Puppet::Util::Execution.expects(:execute).with(['/usr/bin/ssh-keygen','-t', 'rsa', '-b', '4096', '-f', '/tmp/a/b/c', '-P', '', '-q']).returns("")
       result = scope.function_ssh_keygen(['/tmp/a/b/c'])
       result.length.should == 2
       result[0].should == 'privatekey'
       result[1].should == 'publickey'
     end
 
-    xit "should fail if something goes wrong during generation" do
+    it "should fail if something goes wrong during generation" do
       File.stubs(:exists?).with("/tmp/a/b/c").returns(false)
       File.stubs(:exists?).with("/tmp/a/b/c.pub").returns(false)
       File.stubs(:directory?).with("/tmp/a/b").returns(true)
-      Puppet::Util.expects(:execute).with(['/usr/bin/ssh-keygen','-t', 'rsa', '-b', '4096', '-f', '/tmp/a/b/c', '-P', '', '-q']).returns("something is wrong")
+      Puppet::Util::Execution.expects(:execute).with(['/usr/bin/ssh-keygen','-t', 'rsa', '-b', '4096', '-f', '/tmp/a/b/c', '-P', '', '-q']).returns("something is wrong")
       lambda {
         scope.function_ssh_keygen(["/tmp/a/b/c"])
       }.should( raise_error(Puppet::ParseError))
