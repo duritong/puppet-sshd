@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe 'sshd' do
 
-
   shared_examples "a Linux OS" do
     it { should compile.with_all_deps }
     it { should contain_class('sshd') }
@@ -22,6 +21,15 @@ describe 'sshd' do
         'mode'    => '0600',
       }
     )}
+
+    context 'change ssh port' do
+      let(:params){{
+       :ports => [ 22222],
+      }}
+      it { should contain_file(
+          'sshd_config'
+      ).with_content(/Port 22222/)}
+    end
   end
 
   context "Debian OS" do
