@@ -3,7 +3,7 @@ $LOAD_PATH.unshift File.join(dir, 'lib')
 require 'puppet'
 require 'rspec'
 require 'puppetlabs_spec_helper/module_spec_helper'
-require 'rspec-hiera-puppet'
+#require 'rspec-hiera-puppet'
 require 'rspec-puppet/coverage'
 require 'rspec/autorun'
 

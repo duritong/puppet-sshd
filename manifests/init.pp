@@ -36,6 +36,10 @@ class sshd(
   $shorewall_source = 'net'
 ) {
 
+  validate_bool($manage_shorewall)
+  validate_array($listen_address)
+  validate_array($ports)
+
   class{'sshd::client':
     shared_ip        => $sshd::shared_ip,
     ensure_version   => $sshd::ensure_version,
