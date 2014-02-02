@@ -40,9 +40,9 @@ define sshd::ssh_authorized_key(
   case $options {
     'absent': { info("not setting any option for ssh_authorized_key: ${name}") }
     default: {
-      Ssh_authorized_key[$name]{
+      ensure_resource('ssh_authorized_key', $name, {
         options => $options,
-      }
+      })
     }
   }
 }
