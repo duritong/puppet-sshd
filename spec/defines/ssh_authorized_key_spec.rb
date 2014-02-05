@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'sshd::ssh_authorized_key' do
 
-  context 'add authorized key' do
+  context 'manage authorized key' do
     let(:title) { 'foo' }
     let(:ssh_key) { 'some_secret_ssh_key' }
 
