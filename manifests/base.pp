@@ -29,7 +29,7 @@ class sshd::base(
       }
       # In case the node has uses a shared network address,
       # we don't define a sshkey resource using an IP address
-      $ipaddr = inline_template("<%= scope.lookupvar(ipaddr_fact) %>")
+      $ipaddr = inline_template("<%= scope.lookupvar(ipaddres_fact) %>")
       if $sshd::shared_ip == 'no' {
         @@sshkey{$ipaddr:
 
