@@ -34,7 +34,7 @@ class sshd(
   $print_motd = 'yes',
   $manage_shorewall = false,
   $shorewall_source = 'net',
-  $ipaddres_fact = 'ipaddress',
+  $ipaddress_fact = 'ipaddress',
 ) {
 
   validate_bool($manage_shorewall)

@@ -1,5 +1,5 @@
 class sshd::base(
-  $ipaddres_fact = $sshd::ipaddres_fact,
+  $ipaddress_fact = $sshd::ipaddress_fact,
 ) {
 
   $sshd_config_content = $::lsbdistcodename ? {
@@ -29,7 +29,7 @@ class sshd::base(
       }
       # In case the node has uses a shared network address,
       # we don't define a sshkey resource using an IP address
-      $ipaddr = inline_template("<%= scope.lookupvar(ipaddres_fact) %>")
+      $ipaddr = inline_template("<%= scope.lookupvar(ipaddress_fact) %>")
       if $sshd::shared_ip == 'no' {
         @@sshkey{$ipaddr:
 
