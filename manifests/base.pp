@@ -1,4 +1,6 @@
-class sshd::base {
+class sshd::base(
+  $sshkey_ipaddress = $sshd::sshkey_ipaddress,
+) {
 
   $sshd_config_content = $::lsbdistcodename ? {
     ''      => template("sshd/sshd_config/${::operatingsystem}.erb"),
@@ -28,7 +30,7 @@ class sshd::base {
       # In case the node has uses a shared network address,
       # we don't define a sshkey resource using an IP address
       if $sshd::shared_ip == 'no' {
-        @@sshkey{$::ipaddress:
+        @@sshkey{$sshkey_ipaddress:
           ensure => present,
           tag    => 'ipaddress',
           type   => ssh-rsa,
