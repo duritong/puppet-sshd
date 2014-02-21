@@ -34,7 +34,7 @@ class sshd(
   $print_motd = 'yes',
   $manage_shorewall = false,
   $shorewall_source = 'net',
-  $ipaddress_fact = 'ipaddress',
+  $sshkey_ipaddress = $::ipaddress
 ) {
 
   validate_bool($manage_shorewall)
