@@ -1,3 +1,6 @@
+# The base class to setup the common things.
+# This is a private class and will always be used
+# throught the sshd class itself.
 class sshd::base {
 
   $sshd_config_content = $::lsbdistcodename ? {
@@ -28,7 +31,7 @@ class sshd::base {
       # In case the node has uses a shared network address,
       # we don't define a sshkey resource using an IP address
       if $sshd::shared_ip == 'no' {
-        @@sshkey{$sshkey_ipaddress:
+        @@sshkey{$sshd::sshkey_ipaddress:
           ensure => present,
           tag    => 'ipaddress',
           type   => ssh-rsa,
