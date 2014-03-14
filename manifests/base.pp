@@ -1,6 +1,4 @@
-class sshd::base(
-  $sshkey_ipaddress = $sshd::sshkey_ipaddress,
-) {
+class sshd::base {
 
   $sshd_config_content = $::lsbdistcodename ? {
     ''      => template("sshd/sshd_config/${::operatingsystem}.erb"),
