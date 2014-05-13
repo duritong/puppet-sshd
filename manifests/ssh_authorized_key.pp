@@ -5,7 +5,8 @@ define sshd::ssh_authorized_key(
     $key = 'absent',
     $user = '',
     $target = undef,
-    $options = 'absent'
+    $options = 'absent',
+    $override_builtin = undef
 ){
 
   if ($ensure=='present') and ($key=='absent') {
@@ -29,19 +30,59 @@ define sshd::ssh_authorized_key(
       $real_target = $target
     }
   }
-  ssh_authorized_key{$name:
-    ensure => $ensure,
-    type   => $type,
-    key    => $key,
-    user   => $real_user,
-    target => $real_target,
-  }
 
-  case $options {
-    'absent': { info("not setting any option for ssh_authorized_key: ${name}") }
-    default: {
-      Ssh_authorized_key[$name]{
-        options => $options,
+  # The ssh_authorized_key built-in function (in 2.7.23 at least)
+  # will not write an authorized_keys file for a mortal user to
+  # a directory they don't have write permission to, puppet attempts to
+  # create the file as the user specified with the user parameter and fails.
+  # Since ssh will refuse to use authorized_keys files not owned by the
+  # user, or in files/directories that allow other users to write, this
+  # behavior is deliberate in order to prevent typical non-working
+  # configurations. However, it also prevents the case of puppet, running
+  # as root, writing a file owned by a mortal user to a common
+  # authorized_keys directory such as one might specify in sshd_config with
+  # something like
+  #  'AuthorizedKeysFile /etc/ssh/authorized_keys/%u'
+  # So we provide a way to override the built-in and instead just install
+  # via a file resource. There is no additional security risk here, it's
+  # nothing a user can't already do by writing their own file resources,
+  # we still depend on the filesystem permissions to keep things safe.
+  if $override_builtin {
+    case $options {
+      'absent': {
+        info("not setting any option for ssh_authorized_key: ${name}")
+
+        file { "$real_target":
+          ensure => $ensure,
+          content => "$type $key",
+          owner => "$real_user", 
+          mode => '0600';
+        }
+      }
+      default: {
+        file { "$real_target":
+          ensure => $ensure,
+          content => "$options $type $key",
+          owner => "$real_user", 
+          mode => '0600';
+        }
+      }
+    }
+  } else {
+    ssh_authorized_key{$name:
+      ensure => $ensure,
+      type   => $type,
+      key    => $key,
+      user   => $real_user,
+      target => $real_target,
+    }
+
+    case $options {
+      'absent': { info("not setting any option for ssh_authorized_key: ${name}") }
+      default: {
+        Ssh_authorized_key[$name]{
+          options => $options,
+        }
       }
     }
   }
