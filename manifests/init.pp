@@ -26,7 +26,7 @@ class sshd(
   $rhosts_rsa_authentication = 'no',
   $hostbased_authentication = 'no',
   $permit_empty_passwords = 'no',
-  $authorized_keys_file = '%h/.ssh/authorized_keys',
+  $authorized_keys_file = '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
   $hardened_ssl = 'no',
   $sftp_subsystem = '',
   $head_additional_options = '',
