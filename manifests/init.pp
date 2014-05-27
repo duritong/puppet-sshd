@@ -33,13 +33,16 @@ class sshd(
   $tail_additional_options = '',
   $print_motd = 'yes',
   $manage_shorewall = false,
-  $shorewall_source = 'net'
+  $shorewall_source = 'net',
+  $manage_client = true,
 ) {
 
-  class{'sshd::client':
-    shared_ip        => $sshd::shared_ip,
-    ensure_version   => $sshd::ensure_version,
-    manage_shorewall => $manage_shorewall,
+  if $manage_client {
+    class{'sshd::client':
+      shared_ip        => $sshd::shared_ip,
+      ensure_version   => $sshd::ensure_version,
+      manage_shorewall => $manage_shorewall,
+    }
   }
 
   case $::operatingsystem {
