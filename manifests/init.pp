@@ -34,6 +34,7 @@ class sshd(
     },
     RedHat => $::operatingsystemmajrelease ? {
       5       => '%h/.ssh/authorized_keys',
+      6       => '%h/.ssh/authorized_keys',
       default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
     },
     default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
