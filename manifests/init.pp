@@ -37,6 +37,7 @@ class sshd(
       6       => '%h/.ssh/authorized_keys',
       default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
     },
+    OpenBSD => '%h/.ssh/authorized_keys',
     default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
   },
   $hardened_ssl = 'no',
