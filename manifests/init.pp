@@ -26,7 +26,17 @@ class sshd(
   $rhosts_rsa_authentication = 'no',
   $hostbased_authentication = 'no',
   $permit_empty_passwords = 'no',
-  $authorized_keys_file = '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
+  $authorized_keys_file = $::osfamily ? {
+    Debian => $::operatingsystemmajrelease ? {
+      6       => '%h/.ssh/authorized_keys',
+      default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
+    },
+    RedHat => $::operatingsystemmajrelease ? {
+      5       => '%h/.ssh/authorized_keys',
+      default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
+    },
+    default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
+  },
   $hardened_ssl = 'no',
   $sftp_subsystem = '',
   $head_additional_options = '',
