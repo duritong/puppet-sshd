@@ -1,3 +1,4 @@
+# manage an sshd installation
 class sshd(
   $manage_nagios = false,
   $nagios_check_ssh_hostname = 'absent',
