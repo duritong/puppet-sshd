@@ -26,7 +26,7 @@ class sshd(
   $rhosts_rsa_authentication = 'no',
   $hostbased_authentication = 'no',
   $permit_empty_passwords = 'no',
-  $authorized_keys_file = '%h/.ssh/authorized_keys',
+  $authorized_keys_file = '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
   $hardened_ssl = 'no',
   $sftp_subsystem = '',
   $head_additional_options = '',
@@ -34,17 +34,21 @@ class sshd(
   $print_motd = 'yes',
   $manage_shorewall = false,
   $shorewall_source = 'net',
-  $sshkey_ipaddress = $::ipaddress
+  $sshkey_ipaddress = $::ipaddress,
+  $manage_client = true,
 ) {
 
   validate_bool($manage_shorewall)
+  validate_bool($manage_client)
   validate_array($listen_address)
   validate_array($ports)
 
-  class{'sshd::client':
-    shared_ip        => $sshd::shared_ip,
-    ensure_version   => $sshd::ensure_version,
-    manage_shorewall => $manage_shorewall,
+  if $manage_client {
+    class{'sshd::client':
+      shared_ip        => $shared_ip,
+      ensure_version   => $ensure_version,
+      manage_shorewall => $manage_shorewall,
+    }
   }
 
   case $::operatingsystem {
