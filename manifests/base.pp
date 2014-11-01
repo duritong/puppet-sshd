@@ -3,9 +3,12 @@
 # throught the sshd class itself.
 class sshd::base {
 
-  $sshd_config_content = $::lsbdistcodename ? {
-    ''      => template("sshd/sshd_config/${::operatingsystem}.erb"),
-    default => template ("sshd/sshd_config/${::operatingsystem}_${::lsbdistcodename}.erb"),
+  $sshd_config_content = $::operatingsystem ? {
+    'CentOS'  => template("sshd/sshd_config/${::operatingsystem}_${::operatingsystemmajrelease}.erb"),
+    default   => $::lsbdistcodename ? {
+      ''      => template("sshd/sshd_config/${::operatingsystem}.erb"),
+      default => template("sshd/sshd_config/${::operatingsystem}_${::lsbdistcodename}.erb")
+    }
   }
 
   file { 'sshd_config':
