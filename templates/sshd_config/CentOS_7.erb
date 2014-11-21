@@ -35,9 +35,9 @@ ListenAddress <%= address %>
 # HostKey for protocol version 1
 #HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2
-HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_dsa_key
-HostKey /etc/ssh/ssh_host_ecdsa_key
+<% scope.lookupvar('sshd::hostkey_type').to_a.each do |hostkey_type| -%>
+HostKey /etc/ssh/ssh_host_<%=hostkey_type %>_key
+<% end -%>
 
 # Lifetime and size of ephemeral version 1 server key
 #KeyRegenerationInterval 1h
