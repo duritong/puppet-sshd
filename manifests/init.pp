@@ -49,8 +49,8 @@ class sshd(
   $shorewall_source = 'net',
   $sshkey_ipaddress = $::ipaddress,
   $manage_client = true,
-  $hostkey_type = $::ssh_version ? {
-    /(1|0)/ => [ 'rsa', 'ed25519' ],
+  $hostkey_type = versioncmp($::ssh_version, '6.5') ? {
+    /(^1|0)/ => [ 'rsa', 'ed25519' ],
     /-1/    => [ 'dsa', 'rsa' ]
   }
 ) {
