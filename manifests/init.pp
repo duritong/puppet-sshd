@@ -51,7 +51,7 @@ class sshd(
   $manage_client = true,
   $hostkey_type = versioncmp($::ssh_version, '6.5') ? {
     /(^1|0)/ => [ 'rsa', 'ed25519' ],
-    /-1/    => [ 'dsa', 'rsa' ]
+    /-1/    => [ 'rsa', 'dsa' ]
   }
 ) {
 
