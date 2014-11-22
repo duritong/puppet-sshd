@@ -14,8 +14,6 @@
 <%= s %>
 <% end -%>
 
-# only protocol 2
-Protocol 2
 <% scope.lookupvar('sshd::ports').to_a.each do |port| -%>
 <% if port == 'off' -%>
 #Port -- disabled by puppet
@@ -29,6 +27,11 @@ Port <%= port %>
 ListenAddress <%= address %>
 <% end -%>
 
+# Disable legacy (protocol version 1) support in the server for new
+# installations. In future the default will change to require explicit
+# activation of protocol 1
+Protocol 2
+
 # HostKey for protocol version 1
 #HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2
@@ -37,7 +40,7 @@ ListenAddress <%= address %>
 
 # Lifetime and size of ephemeral version 1 server key
 #KeyRegenerationInterval 1h
-#ServerKeyBits 768
+#ServerKeyBits 1024
 
 # Logging
 # obsoletes QuietMode and FascistLogging
@@ -55,10 +58,10 @@ StrictModes <%= scope.lookupvar('sshd::strict_modes') %>
 #MaxAuthTries 6
 
 RSAAuthentication <%= scope.lookupvar('sshd::rsa_authentication') %>
-
 PubkeyAuthentication <%= scope.lookupvar('sshd::pubkey_authentication') %>
-
 AuthorizedKeysFile <%= scope.lookupvar('sshd::authorized_keys_file') %>
+#AuthorizedKeysCommand none
+#AuthorizedKeysCommandRunAs nobody
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
 RhostsRSAAuthentication <%= scope.lookupvar('sshd::rhosts_rsa_authentication') %>
@@ -87,6 +90,7 @@ ChallengeResponseAuthentication <%= scope.lookupvar('sshd::challenge_response_au
 #KerberosOrLocalPasswd yes
 #KerberosTicketCleanup yes
 #KerberosGetAFSToken no
+#KerberosUseKuserok yes
 
 # GSSAPI options
 #GSSAPIAuthentication no
@@ -94,22 +98,24 @@ ChallengeResponseAuthentication <%= scope.lookupvar('sshd::challenge_response_au
 
 # Set this to 'yes' to enable PAM authentication, account processing, 
 # and session processing. If this is enabled, PAM authentication will 
-# be allowed through the ChallengeResponseAuthentication mechanism. 
-# Depending on your PAM configuration, this may bypass the setting of 
-# PasswordAuthentication, PermitEmptyPasswords, and 
-# "PermitRootLogin without-password". If you just want the PAM account and 
-# session checks to run without PAM authentication, then enable this but set 
-# ChallengeResponseAuthentication=no
+# be allowed through the ChallengeResponseAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via ChallengeResponseAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and ChallengeResponseAuthentication to 'no'.
 #UsePAM no
 UsePAM <%= scope.lookupvar('sshd::use_pam') %>
 
 # Accept locale-related environment variables
-AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES 
-AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT 
-AcceptEnv LC_IDENTIFICATION LC_ALL
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv XMODIFIERS
 
+#AllowAgentForwarding yes
 AllowTcpForwarding <%= scope.lookupvar('sshd::tcp_forwarding') %>
-
 #GatewayPorts no
 #X11Forwarding no
 X11Forwarding <%= scope.lookupvar('sshd::x11_forwarding') %>
@@ -127,7 +133,7 @@ PrintMotd <%= scope.lookupvar('sshd::print_motd') %>
 #ShowPatchLevel no
 #UseDNS yes
 #PidFile /var/run/sshd.pid
-#MaxStartups 10
+#MaxStartups 10:30:100
 #PermitTunnel no
 #ChrootDirectory none
 
@@ -149,6 +155,12 @@ Ciphers aes256-ctr
 MACs hmac-sha1
 <% end -%>
 
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#      X11Forwarding no
+#      AllowTcpForwarding no
+#      ForceCommand cvs server
+#
 <% unless (s=scope.lookupvar('sshd::tail_additional_options')).empty? -%>
 <%= s %>
 <% end -%>

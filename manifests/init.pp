@@ -1,5 +1,6 @@
+# manage an sshd installation
 class sshd(
-  $manage_nagios = true,
+  $manage_nagios = false,
   $nagios_check_ssh_hostname = 'absent',
   $ports = [ 22 ],
   $shared_ip = 'no',
@@ -26,20 +27,41 @@ class sshd(
   $rhosts_rsa_authentication = 'no',
   $hostbased_authentication = 'no',
   $permit_empty_passwords = 'no',
-  $authorized_keys_file = '%h/.ssh/authorized_keys',
+  $authorized_keys_file = $::osfamily ? {
+    Debian => $::operatingsystemmajrelease ? {
+      6       => '%h/.ssh/authorized_keys',
+      default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
+    },
+    RedHat => $::operatingsystemmajrelease ? {
+      5       => '%h/.ssh/authorized_keys',
+      6       => '%h/.ssh/authorized_keys',
+      default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
+    },
+    OpenBSD => '%h/.ssh/authorized_keys',
+    default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
+  },
   $hardened_ssl = 'no',
   $sftp_subsystem = '',
   $head_additional_options = '',
   $tail_additional_options = '',
   $print_motd = 'yes',
   $manage_shorewall = false,
-  $shorewall_source = 'net'
+  $shorewall_source = 'net',
+  $sshkey_ipaddress = $::ipaddress,
+  $manage_client = true,
 ) {
 
-  class{'sshd::client':
-    shared_ip        => $sshd::shared_ip,
-    ensure_version   => $sshd::ensure_version,
-    manage_shorewall => $manage_shorewall,
+  validate_bool($manage_shorewall)
+  validate_bool($manage_client)
+  validate_array($listen_address)
+  validate_array($ports)
+
+  if $manage_client {
+    class{'sshd::client':
+      shared_ip        => $shared_ip,
+      ensure_version   => $ensure_version,
+      manage_shorewall => $manage_shorewall,
+    }
   }
 
   case $::operatingsystem {
