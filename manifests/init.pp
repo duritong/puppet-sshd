@@ -49,6 +49,7 @@ class sshd(
   $shorewall_source = 'net',
   $sshkey_ipaddress = $::ipaddress,
   $manage_client = true,
+  $purge_sshkeys = true,
 ) {
 
   validate_bool($manage_shorewall)

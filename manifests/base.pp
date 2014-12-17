@@ -43,6 +43,11 @@ class sshd::base {
       }
     }
   }
+  if $sshd::purge_sshkeys {
+    resources{'sshkey':
+      purge => true,
+    }
+  }
   service{'sshd':
     ensure    => running,
     name      => 'sshd',
