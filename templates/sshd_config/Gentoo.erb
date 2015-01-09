@@ -123,7 +123,7 @@ PrintMotd <%= scope.lookupvar('sshd::print_motd') %>
 #Compression delayed
 #ClientAliveInterval 0
 #ClientAliveCountMax 3
-UseDNS no
+UseDNS <%= scope['sshd::use_dns'] %>
 #PidFile /var/run/sshd.pid
 #MaxStartups 10
 #PermitTunnel no
