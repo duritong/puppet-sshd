@@ -115,8 +115,9 @@ AllowGroups <%= s %>
 <%- end -%>
 
 <% if scope.lookupvar('sshd::hardened_ssl') == 'yes' -%>
-Ciphers aes256-ctr
-MACs hmac-sha1
+KexAlgorithms diffie-hellman-group-exchange-sha256
+Ciphers aes256-ctr,aes192-ctr,aes128-ctr
+MACs hmac-sha2-512,hmac-sha2-256
 <% end -%>
 
 <% unless (s=scope.lookupvar('sshd::tail_additional_options')).empty? -%>
