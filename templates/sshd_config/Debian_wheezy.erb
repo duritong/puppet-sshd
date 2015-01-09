@@ -37,7 +37,7 @@ ServerKeyBits 768
 # Logging
 SyslogFacility AUTH
 LogLevel INFO
-UseDNS no
+UseDNS <%= scope['sshd::use_dns'] %>
 
 # Authentication:
 LoginGraceTime 600
