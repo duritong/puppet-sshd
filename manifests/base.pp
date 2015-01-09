@@ -11,14 +11,22 @@ class sshd::base {
     }
   }
 
-  file { 'sshd_config':
-    ensure  => present,
-    path    => '/etc/ssh/sshd_config',
-    content => $sshd_config_content,
-    notify  => Service[sshd],
-    owner   => root,
-    group   => 0,
-    mode    => '0600';
+  file {
+    'sshd_config':
+      ensure  => present,
+      path    => '/etc/ssh/sshd_config',
+      content => $sshd_config_content,
+      notify  => Service[sshd],
+      owner   => root,
+      group   => 0,
+      mode    => '0600';
+    # remove weak rsa moduli
+    '/etc/ssh/moduli':
+      content => generate('/usr/bin/awk', '$5 >= 2048', '/etc/ssh/moduli'),
+      notify  => Service[sshd],
+      owner   => root,
+      group   => 0,
+      mode    => '0644';
   }
 
   # Now add the key, if we've got one
