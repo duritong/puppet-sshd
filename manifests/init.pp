@@ -42,6 +42,7 @@ class sshd(
     default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
   },
   $hardened = false,
+  $hardened_client = false,
   $harden_moduli = false,
   $use_host_ecdsa_key = false,
   $sftp_subsystem = '',
@@ -60,6 +61,7 @@ class sshd(
   validate_bool($harden_moduli)
   validate_bool($use_host_ecdsa_key)
   validate_bool($hardened)
+  validate_bool($hardened_client)
   validate_array($listen_address)
   validate_array($ports)
 
@@ -68,6 +70,7 @@ class sshd(
       shared_ip        => $shared_ip,
       ensure_version   => $ensure_version,
       manage_shorewall => $manage_shorewall,
+      hardened         => $hardened_client,
     }
   }
 
