@@ -23,12 +23,12 @@ class sshd::base {
   }
   if $ssh::harden_moduli {
     exec{'harden_ssh_moduli':
-      umask => '077',
-      environment => ['TMP=/tmp/ssh_moduli.$RANDOM'],
-      command => 'awk \'$5 >= 2048\' /etc/ssh/moduli > $TMP && \
+      umask       => '077',
+      environment => ['TMP=/etc/ssh/moduli_strong.$RANDOM'],
+      command     => 'awk \'$5 >= 2048\' /etc/ssh/moduli > $TMP && \
         mv $TMP /etc/ssh/moduli',
-      unless  => 'awk \'$5 < 2048 { exit 1 }\' /etc/ssh/moduli',
-      notify  => Service[sshd],
+      unless      => 'awk \'$5 < 2048 { exit 1 }\' /etc/ssh/moduli',
+      notify      => Service[sshd],
     }
   }
 
