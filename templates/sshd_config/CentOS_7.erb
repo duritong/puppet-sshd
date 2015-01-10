@@ -37,7 +37,7 @@ ListenAddress <%= address %>
 # HostKeys for protocol version 2
 HostKey /etc/ssh/ssh_host_rsa_key
 #HostKey /etc/ssh/ssh_host_dsa_key
-<% if scope.lookupvar('sshd::use_host_ecdsa_key') != 'no' -%>
+<% if scope.lookupvar('sshd::use_host_ecdsa_key') -%>
 HostKey /etc/ssh/ssh_host_ecdsa_key
 <% end -%>
 
@@ -166,7 +166,7 @@ AllowGroups <%= s %>
 #Host *.local
 #  CheckHostIP no
 
-<% if scope.lookupvar('sshd::hardened_ssl') == 'yes' -%>
+<% if scope.lookupvar('sshd::hardened') -%>
 KexAlgorithms diffie-hellman-group-exchange-sha256
 Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
 MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com

@@ -41,9 +41,9 @@ class sshd(
     OpenBSD => '%h/.ssh/authorized_keys',
     default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
   },
-  $hardened_ssl = 'no',
+  $hardened = false,
   $harden_moduli = false,
-  $use_host_ecdsa_key = 'no',
+  $use_host_ecdsa_key = false,
   $sftp_subsystem = '',
   $head_additional_options = '',
   $tail_additional_options = '',
@@ -58,6 +58,8 @@ class sshd(
   validate_bool($manage_shorewall)
   validate_bool($manage_client)
   validate_bool($harden_moduli)
+  validate_bool($use_host_ecdsa_key)
+  validate_bool($hardened)
   validate_array($listen_address)
   validate_array($ports)
 

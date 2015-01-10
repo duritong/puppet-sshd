@@ -24,7 +24,7 @@ Protocol 2
 # HostKeys for protocol version 2
 HostKey /etc/ssh/ssh_host_rsa_key
 HostKey /etc/ssh/ssh_host_dsa_key
-<% if scope.lookupvar('sshd::use_host_ecdsa_key') != 'no' -%>
+<% if scope.lookupvar('sshd::use_host_ecdsa_key') -%>
 HostKey /etc/ssh/ssh_host_ecdsa_key
 <% end -%>
 #Privilege Separation is turned on for security
@@ -117,7 +117,7 @@ AllowUsers <%= s %>
 AllowGroups <%= s %>
 <%- end -%>
 
-<% if scope.lookupvar('sshd::hardened_ssl') == 'yes' -%>
+<% if scope.lookupvar('sshd::hardened') -%>
 KexAlgorithms diffie-hellman-group-exchange-sha256
 Ciphers aes256-ctr,aes192-ctr,aes128-ctr
 MACs hmac-sha2-512,hmac-sha2-256

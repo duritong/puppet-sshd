@@ -116,7 +116,7 @@ AllowGroups <%= s %>
 
 PrintMotd <%= scope.lookupvar('sshd::print_motd') %>
 
-<% if scope.lookupvar('sshd::hardened_ssl') == 'yes' -%>
+<% if scope.lookupvar('sshd::hardened') -%>
 Ciphers aes256-ctr
 MACs hmac-sha1
 <% end -%>

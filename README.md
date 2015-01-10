@@ -171,11 +171,12 @@ The following is a list of the currently available variables:
     Set this to the location of the AuthorizedKeysFile
     (e.g. `/etc/ssh/authorized_keys/%u`). Default: `AuthorizedKeysFile
     %h/.ssh/authorized_keys`
-  - `hardened_ssl`
-    Use only strong SSL ciphers and MAC.
-    Values:
-    - `no` (default)
-    - `yes`
+  - `hardened_moduli`
+    Remove rsa moduli smaller than 2048.
+    Values boolean.
+  - `hardened`
+    Use only strong ciphers and MAC.
+    Values boolean.
   - `print_motd`
     Show the Message of the day when a user logs in.
   - `sftp_subsystem`
