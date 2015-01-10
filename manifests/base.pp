@@ -21,7 +21,7 @@ class sshd::base {
       group   => 0,
       mode    => '0600';
   }
-  if $ssh::harden_moduli {
+  if $sshd::harden_moduli {
     exec{'harden_ssh_moduli':
       umask       => '077',
       environment => ['TMP=/etc/ssh/moduli_strong.$RANDOM'],
