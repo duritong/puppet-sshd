@@ -1,9 +1,10 @@
 # manifests/client.pp
 
 class sshd::client(
-  $shared_ip = 'no',
-  $ensure_version = 'installed',
-  $manage_shorewall = false
+  $shared_ip        = 'no',
+  $ensure_version   = 'installed',
+  $manage_shorewall = false,
+  $hardened         = false,
 ) {
 
   case $::operatingsystem {

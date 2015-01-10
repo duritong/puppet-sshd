@@ -12,4 +12,20 @@ class sshd::client::base {
     no:  { Sshkey <<||>> }
     yes: { Sshkey <<| tag == fqdn |>> }
   }
+
+  if $sshd::client::hardened {
+    file {
+      '/etc/ssh/ssh_config':
+        ensure  => present,
+        source  => ["puppet:///modules/site_sshd/${::fqdn}/hardened_ssh_config",
+                    "puppet:///modules/site_sshd/hardened_ssh_config",
+                    "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}_${::operatingsystemmajrelease}",
+                    "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}_${::lsbdistcodename}",
+                    "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}"],
+        notify  => Service[sshd],
+        owner   => root,
+        group   => 0,
+        mode    => '0644';
+    }
+  }
 }

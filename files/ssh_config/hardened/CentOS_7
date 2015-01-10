@@ -1,0 +1,14 @@
+Host *
+    ForwardAgent no
+    ForwardX11 no
+
+    Protocol 2
+
+    SendEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+    SendEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+    SendEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+    SendEnv XMODIFIERS
+
+    KexAlgorithms diffie-hellman-group-exchange-sha256
+    Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+    MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com
