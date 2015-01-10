@@ -9,6 +9,6 @@ Host *
     SendEnv LC_IDENTIFICATION LC_ALL LANGUAGE
     SendEnv XMODIFIERS
 
-    KexAlgorithms diffie-hellman-group-exchange-sha256
+    KexAlgorithms diffie-hellman-group-exchange-sha256,diffie-hellman-group-exchange-sha1
     Ciphers aes256-ctr,aes192-ctr,aes128-ctr
-    MACs hmac-sha2-512,hmac-sha2-256
+    MACs hmac-sha2-512,hmac-sha2-256,hmac-sha1
