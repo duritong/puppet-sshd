@@ -166,10 +166,10 @@ AllowGroups <%= s %>
 #Host *.local
 #  CheckHostIP no
 
-<% if scope.lookupvar('sshd::hardened') -%>
-KexAlgorithms diffie-hellman-group-exchange-sha256
+<% if s=scope.lookupvar('sshd::hardened') -%>
+KexAlgorithms diffie-hellman-group-exchange-sha256<% if s.include?("+sha1") %>,diffie-hellman-group-exchange-sha1<% end %>
 Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
-MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com<% if s.include?("+sha1") %>,hmac-sha1<% end %>
 <% end -%>
 
 # Example of overriding settings on a per-user basis

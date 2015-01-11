@@ -60,7 +60,6 @@ class sshd(
   validate_bool($manage_client)
   validate_bool($harden_moduli)
   validate_bool($use_host_ecdsa_key)
-  validate_bool($hardened)
   validate_bool($hardened_client)
   validate_array($listen_address)
   validate_array($ports)
