@@ -28,7 +28,7 @@ class sshd(
   $hostbased_authentication = 'no',
   $permit_empty_passwords = 'no',
   $authorized_keys_file = $::osfamily ? {
-    Debian => $::operatingsystemmajrelease ? {
+    Debian => $::lsbmajdistrelease ? {
       6       => '%h/.ssh/authorized_keys',
       default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
     },
