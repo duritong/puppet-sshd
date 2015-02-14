@@ -78,9 +78,9 @@ describe 'sshd' do
     it_behaves_like "a Linux OS" do
       let :facts do
         {
-        :operatingsystem => 'CentOS',
-        :osfamily        => 'RedHat',
-        :lsbdistcodename => 'Final',
+        :operatingsystem           => 'CentOS',
+        :osfamily                  => 'RedHat',
+        :operatingsystemmajrelease => 7,
        }
       end
     end
