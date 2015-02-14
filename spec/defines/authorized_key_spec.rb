@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'sshd::ssh_authorized_key' do
+describe 'sshd::authorized_key' do
 
   context 'manage authorized key' do
     let(:title) { 'foo' }
@@ -12,7 +12,7 @@ describe 'sshd::ssh_authorized_key' do
 
     it { should contain_ssh_authorized_key('foo').with({
         'ensure' => 'present',
-        'type'   => 'ssh-dss',
+        'type'   => 'ssh-rsa',
         'user'   => 'foo',
         'target' => '/home/foo/.ssh/authorized_keys',
         'key'    => ssh_key,
@@ -32,7 +32,7 @@ describe 'sshd::ssh_authorized_key' do
 
     it { should contain_ssh_authorized_key('foo2').with({
         'ensure'  => 'present',
-        'type'    => 'ssh-dss',
+        'type'    => 'ssh-rsa',
         'user'    => 'foo2',
         'target'  => '/home/foo2/.ssh/authorized_keys',
         'key'     => ssh_key,
