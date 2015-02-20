@@ -51,7 +51,8 @@ hostname specified by `nagios_check_ssh_hostname`.
 
 NOTE: this requires that you are using the shared-nagios puppet module which
 supports the nagios native types via `nagios::service`:
-git://labs.riseup.net/shared-nagios
+
+https://gitlab.com/shared-puppet-modules-group/sshd
 
 ### Firewall
 
