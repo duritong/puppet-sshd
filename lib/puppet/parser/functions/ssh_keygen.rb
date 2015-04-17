@@ -27,3 +27,4 @@ Puppet::Parser::Functions::newfunction(:ssh_keygen, :type => :rvalue, :doc =>
     end
     [File.read(private_key_path),File.read(public_key_path)]
 end
+
