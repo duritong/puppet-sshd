@@ -119,10 +119,11 @@ AllowGroups <%= s %>
 <% if (scope.function_versioncmp([@ssh_version,'6.5'])) >= 0 -%>
 KexAlgorithms curve25519-sha256@libssh.org
 Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes256-ctr
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com
 <% else -%>
 Ciphers aes256-ctr
-<% end -%>
 MACs hmac-sha1
+<% end -%>
 <% end -%>
 
 <% unless (s=scope.lookupvar('sshd::tail_additional_options')).empty? -%>
