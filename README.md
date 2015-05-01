@@ -49,9 +49,17 @@ monitored.
 Nagios will automatically check the ports defined in `ports`, and the
 hostname specified by `nagios_check_ssh_hostname`.
 
+Note that if you need to use some specific logic to decide whether or not to
+create a nagios service check, you should set $manage_nagios to false, and
+use sshd::nagios from within your own manifests. You'll also need to manually
+specify the port to that define. By default, if the $port parameter is not
+specified, it will use the resource name as the port (e.g. if you call it like
+this: `sshd::nagios { '22': }` )
+
 NOTE: this requires that you are using the shared-nagios puppet module which
 supports the nagios native types via `nagios::service`:
-git://labs.riseup.net/shared-nagios
+
+https://gitlab.com/shared-puppet-modules-group/sshd
 
 ### Firewall
 
