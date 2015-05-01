@@ -128,7 +128,7 @@ AllowGroups <%= s %>
 #	AllowTcpForwarding no
 #	ForceCommand cvs server
 
-<% if scope.lookupvar('sshd::hardened_ssl') == 'yes' -%>
+<% if scope.lookupvar('sshd::hardened') == 'yes' -%>
 Ciphers aes256-ctr
 MACs hmac-sha1
 <% end -%>
