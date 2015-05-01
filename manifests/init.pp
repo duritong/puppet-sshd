@@ -40,7 +40,7 @@ class sshd(
     OpenBSD => '%h/.ssh/authorized_keys',
     default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
   },
-  $hardened_ssl = 'no',
+  $hardened = 'no',
   $sftp_subsystem = '',
   $head_additional_options = '',
   $tail_additional_options = '',
