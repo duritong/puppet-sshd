@@ -165,6 +165,9 @@ AllowGroups <%= s %>
 #  CheckHostIP no
 
 <% if scope.lookupvar('sshd::hardened') == 'yes' -%>
+<% if (scope.function_versioncmp([@ssh_version,'6.5'])) >= 0 -%>
+KexAlgorithms curve25519-sha256@libssh.org
+<% end -%>
 Ciphers aes256-ctr
 MACs hmac-sha1
 <% end -%>
