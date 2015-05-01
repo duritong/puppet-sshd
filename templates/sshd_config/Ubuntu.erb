@@ -116,6 +116,9 @@ AllowGroups <%= s %>
 <%- end -%>
 
 <% if scope.lookupvar('sshd::hardened') == 'yes' -%>
+<% if (scope.function_versioncmp([scope.lookupvar('::ssh_version'),'6.5'])) >= 0 -%>
+KexAlgorithms curve25519-sha256@libssh.org
+<% end -%>
 Ciphers aes256-ctr
 MACs hmac-sha1
 <% end -%>
