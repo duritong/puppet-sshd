@@ -156,6 +156,7 @@ MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-
 Ciphers aes256-ctr
 MACs hmac-sha1
 <% end -%>
+<% end -%>
 
 <% unless (s=scope.lookupvar('sshd::tail_additional_options')).empty? -%>
 <%= s %>
