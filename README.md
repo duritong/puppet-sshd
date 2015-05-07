@@ -4,6 +4,10 @@
 
 This puppet module manages OpenSSH configuration and services.
 
+**!! Upgrade Notice (05/2015) !!**
+
+The hardened_ssl parameter name was changed to simply 'hardened'.
+
 **!! Upgrade Notice (01/2013) !!**
 
 This module now uses parameterized classes, where it used global variables
@@ -179,8 +183,8 @@ The following is a list of the currently available variables:
     Set this to the location of the AuthorizedKeysFile
     (e.g. `/etc/ssh/authorized_keys/%u`). Default: `AuthorizedKeysFile
     %h/.ssh/authorized_keys`
-  - `hardened_ssl`
-    Use only strong SSL ciphers and MAC.
+  - `hardened`
+    Use only strong ciphers, MAC, KexAlgorithms, etc.
     Values:
     - `no` (default)
     - `yes`

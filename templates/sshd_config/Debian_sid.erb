@@ -111,9 +111,10 @@ AllowUsers <%= s %>
 AllowGroups <%= s %>
 <%- end -%>
 
-<% if scope.lookupvar('sshd::hardened_ssl') == 'yes' -%>
-Ciphers aes256-ctr
-MACs hmac-sha1
+<% if scope.lookupvar('sshd::hardened') == 'yes' -%>
+KexAlgorithms curve25519-sha256@libssh.org
+Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes256-ctr
+MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com
 <% end -%>
 
 <% unless (s=scope.lookupvar('sshd::tail_additional_options')).empty? -%>
