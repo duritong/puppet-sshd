@@ -4,15 +4,12 @@ require 'etc'
 # Etc module) and look in their .ssh directory for public keys. the
 # public keys are exported in a user => [keys] hash, where keys are
 # stored in the array without distinction of type
-#
-# old RSA1 keys are not exported.
 Facter.add(:ssh_keys_users) do
   setcode do
     keys_hash = {}
     Etc.passwd { |user|
       keys = []
-      ['id_dsa.pub', 'id_rsa.pub', 'id_ecdsa.pub', 'id_ed25519.pub'].each { |file|
-        filepath = File.join(user.dir, '.ssh', file)
+      Dir.glob(File.join(user.dir, '.ssh', '*.pub')).each { |filepath|
         if FileTest.file?(filepath)
           regex1 = %r{^(\S+) (\S+) (\S+)$}
           regex2 = %r{^(\S+) (\S+)(\s+)$}
