@@ -37,7 +37,7 @@ SyslogFacility AUTH
 LogLevel INFO
 
 # Authentication:
-LoginGraceTime 600
+LoginGraceTime 120
 PermitRootLogin <%= scope.lookupvar('::sshd::permit_root_login') %>
 
 StrictModes <%= scope.lookupvar('::sshd::strict_modes') %>
