@@ -51,10 +51,11 @@ define sshd::ssh_authorized_key(
     case $options {
       'absent': {
         info("not setting any option for ssh_authorized_key: ${name}")
+        $header = "# HEADER: This file is managed by Puppet.\n"
 
         file { $real_target:
           ensure => $ensure,
-          content => "${type} ${key}",
+          content => "${header}${type} ${key}",
           owner => $real_user,
           mode => '0600';
         }
@@ -62,7 +63,7 @@ define sshd::ssh_authorized_key(
       default: {
         file { $real_target:
           ensure => $ensure,
-          content => "${options} ${type} ${key}",
+          content => "${header}${options} ${type} ${key}",
           owner => $real_user,
           mode => '0600';
         }
