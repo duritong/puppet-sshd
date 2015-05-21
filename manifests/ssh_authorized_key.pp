@@ -52,18 +52,18 @@ define sshd::ssh_authorized_key(
       'absent': {
         info("not setting any option for ssh_authorized_key: ${name}")
 
-        file { '$real_target':
+        file { $real_target:
           ensure => $ensure,
-          content => '$type $key',
-          owner => '$real_user',
+          content => "${type} ${key}",
+          owner => $real_user,
           mode => '0600';
         }
       }
       default: {
-        file { '$real_target':
+        file { $real_target:
           ensure => $ensure,
-          content => '$options $type $key',
-          owner => '$real_user',
+          content => "${options} ${type} ${key}",
+          owner => $real_user,
           mode => '0600';
         }
       }
