@@ -48,32 +48,45 @@ define sshd::ssh_authorized_key(
   # nothing a user can't already do by writing their own file resources,
   # we still depend on the filesystem permissions to keep things safe.
   if $override_builtin {
+    case $options {
+      'absent': {
+        info("not setting any option for ssh_authorized_key: ${name}")
+        $header = "# HEADER: This file is managed by Puppet.\n"
 
-    $header = '# HEADER: This file is managed by Puppet.'
-
-    file { $real_target:
-      ensure  => $ensure,
-      owner   => $real_user,
-      mode    => '0600',
-      content => $options ? {
-        'absent' => "${header}\n${type} ${key}",
-        default  => "${header}\n${options} ${type} ${key}",
-      },
+        file { $real_target:
+          ensure => $ensure,
+          content => "${header}${type} ${key}",
+          owner => $real_user,
+          mode => '0600';
+        }
+      }
+      default: {
+        file { $real_target:
+          ensure => $ensure,
+          content => "${header}${options} ${type} ${key}",
+          owner => $real_user,
+          mode => '0600';
+        }
+      }
     }
-
   } else {
-
     ssh_authorized_key{$name:
-      ensure  => $ensure,
-      type    => $type,
-      key     => $key,
-      user    => $real_user,
-      target  => $real_target,
-      options => $options ? {
-        'absent' => undef,
-        default  => $options,
-      },
+      ensure => $ensure,
+      type   => $type,
+      key    => $key,
+      user   => $real_user,
+      target => $real_target,
     }
 
+    case $options {
+      'absent': {
+        info("not setting any option for ssh_authorized_key: ${name}")
+      }
+      default: {
+        Ssh_authorized_key[$name]{
+          options => $options,
+        }
+      }
+    }
   }
 }
