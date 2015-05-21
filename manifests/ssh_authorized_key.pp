@@ -52,9 +52,9 @@ define sshd::ssh_authorized_key(
 
     if $options == 'absent' {
       info("not setting any option for ssh_authorized_key: ${name}")
-      $content = "${header}${type} ${key}"
+      $content = "${header}${type} ${key}\n"
     } else {
-      $content = "${header}${options} ${type} ${key}"
+      $content = "${header}${options} ${type} ${key}\n"
     }
 
     file { $real_target:
