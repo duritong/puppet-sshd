@@ -88,6 +88,8 @@ KeepAlive yes
 
 #MaxStartups 10:30:60
 #Banner /etc/issue.net
+# do not reveal debian version (default is yes)
+DebianBanner no
 #ReverseMappingCheck yes
 
 Subsystem      sftp    <%= (s=scope.lookupvar('::sshd::sftp_subsystem')).empty? ? '/usr/lib/openssh/sftp-server' : s %>
