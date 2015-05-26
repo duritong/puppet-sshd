@@ -11,11 +11,10 @@ Facter.add(:ssh_keys_users) do
       keys = []
       Dir.glob(File.join(user.dir, '.ssh', '*.pub')).each { |filepath|
         if FileTest.file?(filepath)
-          regex1 = %r{^(\S+) (\S+) (\S+)$}
-          regex2 = %r{^(\S+) (\S+)(\s+)$}
+          regex = %r{^(\S+) (\S+)(\s+\S+)?$}
           begin
             line = File.open(filepath).read.chomp
-            if (match = regex1.match(line)) or (match = regex2.match(line))
+            if (match = regex.match(line))
               keys += [match[2]]
             end
           rescue
