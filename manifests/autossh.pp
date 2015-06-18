@@ -1,6 +1,7 @@
 class sshd::autossh($host,
-                    $port = undef, # this should be a remote->local hash
-                    $remote_user = undef,
+              $port = undef, # this should be a remote->local hash
+              $remote_user = undef,
+              $user = 'root',
 ) {
   if $port {
     $port_ensure = $port
@@ -21,7 +22,7 @@ class sshd::autossh($host,
       source => 'puppet:///modules/sshd/autossh.init.d';
     '/etc/default/autossh':
       mode    => '0444',
-      content => "DAEMON_ARGS='-o ServerAliveInterval=15 -o ServerAliveCountMax=4 -q -N -R $port_ensure:localhost:22 $remote_user_ensure@$host'\n";
+      content => "USER=$user\nDAEMON_ARGS='-o ServerAliveInterval=15 -o ServerAliveCountMax=4 -q -N -R $port_ensure:localhost:22 $remote_user_ensure@$host'\n";
   }
   package { 'autossh':
     ensure => present,
