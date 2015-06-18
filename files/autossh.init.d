@@ -19,12 +19,15 @@ DESC="autossh"
 NAME=autossh
 USER=$NAME
 DAEMON=/usr/bin/autossh
-DAEMON_ARGS=""
+DAEMON_ARGS="-f"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
 # Read configuration variable file if it is present
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+AUTOSSH_PIDFILE=$PIDFILE
+export AUTOSSH_PIDFILE
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
@@ -46,9 +49,9 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-        start-stop-daemon --start --quiet --background --user $USER --pidfile $PIDFILE --makepidfile --exec $DAEMON --test > /dev/null \
+        start-stop-daemon --start --quiet --user $USER --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
 		|| return 1
-	start-stop-daemon --start --quiet --background --user $USER --chuid $USER --pidfile $PIDFILE --makepidfile --exec $DAEMON -- \
+	start-stop-daemon --start --quiet --user $USER --chuid $USER --pidfile $PIDFILE --exec $DAEMON -- \
 		$DAEMON_ARGS \
 		|| return 2
 	# The above code will not work for interpreted scripts, use the next
