@@ -23,12 +23,16 @@ class sshd::autossh($host,
       mode    => '0444',
       content => "DAEMON_OPTS='-o ServerAliveInterval=15 -o ServerAliveCountMax=4 -q -N -R $port_ensure:localhost:22 $user_ensure@$host'\n";
   }
+  package { 'autossh':
+    ensure => present,
+  }
   service { 'autossh':
     ensure    => running,
     enable    => true,
     subscribe => [
-                File['/etc/init.d/autossh'],
-                File['/etc/default/autossh']
-                ],
+                  File['/etc/init.d/autossh'],
+                  File['/etc/default/autossh'],
+                  Package['autossh'],
+                  ],
   }
 }

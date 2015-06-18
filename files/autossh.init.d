@@ -6,12 +6,14 @@
 # Required-Stop:	$remote_fs $syslog
 # Default-Start:	2 3 4 5
 # Default-Stop:		
-# Short-Description:	Autossh for isuma
+# Short-Description:	AutoSSH daemon
 ### END INIT INFO
 
 set -e
 
 umask 022
+
+PIDFILE=/var/run/autossh.pid
 
 if test -f /etc/default/isuma-autossh; then
     . /etc/default/isuma-autossh
@@ -23,16 +25,16 @@ export PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 case "$1" in
   start)
-	log_daemon_msg "Starting Autossh for isuma" "autossh"
-	if start-stop-daemon --quiet --start --background --pidfile /var/run/autossh-isuma.pid --make-pidfile --exec /usr/bin/autossh -- $AUTOSSH_ISUMA_OPTS; then
+	log_daemon_msg "Starting AutoSSH daemon" "autossh"
+	if start-stop-daemon --quiet --start --background --pidfile $PIDFILE --make-pidfile --exec /usr/bin/autossh -- $DAEMON_OPTS; then
 	    log_end_msg 0
 	else
 	    log_end_msg 1
 	fi
 	;;
   stop)
-	log_daemon_msg "Stopping Autossh for isuma" "autossh"
-	if start-stop-daemon --stop --quiet --pidfile /var/run/autossh-isuma.pid ; then
+	log_daemon_msg "Stopping AutoSSH daemon" "autossh"
+	if start-stop-daemon --stop --quiet --pidfile $PIDFILE ; then
 	    log_end_msg 0
 	else
 	    log_end_msg 1
@@ -40,8 +42,8 @@ case "$1" in
 	;;
 
   reload|force-reload)
-	log_daemon_msg "Reloading Autossh for isuma's configuration" "autossh"
-	if start-stop-daemon --stop --signal 1 --quiet --oknodo --pidfile /var/run/autossh-isuma.pid; then
+	log_daemon_msg "Reloading AutoSSH daemon" "autossh"
+	if start-stop-daemon --stop --signal 1 --quiet --oknodo --pidfile $PIDFILE; then
 	    log_end_msg 0
 	else
 	    log_end_msg 1
@@ -50,8 +52,8 @@ case "$1" in
 
   restart)
 	log_daemon_msg "Restarting Autossh for isuma" "autossh"
-	start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile /var/run/autossh-isuma.pid
-	if start-stop-daemon --start --quiet -b --make-pidfile  --pidfile /var/run/autossh-isuma.pid --exec /usr/bin/autossh -- $AUTOSSH_ISUMA_OPTS; then
+	start-stop-daemon --stop --quiet --oknodo --retry 30 --pidfile $PIDFILE
+	if start-stop-daemon --start --quiet -b --make-pidfile  --pidfile $PIDFILE --exec /usr/bin/autossh -- $AUTOSSH_ISUMA_OPTS; then
 	    log_end_msg 0
 	else
 	    log_end_msg 1
@@ -61,13 +63,13 @@ case "$1" in
   try-restart)
 	log_daemon_msg "Restarting Autossh for isuma" "autossh"
 	set +e
-	start-stop-daemon --stop --quiet --retry 30 --pidfile /var/run/autossh-isuma.pid
+	start-stop-daemon --stop --quiet --retry 30 --pidfile $PIDFILE
 	RET="$?"
 	set -e
 	case $RET in
 	    0)
 		# old daemon stopped
-		if start-stop-daemon --start --quiet --oknodo -b --pidfile /var/run/autossh-isuma.pid --make-pidfile --exec /usr/bin/autossh -- $AUTOSSH_ISUMA_OPTS; then
+		if start-stop-daemon --start --quiet --oknodo -b --pidfile $PIDFILE --make-pidfile --exec /usr/bin/autossh -- $AUTOSSH_ISUMA_OPTS; then
 		    log_end_msg 0
 		else
 		    log_end_msg 1
@@ -87,7 +89,7 @@ case "$1" in
 	;;
 
   status)
-    status_of_proc -p /var/run/autossh-isuma.pid /usr/sbin/autossh autossh && exit 0 || exit $?
+    status_of_proc -p $PIDFILE /usr/sbin/autossh autossh && exit 0 || exit $?
 	;;
 
   *)
