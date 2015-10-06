@@ -117,7 +117,7 @@ AllowGroups <%= s %>
 
 <% if scope.lookupvar('::sshd::hardened') == 'yes' -%>
 Ciphers aes256-ctr
-MACs hmac-sha1
+MACs hmac-sha2-512
 <% end -%>
 
 <% unless (s=scope.lookupvar('::sshd::tail_additional_options')).empty? -%>
