@@ -27,7 +27,7 @@ class sshd::base {
     default: {
       # only export sshkey when storedconfigs is enabled
       if $::sshd::use_storedconfigs {
-        include ::ssh::sshkey
+        include ::sshd::sshkey
       }
     }
   }
