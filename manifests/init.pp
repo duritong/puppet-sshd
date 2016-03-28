@@ -29,17 +29,17 @@ class sshd(
   $hostbased_authentication = 'no',
   $permit_empty_passwords = 'no',
   $authorized_keys_file = $::osfamily ? {
-    Debian => $::operatingsystemmajrelease ? {
-      6       => '%h/.ssh/authorized_keys',
+    'Debian' => $::operatingsystemmajrelease ? {
+      '6'     => '%h/.ssh/authorized_keys',
       default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
     },
-    RedHat => $::operatingsystemmajrelease ? {
-      5       => '%h/.ssh/authorized_keys',
-      6       => '%h/.ssh/authorized_keys',
+    'RedHat' => $::operatingsystemmajrelease ? {
+      '5'     => '%h/.ssh/authorized_keys',
+      '6'     => '%h/.ssh/authorized_keys',
       default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
     },
-    OpenBSD => '%h/.ssh/authorized_keys',
-    default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
+    'OpenBSD' => '%h/.ssh/authorized_keys',
+    default   => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
   },
   $hardened = false,
   $hardened_client = false,
@@ -65,7 +65,7 @@ class sshd(
   validate_array($ports)
 
   if $manage_client {
-    class{'sshd::client':
+    class{'::sshd::client':
       shared_ip        => $shared_ip,
       ensure_version   => $ensure_version,
       manage_shorewall => $manage_shorewall,
@@ -74,11 +74,11 @@ class sshd(
   }
 
   case $::operatingsystem {
-    gentoo: { include sshd::gentoo }
-    redhat,centos: { include sshd::redhat }
-    openbsd: { include sshd::openbsd }
-    debian,ubuntu: { include sshd::debian }
-    default: { include sshd::base }
+    'Gentoo': { include ::sshd::gentoo }
+    'RedHat','CentOS': { include ::sshd::redhat }
+    'OpenBSD': { include ::sshd::openbsd }
+    'Debian','Ubuntu': { include ::sshd::debian }
+    default: { include ::sshd::base }
   }
 
   if $manage_nagios {
@@ -88,7 +88,7 @@ class sshd(
   }
 
   if $manage_shorewall {
-    class{'shorewall::rules::ssh':
+    class{'::shorewall::rules::ssh':
       ports  => $ports,
       source => $shorewall_source
     }
