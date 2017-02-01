@@ -16,12 +16,12 @@
 
 #VersionAddendum FreeBSD-20100308
 
-<% unless (s=scope.lookupvar('sshd::head_additional_options')).empty? -%>
+<% unless (s=scope.lookupvar('::sshd::head_additional_options')).empty? -%>
 <%= s %>
 <% end -%>
 
 # What ports, IPs and protocols we listen for
-<% scope.lookupvar('sshd::ports').to_a.each do |port| -%>
+<% scope.lookupvar('::sshd::ports').to_a.each do |port| -%>
 <% if port == 'off' -%>
 #Port -- disabled by puppet
 <% else -%>
@@ -30,7 +30,7 @@ Port <%= port %>
 <% end -%>
 
 #AddressFamily any
-<% scope.lookupvar('sshd::listen_address').to_a.each do |address| -%>
+<% scope.lookupvar('::sshd::listen_address').to_a.each do |address| -%>
 ListenAddress <%= address %>
 <% end -%>
 
@@ -40,7 +40,7 @@ Protocol 2
 # HostKey for protocol version 1
 #HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2
-<% scope.lookupvar('sshd::hostkey_type').to_a.each do |hostkey_type| -%>
+<% scope.lookupvar('::sshd::hostkey_type').to_a.each do |hostkey_type| -%>
 HostKey /etc/ssh/ssh_host_<%=hostkey_type %>_key
 <% end -%>
 
@@ -56,24 +56,24 @@ LogLevel INFO
 # Authentication:
 
 LoginGraceTime 600
-PermitRootLogin <%= scope.lookupvar('sshd::permit_root_login') %>
+PermitRootLogin <%= scope.lookupvar('::sshd::permit_root_login') %>
 
-StrictModes <%= scope.lookupvar('sshd::strict_modes') %>
+StrictModes <%= scope.lookupvar('::sshd::strict_modes') %>
 
 #MaxAuthTries 6
 #MaxSessions 10
 
-RSAAuthentication <%= scope.lookupvar('sshd::rsa_authentication') %>
+RSAAuthentication <%= scope.lookupvar('::sshd::rsa_authentication') %>
 
-PubkeyAuthentication <%= scope.lookupvar('sshd::pubkey_authentication') %>
+PubkeyAuthentication <%= scope.lookupvar('::sshd::pubkey_authentication') %>
 
-AuthorizedKeysFile <%= scope.lookupvar('sshd::authorized_keys_file') %>
+AuthorizedKeysFile <%= scope.lookupvar('::sshd::authorized_keys_file') %>
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
-RhostsRSAAuthentication <%= scope.lookupvar('sshd::rhosts_rsa_authentication') %>
+RhostsRSAAuthentication <%= scope.lookupvar('::sshd::rhosts_rsa_authentication') %>
 
 # similar for protocol version 2
-HostbasedAuthentication <%= scope.lookupvar('sshd::hostbased_authentication') %>
+HostbasedAuthentication <%= scope.lookupvar('::sshd::hostbased_authentication') %>
 
 # Change to yes if you don't trust ~/.ssh/known_hosts for
 # RhostsRSAAuthentication and HostbasedAuthentication
@@ -82,21 +82,21 @@ HostbasedAuthentication <%= scope.lookupvar('sshd::hostbased_authentication') %>
 #IgnoreRhosts yes
 
 # Change to yes to enable built-in password authentication.
-PasswordAuthentication <%= scope.lookupvar('sshd::password_authentication') %>
+PasswordAuthentication <%= scope.lookupvar('::sshd::password_authentication') %>
 
-PermitEmptyPasswords <%= scope.lookupvar('sshd::permit_empty_passwords') %>
+PermitEmptyPasswords <%= scope.lookupvar('::sshd::permit_empty_passwords') %>
 
 # Change to no to disable PAM authentication
-ChallengeResponseAuthentication <%= scope.lookupvar('sshd::challenge_response_authentication') %>
+ChallengeResponseAuthentication <%= scope.lookupvar('::sshd::challenge_response_authentication') %>
 
 # Kerberos options
-KerberosAuthentication <%= scope.lookupvar('sshd::kerberos_authentication') %>
-KerberosOrLocalPasswd <%= scope.lookupvar('sshd::kerberos_orlocalpasswd') %>
-KerberosTicketCleanup <%= scope.lookupvar('sshd::kerberos_ticketcleanup') %>
+KerberosAuthentication <%= scope.lookupvar('::sshd::kerberos_authentication') %>
+KerberosOrLocalPasswd <%= scope.lookupvar('::sshd::kerberos_orlocalpasswd') %>
+KerberosTicketCleanup <%= scope.lookupvar('::sshd::kerberos_ticketcleanup') %>
 
 # GSSAPI options
-GSSAPIAuthentication <%= scope.lookupvar('sshd::gssapi_authentication') %>
-GSSAPICleanupCredentials <%= scope.lookupvar('sshd::gssapi_cleanupcredentials') %>
+GSSAPIAuthentication <%= scope.lookupvar('::sshd::gssapi_authentication') %>
+GSSAPICleanupCredentials <%= scope.lookupvar('::sshd::gssapi_cleanupcredentials') %>
 
 # Set this to 'no' to disable PAM authentication, account processing,
 # and session processing. If this is enabled, PAM authentication will 
@@ -107,14 +107,14 @@ GSSAPICleanupCredentials <%= scope.lookupvar('sshd::gssapi_cleanupcredentials') 
 # If you just want the PAM account and session checks to run without
 # PAM authentication, then enable this but set PasswordAuthentication
 # and ChallengeResponseAuthentication to 'no'.
-UsePAM <%= scope.lookupvar('sshd::use_pam') %>
+UsePAM <%= scope.lookupvar('::sshd::use_pam') %>
 
-AllowAgentForwarding <%= scope.lookupvar('sshd::agent_forwarding') %>
+AllowAgentForwarding <%= scope.lookupvar('::sshd::agent_forwarding') %>
 
-AllowTcpForwarding <%= scope.lookupvar('sshd::tcp_forwarding') %>
+AllowTcpForwarding <%= scope.lookupvar('::sshd::tcp_forwarding') %>
 
 #GatewayPorts no
-X11Forwarding <%= scope.lookupvar('sshd::x11_forwarding') %>
+X11Forwarding <%= scope.lookupvar('::sshd::x11_forwarding') %>
 
 X11DisplayOffset 10
 #X11UseLocalhost yes
@@ -137,7 +137,7 @@ TCPKeepAlive yes
 #Banner none
 
 # override default of no subsystems
-Subsystem      sftp    <%= (s=scope.lookupvar('sshd::sftp_subsystem')).empty? ? '/usr/libexec/sftp-server' : s %>
+Subsystem      sftp    <%= (s=scope.lookupvar('::sshd::sftp_subsystem')).empty? ? '/usr/libexec/sftp-server' : s %>
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs
@@ -145,15 +145,15 @@ Subsystem      sftp    <%= (s=scope.lookupvar('sshd::sftp_subsystem')).empty? ? 
 #	AllowTcpForwarding no
 #	ForceCommand cvs server
 
-<% unless (s=scope.lookupvar('sshd::allowed_users')).empty? -%>
+<% unless (s=scope.lookupvar('::sshd::allowed_users')).empty? -%>
 AllowUsers <%= s %>
 <% end -%>
-<% unless (s=scope.lookupvar('sshd::allowed_groups')).empty? -%>
+<% unless (s=scope.lookupvar('::sshd::allowed_groups')).empty? -%>
 AllowGroups <%= s %>
 <%- end -%>
 
-<% if scope.lookupvar('sshd::hardened') == 'yes' -%>
-<% if (scope.function_versioncmp([@ssh_version,'6.5'])) >= 0 -%>
+<% if scope.lookupvar('::sshd::hardened') == 'yes' -%>
+<% if (scope.function_versioncmp([scope.lookupvar('::ssh_version'),'6.5'])) >= 0 -%>
 KexAlgorithms curve25519-sha256@libssh.org
 Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes256-ctr
 MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com
@@ -163,6 +163,6 @@ MACs hmac-sha1
 <% end -%>
 <% end -%>
 
-<% unless (s=scope.lookupvar('sshd::tail_additional_options')).empty? -%>
+<% unless (s=scope.lookupvar('::sshd::tail_additional_options')).empty? -%>
 <%= s %>
 <% end -%>
