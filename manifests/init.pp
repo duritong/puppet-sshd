@@ -51,7 +51,7 @@ class sshd(
   $print_motd = 'yes',
   $manage_shorewall = false,
   $shorewall_source = 'net',
-  $sshkey_ipaddress = $::ipaddress,
+  $sshkey_ipaddress = pick($default_ipaddress,$::ipaddress),
   $manage_client = true,
   $purge_sshkeys = true,
 ) {
