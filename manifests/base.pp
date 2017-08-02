@@ -3,12 +3,15 @@
 # throught the sshd class itself.
 class sshd::base {
 
-  $sshd_config_content = $::operatingsystem ? {
-    'CentOS'  => template("sshd/sshd_config/${::operatingsystem}_${::operatingsystemmajrelease}.erb"),
-    default   => $::lsbdistcodename ? {
-      ''      => template("sshd/sshd_config/${::operatingsystem}.erb"),
-      default => template("sshd/sshd_config/${::operatingsystem}_${::lsbdistcodename}.erb")
-    }
+  if $osfamily == 'Debian' {
+    $osrelease = $::lsbdistcodename
+  } else {
+    $osrelease = $operatingsystemmajrelease
+  }
+
+  $sshd_config_content = $osrelease ? {
+    ''      => template("sshd/sshd_config/${::operatingsystem}.erb"),
+    default => template("sshd/sshd_config/${::operatingsystem}_${osrelease}.erb")
   }
 
   file {
@@ -28,7 +31,7 @@ class sshd::base {
       command     => 'awk \'$5 >= 2048\' /etc/ssh/moduli > $TMP && \
         mv $TMP /etc/ssh/moduli',
       unless      => 'awk \'$5 < 2048 { exit 1 }\' /etc/ssh/moduli',
-      notify      => Service[sshd],
+      notify      => Service['sshd'],
     }
   }
 

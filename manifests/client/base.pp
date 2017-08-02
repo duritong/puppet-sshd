@@ -14,13 +14,17 @@ class sshd::client::base {
   }
 
   if $sshd::client::hardened {
+    if $osfamily == 'Debian' {
+      $osrelease = $::lsbdistcodename
+    } else {
+      $osrelease = $operatingsystemmajrelease
+    }
     file {
       '/etc/ssh/ssh_config':
         ensure  => present,
         source  => ["puppet:///modules/site_sshd/${::fqdn}/hardened_ssh_config",
                     "puppet:///modules/site_sshd/hardened_ssh_config",
-                    "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}_${::operatingsystemmajrelease}",
-                    "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}_${::lsbdistcodename}",
+                    "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}_${osrelease}",
                     "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}"],
         notify  => Service[sshd],
         owner   => root,
