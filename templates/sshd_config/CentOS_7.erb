@@ -62,7 +62,8 @@ StrictModes <%= scope.lookupvar('sshd::strict_modes') %>
 #MaxAuthTries 6
 #MaxSessions 10
 
-RSAAuthentication <%= scope.lookupvar('sshd::rsa_authentication') %>
+# Deprecated in EL 7.4
+# RSAAuthentication <%= scope.lookupvar('sshd::rsa_authentication') %>
 PubkeyAuthentication <%= scope.lookupvar('sshd::pubkey_authentication') %>
 AuthorizedKeysFile <%= scope.lookupvar('sshd::authorized_keys_file') %>
 #AuthorizedPrincipalsFile none
@@ -70,7 +71,8 @@ AuthorizedKeysFile <%= scope.lookupvar('sshd::authorized_keys_file') %>
 #AuthorizedKeysCommandRunAs nobody
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
-RhostsRSAAuthentication <%= scope.lookupvar('sshd::rhosts_rsa_authentication') %>
+# Deprecated in EL 7.4
+# RhostsRSAAuthentication <%= scope.lookupvar('sshd::rhosts_rsa_authentication') %>
 
 # similar for protocol version 2
 HostbasedAuthentication <%= scope.lookupvar('sshd::hostbased_authentication') %>
