@@ -37,7 +37,8 @@ class sshd::base {
 
   # Now add the key, if we've got one
   if !empty($facts['ssh']['rsa']) {
-    @@sshkey{$facts['fqdn']:
+    @@sshkey{"${facts['fqdn']}-rsa":
+      name => $facts['fqdn'],
       tag  => 'fqdn',
       type => 'ssh-rsa',
       key  => $facts['ssh']['rsa']['key'],
@@ -45,7 +46,8 @@ class sshd::base {
     # In case the node has uses a shared network address,
     # we don't define a sshkey resource using an IP address
     if $sshd::shared_ip == 'no' {
-      @@sshkey{$sshd::sshkey_ipaddress:
+      @@sshkey{"${sshd::sshkey_ipaddress}-rsa":
+        name => $sshd::sshkey_ipaddress,
         tag  => 'ipaddress',
         type => 'ssh-rsa',
         key  => $facts['ssh']['rsa']['key'],
