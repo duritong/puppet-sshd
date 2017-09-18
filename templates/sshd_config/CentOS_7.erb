@@ -7,7 +7,7 @@
 
 # The strategy used for options in the default sshd_config shipped with
 # OpenSSH is to specify options with their default value where
-possible, but leave them commented.  Uncommented options override the
+# possible, but leave them commented.  Uncommented options override the
 # default value.
 <% unless (s=scope.lookupvar('sshd::head_additional_options')).empty? -%>
 
