@@ -6,12 +6,13 @@ class sshd::base {
   if $osfamily == 'Debian' {
     $osrelease = $::lsbdistcodename
   } else {
-    $osrelease = $operatingsystemmajrelease
+    $osrelease = $::operatingsystemmajrelease
   }
 
-  $sshd_config_content = $osrelease ? {
-    ''      => template("sshd/sshd_config/${::operatingsystem}.erb"),
-    default => template("sshd/sshd_config/${::operatingsystem}_${osrelease}.erb")
+  if empty($osrelease) {
+    $sshd_config_content = template("sshd/sshd_config/${::operatingsystem}.erb")
+  } else {
+    $sshd_config_content = template("sshd/sshd_config/${::operatingsystem}_${osrelease}.erb")
   }
 
   file {
@@ -36,24 +37,37 @@ class sshd::base {
   }
 
   # Now add the key, if we've got one
-  case $::sshrsakey {
-    '': { info("no sshrsakey on ${::fqdn}") }
-    default: {
-      @@sshkey{$::fqdn:
-        ensure => present,
-        tag    => 'fqdn',
-        type   => ssh-rsa,
-        key    => $::sshrsakey,
+  if !empty($facts['ssh']['rsa']) {
+    @@sshkey{$facts['fqdn']:
+      tag    => 'fqdn',
+      type   => 'ssh-rsa',
+      key    => $facts['ssh']['rsa']['key'],
+    }
+    # In case the node has uses a shared network address,
+    # we don't define a sshkey resource using an IP address
+    if $sshd::shared_ip == 'no' {
+      @@sshkey{$sshd::sshkey_ipaddress:
+        tag    => 'ipaddress',
+        type   => 'ssh-rsa',
+        key    => $facts['ssh']['rsa']['key'],
       }
-      # In case the node has uses a shared network address,
-      # we don't define a sshkey resource using an IP address
-      if $sshd::shared_ip == 'no' {
-        @@sshkey{$sshd::sshkey_ipaddress:
-          ensure => present,
-          tag    => 'ipaddress',
-          type   => ssh-rsa,
-          key    => $::sshrsakey,
-        }
+    }
+  }
+  if !empty($facts['ssh']['ed25519']) {
+    @@sshkey{"${facts['fqdn']}-ed255519":
+      name   => $facts['fqdn'],
+      tag    => 'fqdn',
+      type   => 'ssh-ed25519',
+      key    => $facts['ssh']['ed25519']['key'],
+    }
+    # In case the node has uses a shared network address,
+    # we don't define a sshkey resource using an IP address
+    if $sshd::shared_ip == 'no' {
+      @@sshkey{"${sshd::sshkey_ipaddress}-ed255519":
+        name   => $sshd::sshkey_ipaddress,
+        tag    => 'ipaddress',
+        type   => 'ssh-ed25519',
+        key    => $facts['ssh']['ed25519']['key'],
       }
     }
   }
