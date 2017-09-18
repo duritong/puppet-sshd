@@ -3,7 +3,7 @@
 # throught the sshd class itself.
 class sshd::base {
 
-  if $osfamily == 'Debian' {
+  if $::osfamily == 'Debian' {
     $osrelease = $::lsbdistcodename
   } else {
     $osrelease = $::operatingsystemmajrelease
@@ -17,7 +17,6 @@ class sshd::base {
 
   file {
     'sshd_config':
-      ensure  => present,
       path    => '/etc/ssh/sshd_config',
       content => $sshd_config_content,
       notify  => Service[sshd],
@@ -39,35 +38,35 @@ class sshd::base {
   # Now add the key, if we've got one
   if !empty($facts['ssh']['rsa']) {
     @@sshkey{$facts['fqdn']:
-      tag    => 'fqdn',
-      type   => 'ssh-rsa',
-      key    => $facts['ssh']['rsa']['key'],
+      tag  => 'fqdn',
+      type => 'ssh-rsa',
+      key  => $facts['ssh']['rsa']['key'],
     }
     # In case the node has uses a shared network address,
     # we don't define a sshkey resource using an IP address
     if $sshd::shared_ip == 'no' {
       @@sshkey{$sshd::sshkey_ipaddress:
-        tag    => 'ipaddress',
-        type   => 'ssh-rsa',
-        key    => $facts['ssh']['rsa']['key'],
+        tag  => 'ipaddress',
+        type => 'ssh-rsa',
+        key  => $facts['ssh']['rsa']['key'],
       }
     }
   }
   if !empty($facts['ssh']['ed25519']) {
     @@sshkey{"${facts['fqdn']}-ed255519":
-      name   => $facts['fqdn'],
-      tag    => 'fqdn',
-      type   => 'ssh-ed25519',
-      key    => $facts['ssh']['ed25519']['key'],
+      name => $facts['fqdn'],
+      tag  => 'fqdn',
+      type => 'ssh-ed25519',
+      key  => $facts['ssh']['ed25519']['key'],
     }
     # In case the node has uses a shared network address,
     # we don't define a sshkey resource using an IP address
     if $sshd::shared_ip == 'no' {
       @@sshkey{"${sshd::sshkey_ipaddress}-ed255519":
-        name   => $sshd::sshkey_ipaddress,
-        tag    => 'ipaddress',
-        type   => 'ssh-ed25519',
-        key    => $facts['ssh']['ed25519']['key'],
+        name => $sshd::sshkey_ipaddress,
+        tag  => 'ipaddress',
+        type => 'ssh-ed25519',
+        key  => $facts['ssh']['ed25519']['key'],
       }
     }
   }
