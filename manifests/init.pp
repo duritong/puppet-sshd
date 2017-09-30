@@ -1,11 +1,11 @@
 # manage an sshd installation
 class sshd(
-  $manage_nagios = false,
+  Boolean $manage_nagios = false,
   $nagios_check_ssh_hostname = 'absent',
-  $ports = [ 22 ],
+  Array[Variant[String,Integer]] $ports = [ 22 ],
   $shared_ip = 'no',
   $ensure_version = 'installed',
-  $listen_address = [ '0.0.0.0', '::' ],
+  Array[String] $listen_address = [ '0.0.0.0', '::' ],
   $allowed_users = '',
   $allowed_groups = '',
   $use_pam = 'no',
@@ -41,28 +41,20 @@ class sshd(
     'OpenBSD' => '%h/.ssh/authorized_keys',
     default   => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
   },
-  $hardened = false,
-  $hardened_client = false,
-  $harden_moduli = false,
-  $use_host_ecdsa_key = false,
+  Variant[Boolean,String] $hardened = false,
+  Boolean $hardened_client = false,
+  Boolean $harden_moduli = false,
+  Boolean $use_host_ecdsa_key = false,
   $sftp_subsystem = '',
   $head_additional_options = '',
   $tail_additional_options = '',
   $print_motd = 'yes',
-  $manage_shorewall = false,
+  Boolean $manage_shorewall = false,
   $shorewall_source = 'net',
   $sshkey_ipaddress = pick($default_ipaddress,$::ipaddress),
-  $manage_client = true,
-  $purge_sshkeys = true,
+  Boolean $manage_client = true,
+  Boolean $purge_sshkeys = true,
 ) {
-
-  validate_bool($manage_shorewall)
-  validate_bool($manage_client)
-  validate_bool($harden_moduli)
-  validate_bool($use_host_ecdsa_key)
-  validate_bool($hardened_client)
-  validate_array($listen_address)
-  validate_array($ports)
 
   if $manage_client {
     class{'::sshd::client':
