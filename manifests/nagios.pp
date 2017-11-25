@@ -1,6 +1,7 @@
+# monitor a ssh port
 define sshd::nagios(
-  $port = 'absent',
-  $ensure = 'present',
+  $port           = 'absent',
+  $ensure         = 'present',
   $check_hostname = 'absent'
 ) {
   $real_port = $port ? {

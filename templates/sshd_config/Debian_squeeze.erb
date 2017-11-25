@@ -117,7 +117,7 @@ AllowUsers <%= s %>
 AllowGroups <%= s %>
 <%- end -%>
 
-<% if scope.lookupvar('::sshd::hardened') == 'yes' -%>
+<% if scope.lookupvar('sshd::hardened') -%>
 Ciphers aes256-ctr
 MACs hmac-sha2-512
 <% end -%>

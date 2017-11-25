@@ -1,14 +1,15 @@
 # manage an sshd installation
 class sshd(
-  $manage_nagios = false,
+  Boolean $manage_nagios = false,
   $nagios_check_ssh_hostname = 'absent',
-  $ports = [ 22 ],
+  Array[Variant[String,Integer]] $ports = [ 22 ],
   $shared_ip = 'no',
   $ensure_version = 'installed',
-  $listen_address = [ '0.0.0.0', '::' ],
+  Array[String] $listen_address = [ '0.0.0.0', '::' ],
   $allowed_users = '',
   $allowed_groups = '',
   $use_pam = 'no',
+  $use_dns = 'no',
   $permit_root_login = 'without-password',
   $password_authentication = 'no',
   $kerberos_authentication = 'no',
@@ -28,54 +29,48 @@ class sshd(
   $hostbased_authentication = 'no',
   $permit_empty_passwords = 'no',
   $authorized_keys_file = $::osfamily ? {
-    Debian => $::lsbmajdistrelease ? {
-      6       => '%h/.ssh/authorized_keys',
+    'Debian' => $::operatingsystemmajrelease ? {
+      '6'     => '%h/.ssh/authorized_keys',
       default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
     },
-    RedHat => $::operatingsystemmajrelease ? {
-      5       => '%h/.ssh/authorized_keys',
-      6       => '%h/.ssh/authorized_keys',
+    'RedHat' => $::operatingsystemmajrelease ? {
+      '5'     => '%h/.ssh/authorized_keys',
+      '6'     => '%h/.ssh/authorized_keys',
       default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
     },
-    OpenBSD => '%h/.ssh/authorized_keys',
-    default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
+    'OpenBSD' => '%h/.ssh/authorized_keys',
+    default   => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
   },
-  $hardened = 'no',
+  Variant[Boolean,String] $hardened = false,
+  Boolean $hardened_client = false,
+  Boolean $harden_moduli = false,
+  Boolean $use_host_ecdsa_key = false,
   $sftp_subsystem = '',
   $head_additional_options = '',
   $tail_additional_options = '',
   $print_motd = 'yes',
-  $manage_shorewall = false,
+  Boolean $manage_shorewall = false,
   $shorewall_source = 'net',
-  $sshkey_ipaddress = $::ipaddress,
-  $manage_client = true,
-  $hostkey_type = versioncmp($::ssh_version, '6.5') ? {
-    1  => [ 'rsa', 'ed25519' ],
-    0  => [ 'rsa', 'ed25519' ],
-    -1 => [ 'rsa', 'dsa' ]
-  },
-  $use_storedconfigs = true
+  $sshkey_ipaddress = pick($default_ipaddress,$::ipaddress),
+  Boolean $manage_client = true,
+  Boolean $purge_sshkeys = true,
 ) {
 
-  validate_bool($manage_shorewall)
-  validate_bool($manage_client)
-  validate_array($listen_address)
-  validate_array($ports)
-
   if $manage_client {
-    class{'sshd::client':
+    class{'::sshd::client':
       shared_ip        => $shared_ip,
       ensure_version   => $ensure_version,
       manage_shorewall => $manage_shorewall,
+      hardened         => $hardened_client,
     }
   }
 
   case $::operatingsystem {
-    gentoo: { include sshd::gentoo }
-    redhat,centos: { include sshd::redhat }
-    openbsd: { include sshd::openbsd }
-    debian,ubuntu: { include sshd::debian }
-    default: { include sshd::base }
+    'Gentoo': { include ::sshd::gentoo }
+    'RedHat','CentOS': { include ::sshd::redhat }
+    'OpenBSD': { include ::sshd::openbsd }
+    'Debian','Ubuntu': { include ::sshd::debian }
+    default: { include ::sshd::base }
   }
 
   if $manage_nagios {
@@ -85,7 +80,7 @@ class sshd(
   }
 
   if $manage_shorewall {
-    class{'shorewall::rules::ssh':
+    class{'::shorewall::rules::ssh':
       ports  => $ports,
       source => $shorewall_source
     }

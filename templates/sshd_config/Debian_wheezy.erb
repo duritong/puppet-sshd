@@ -22,8 +22,10 @@ ListenAddress <%= address %>
 <% end -%>
 Protocol 2
 # HostKeys for protocol version 2
-<% scope.lookupvar('::sshd::hostkey_type').to_a.each do |hostkey_type| -%>
-HostKey /etc/ssh/ssh_host_<%=hostkey_type %>_key
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+<% if scope.lookupvar('sshd::use_host_ecdsa_key') -%>
+HostKey /etc/ssh/ssh_host_ecdsa_key
 <% end -%>
 #Privilege Separation is turned on for security
 UsePrivilegeSeparation yes
@@ -35,6 +37,7 @@ ServerKeyBits 768
 # Logging
 SyslogFacility AUTH
 LogLevel INFO
+UseDNS <%= scope['sshd::use_dns'] %>
 
 # Authentication:
 LoginGraceTime 120
@@ -116,16 +119,10 @@ AllowUsers <%= s %>
 AllowGroups <%= s %>
 <%- end -%>
 
-<% if scope.lookupvar('::sshd::hardened') == 'yes' -%>
-<% if (scope.function_versioncmp([scope.lookupvar('::ssh_version'),'6.5'])) >= 0 -%>
-KexAlgorithms curve25519-sha256@libssh.org
-Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes256-ctr
-MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com
-<% else -%>
-Ciphers aes256-ctr
-MACs hmac-sha2-512
-<% end -%>
-<% end -%>
+<% if s=scope.lookupvar('sshd::hardened') -%>
+KexAlgorithms diffie-hellman-group-exchange-sha256<% if "#{s}".include?("+sha1") %>,diffie-hellman-group-exchange-sha1<% end %>
+Ciphers aes256-ctr,aes192-ctr,aes128-ctr
+MACs hmac-sha2-512,hmac-sha2-256<% if "#{s}".include?("+sha1") %>,hmac-sha1<% end %>
 <% end -%>
 
 <% unless (s=scope.lookupvar('::sshd::tail_additional_options')).empty? -%>
