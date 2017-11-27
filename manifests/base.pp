@@ -36,13 +36,13 @@ class sshd::base {
   }
 
   # Now add the key, if we've got one
-  if !empty($facts['ssh']['rsa']) {
-    @@sshkey{"${facts['fqdn']}-rsa":
+  if !empty($::sshfp_rsa) {
+    @@sshkey{$::sshfp_rsa}:
       # workaround https://tickets.puppetlabs.com/browse/PUP-6589
       host_aliases => $facts['fqdn'],
       tag          => 'fqdn',
       type         => 'ssh-rsa',
-      key          => $facts['ssh']['rsa']['key'],
+      key          => $::sshrsakey
     }
     # In case the node has uses a shared network address,
     # we don't define a sshkey resource using an IP address
@@ -51,16 +51,16 @@ class sshd::base {
         host_aliases => $sshd::sshkey_ipaddress,
         tag          => 'ipaddress',
         type         => 'ssh-rsa',
-        key          => $facts['ssh']['rsa']['key'],
+        key          => $::sshrsakey
       }
     }
   }
-  if !empty($facts['ssh']['ed25519']) {
-    @@sshkey{"${facts['fqdn']}-ed25519":
+  if !empty($::sshfp_ed25519) {
+    @@sshkey{$::sshfp_ed25519:
       host_aliases => $facts['fqdn'],
       tag          => 'fqdn',
       type         => 'ssh-ed25519',
-      key          => $facts['ssh']['ed25519']['key'],
+      key          => $::sshed25519key
     }
     # In case the node has uses a shared network address,
     # we don't define a sshkey resource using an IP address
@@ -69,7 +69,7 @@ class sshd::base {
         host_aliases => $sshd::sshkey_ipaddress,
         tag          => 'ipaddress',
         type         => 'ssh-ed25519',
-        key          => $facts['ssh']['ed25519']['key'],
+        key          => $::sshed25519key
       }
     }
   }
