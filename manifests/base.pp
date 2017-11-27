@@ -36,8 +36,8 @@ class sshd::base {
   }
 
   # Now add the key, if we've got one
-  if !empty($::sshfp_rsa) {
-    @@sshkey{$::sshfp_rsa:
+  if !empty($::sshrsakey) {
+    @@sshkey{$::sshrsakey:
       # workaround https://tickets.puppetlabs.com/browse/PUP-6589
       host_aliases => $facts['fqdn'],
       tag          => 'fqdn',
@@ -55,8 +55,8 @@ class sshd::base {
       }
     }
   }
-  if !empty($::sshfp_ed25519) {
-    @@sshkey{$::sshfp_ed25519:
+  if !empty($::sshed25519key) {
+    @@sshkey{$::sshed25519key:
       host_aliases => $facts['fqdn'],
       tag          => 'fqdn',
       type         => 'ssh-ed25519',
