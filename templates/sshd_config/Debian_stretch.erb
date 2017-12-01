@@ -22,9 +22,12 @@ ListenAddress <%= address %>
 <% end -%>
 Protocol 2
 # HostKeys for protocol version 2
-<% scope.lookupvar('::sshd::hostkey_type').to_a.each do |hostkey_type| -%>
-HostKey /etc/ssh/ssh_host_<%=hostkey_type %>_key
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+<% if scope.lookupvar('sshd::use_host_ecdsa_key') -%>
+HostKey /etc/ssh/ssh_host_ecdsa_key
 <% end -%>
+HostKey /etc/ssh/ssh_host_ed25519_key
 #Privilege Separation is turned on for security
 UsePrivilegeSeparation yes
 
