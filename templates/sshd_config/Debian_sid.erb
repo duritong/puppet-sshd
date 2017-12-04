@@ -31,10 +31,6 @@ HostKey /etc/ssh/ssh_host_ed25519_key
 #Privilege Separation is turned on for security
 UsePrivilegeSeparation yes
 
-# Lifetime and size of ephemeral version 1 server key
-KeyRegenerationInterval 3600
-ServerKeyBits 1024
-
 # Logging
 SyslogFacility AUTH
 LogLevel INFO
@@ -44,14 +40,11 @@ LoginGraceTime 120
 PermitRootLogin <%= scope.lookupvar('::sshd::permit_root_login') %>
 StrictModes <%= scope.lookupvar('::sshd::strict_modes') %>
 
-RSAAuthentication <%= scope.lookupvar('::sshd::rsa_authentication') %>
 PubkeyAuthentication <%= scope.lookupvar('::sshd::pubkey_authentication') %>
 AuthorizedKeysFile <%= scope.lookupvar('::sshd::authorized_keys_file') %>
 
 # Don't read the user's ~/.rhosts and ~/.shosts files
 IgnoreRhosts <%= scope.lookupvar('::sshd::ignore_rhosts') %>
-# For this to work you will also need host keys in /etc/ssh_known_hosts
-RhostsRSAAuthentication <%= scope.lookupvar('::sshd::rhosts_rsa_authentication') %>
 # similar for protocol version 2
 HostbasedAuthentication <%= scope.lookupvar('::sshd::hostbased_authentication') %>
 # Uncomment if you don't trust ~/.ssh/known_hosts for RhostsRSAAuthentication
