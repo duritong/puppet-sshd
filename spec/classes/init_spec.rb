@@ -37,7 +37,7 @@ describe 'sshd' do
       {
         :operatingsystem => 'Debian',
         :osfamily        => 'Debian',
-        :lsbdistcodename => 'wheezy',
+        :lsbdistcodename => 'stretch',
       }
     end
     it_behaves_like "a Linux OS"
@@ -51,7 +51,7 @@ describe 'sshd' do
       let :facts do
         {
           :operatingsystem => 'Ubuntu',
-          :lsbdistcodename => 'precise',
+          :lsbdistcodename => 'xenial',
         }
       end
       it_behaves_like "a Linux OS"
