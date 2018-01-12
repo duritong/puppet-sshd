@@ -8,14 +8,18 @@ Facter.add(:ssh_keys_users) do
   setcode do
     keys_hash = {}
     Etc.passwd { |user|
-      keys = []
+      keys = {}
       Dir.glob(File.join(user.dir, '.ssh', '*.pub')).each { |filepath|
         if FileTest.file?(filepath)
           regex = %r{^ssh-(\S+) (\S+)\s?(.+)?$}
           begin
             line = File.open(filepath).read.chomp
             if (match = regex.match(line))
-              keys += [{ 'type' => match[1], 'key' => match[2], 'comment' => match[3] }]
+                keys[File.basename(filepath)] = {
+                    'type' => match[1],
+                    'key' => match[2],
+                    'comment' => match[3]
+                }
             end
           rescue
             puts "cannot read user SSH key: " + user.name
