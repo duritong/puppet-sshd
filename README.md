@@ -188,7 +188,7 @@ The following is a list of the currently available variables:
     Values boolean.
   - `hardened`
     Use only strong ciphers and MAC.
-    Values boolean.
+    Values boolean, string (eg. "+sha1")
   - `print_motd`
     Show the Message of the day when a user logs in.
   - `sftp_subsystem`
