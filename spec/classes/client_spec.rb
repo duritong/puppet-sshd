@@ -18,7 +18,7 @@ describe 'sshd::client' do
       {
         :operatingsystem => 'Debian',
         :osfamily        => 'Debian',
-        :lsbdistcodename => 'wheezy',
+        :lsbdistcodename => 'stretch',
       }
     end
     it_behaves_like "a Linux OS"
