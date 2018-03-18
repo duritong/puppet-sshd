@@ -42,7 +42,7 @@ class sshd::base {
       host_aliases => $facts['fqdn'],
       tag          => 'fqdn',
       type         => 'ssh-rsa',
-      key          => $facts['sshrsakey']
+      key          => $facts['sshrsakey'],
     }
     # In case the node has uses a shared network address,
     # we don't define a sshkey resource using an IP address
@@ -51,16 +51,16 @@ class sshd::base {
         host_aliases => $sshd::sshkey_ipaddress,
         tag          => 'ipaddress',
         type         => 'ssh-rsa',
-        key          => $facts['sshrsakey']
+        key          => $facts['sshrsakey'],
       }
     }
   }
-  if !empty($::sshed25519key) {
+  if !empty($facts['sshed25519key']) {
     @@sshkey{"${::fqdn}-ed25519":
       host_aliases => $facts['fqdn'],
       tag          => 'fqdn',
       type         => 'ssh-ed25519',
-      key          => $facts['sshed25519key']
+      key          => $facts['sshed25519key'],
     }
     # In case the node has uses a shared network address,
     # we don't define a sshkey resource using an IP address
@@ -69,7 +69,7 @@ class sshd::base {
         host_aliases => $sshd::sshkey_ipaddress,
         tag          => 'ipaddress',
         type         => 'ssh-ed25519',
-        key          => $facts['sshed25519key']
+        key          => $facts['sshed25519key'],
       }
     }
   }
