@@ -23,7 +23,9 @@ ListenAddress <%= address %>
 Protocol 2
 # HostKeys for protocol version 2
 HostKey /etc/ssh/ssh_host_rsa_key
+<% if scope.lookupvar('sshd::use_host_dsa_key') -%>
 HostKey /etc/ssh/ssh_host_dsa_key
+<% end -%>
 <% if scope.lookupvar('sshd::use_host_ecdsa_key') -%>
 HostKey /etc/ssh/ssh_host_ecdsa_key
 <% end -%>

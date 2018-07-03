@@ -44,6 +44,7 @@ class sshd(
   Variant[Boolean,String] $hardened = false,
   Boolean $hardened_client = false,
   Boolean $harden_moduli = false,
+  Boolean $use_host_dsa_key = true,
   Boolean $use_host_ecdsa_key = false,
   $sftp_subsystem = '',
   $head_additional_options = '',
