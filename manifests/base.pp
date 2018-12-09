@@ -36,43 +36,48 @@ class sshd::base {
   }
 
   # Now add the key, if we've got one
-  if !empty($::sshrsakey) {
-    @@sshkey{"${::fqdn}-rsa":
-      # workaround https://tickets.puppetlabs.com/browse/PUP-6589
-      host_aliases => $facts['fqdn'],
-      tag          => 'fqdn',
-      type         => 'ssh-rsa',
-      key          => $facts['sshrsakey'],
-    }
-    # In case the node has uses a shared network address,
-    # we don't define a sshkey resource using an IP address
-    if $sshd::shared_ip == 'no' {
-      @@sshkey{"${sshd::sshkey_ipaddress}-rsa":
-        host_aliases => $sshd::sshkey_ipaddress,
-        tag          => 'ipaddress',
+  if $settings::storeconfigs {
+    if !empty($::sshrsakey) {
+      @@sshkey{"${::fqdn}-rsa":
+        # workaround https://tickets.puppetlabs.com/browse/PUP-6589
+        host_aliases => $facts['fqdn'],
+        tag          => 'fqdn',
         type         => 'ssh-rsa',
         key          => $facts['sshrsakey'],
       }
+      # In case the node has uses a shared network address,
+      # we don't define a sshkey resource using an IP address
+      if $sshd::shared_ip == 'no' {
+        @@sshkey{"${sshd::sshkey_ipaddress}-rsa":
+          host_aliases => $sshd::sshkey_ipaddress,
+          tag          => 'ipaddress',
+          type         => 'ssh-rsa',
+          key          => $facts['sshrsakey'],
+        }
+      }
     }
-  }
-  if !empty($facts['sshed25519key']) {
-    @@sshkey{"${::fqdn}-ed25519":
-      host_aliases => $facts['fqdn'],
-      tag          => 'fqdn',
-      type         => 'ssh-ed25519',
-      key          => $facts['sshed25519key'],
-    }
-    # In case the node has uses a shared network address,
-    # we don't define a sshkey resource using an IP address
-    if $sshd::shared_ip == 'no' {
-      @@sshkey{"${sshd::sshkey_ipaddress}-ed25519":
-        host_aliases => $sshd::sshkey_ipaddress,
-        tag          => 'ipaddress',
+    if !empty($facts['sshed25519key']) {
+      @@sshkey{"${::fqdn}-ed25519":
+        host_aliases => $facts['fqdn'],
+        tag          => 'fqdn',
         type         => 'ssh-ed25519',
         key          => $facts['sshed25519key'],
       }
+      # In case the node has uses a shared network address,
+      # we don't define a sshkey resource using an IP address
+      if $sshd::shared_ip == 'no' {
+        @@sshkey{"${sshd::sshkey_ipaddress}-ed25519":
+          host_aliases => $sshd::sshkey_ipaddress,
+          tag          => 'ipaddress',
+          type         => 'ssh-ed25519',
+          key          => $facts['sshed25519key'],
+        }
+      }
     }
+  } else {
+    notify { 'storeconfigs is not set => not adding key': }
   }
+
   if $sshd::purge_sshkeys {
     resources{'sshkey':
       purge => true,

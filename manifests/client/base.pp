@@ -8,10 +8,15 @@ class sshd::client::base {
   }
 
   # Now collect all server keys
-  case $sshd::client::shared_ip {
-    no:  { Sshkey <<||>> }
-    yes: { Sshkey <<| tag == fqdn |>> }
+  if $settings::storeconfigs {
+    case $sshd::client::shared_ip {
+      no:  { Sshkey <<||>> }
+      yes: { Sshkey <<| tag == fqdn |>> }
+    }
+  } else {
+    notify { 'storeconfigs is not set => skipping key collection': }
   }
+
 
   if $sshd::client::hardened {
     if $osfamily == 'Debian' {
