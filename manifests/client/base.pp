@@ -14,7 +14,7 @@ class sshd::client::base {
       yes: { Sshkey <<| tag == fqdn |>> }
     }
   } else {
-    notify { 'storeconfigs is not set => skipping key collection': }
+    debug('storeconfigs is not set => skipping key collection')
   }
 
 
@@ -26,15 +26,15 @@ class sshd::client::base {
     }
     file {
       '/etc/ssh/ssh_config':
-        ensure  => present,
-        source  => ["puppet:///modules/site_sshd/${::fqdn}/hardened_ssh_config",
-                    "puppet:///modules/site_sshd/hardened_ssh_config",
+        ensure => present,
+        source => ["puppet:///modules/site_sshd/${::fqdn}/hardened_ssh_config",
+                    'puppet:///modules/site_sshd/hardened_ssh_config',
                     "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}_${osrelease}",
                     "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}"],
-        notify  => Service[sshd],
-        owner   => root,
-        group   => 0,
-        mode    => '0644';
+        notify => Service[sshd],
+        owner  => root,
+        group  => 0,
+        mode   => '0644';
     }
   }
 }

@@ -75,7 +75,7 @@ class sshd::base {
       }
     }
   } else {
-    notify { 'storeconfigs is not set => not adding key': }
+    debug('storeconfigs is not set => not adding key')
   }
 
   if $sshd::purge_sshkeys {
