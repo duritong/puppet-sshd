@@ -8,10 +8,15 @@ class sshd::client::base {
   }
 
   # Now collect all server keys
-  case $sshd::client::shared_ip {
-    no:  { Sshkey <<||>> }
-    yes: { Sshkey <<| tag == fqdn |>> }
+  if $settings::storeconfigs {
+    case $sshd::client::shared_ip {
+      no:  { Sshkey <<||>> }
+      yes: { Sshkey <<| tag == fqdn |>> }
+    }
+  } else {
+    debug('storeconfigs is not set => skipping key collection')
   }
+
 
   if $sshd::client::hardened {
     if $osfamily == 'Debian' {
@@ -21,15 +26,15 @@ class sshd::client::base {
     }
     file {
       '/etc/ssh/ssh_config':
-        ensure  => present,
-        source  => ["puppet:///modules/site_sshd/${::fqdn}/hardened_ssh_config",
-                    "puppet:///modules/site_sshd/hardened_ssh_config",
+        ensure => present,
+        source => ["puppet:///modules/site_sshd/${::fqdn}/hardened_ssh_config",
+                    'puppet:///modules/site_sshd/hardened_ssh_config',
                     "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}_${osrelease}",
                     "puppet:///modules/sshd/ssh_config/hardened/${::operatingsystem}"],
-        notify  => Service[sshd],
-        owner   => root,
-        group   => 0,
-        mode    => '0644';
+        notify => Service[sshd],
+        owner  => root,
+        group  => 0,
+        mode   => '0644';
     }
   }
 }
