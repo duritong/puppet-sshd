@@ -50,6 +50,7 @@ class sshd(
   $head_additional_options = '',
   $tail_additional_options = '',
   $print_motd = 'yes',
+  Array[String[1]] $accept_env = ['LANG', 'LC_*'],
   Boolean $manage_shorewall = false,
   $shorewall_source = 'net',
   $sshkey_ipaddress = pick($default_ipaddress,$::ipaddress),
