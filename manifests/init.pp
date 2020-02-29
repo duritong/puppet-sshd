@@ -28,12 +28,12 @@ class sshd(
   $rhosts_rsa_authentication = 'no',
   $hostbased_authentication = 'no',
   $permit_empty_passwords = 'no',
-  $authorized_keys_file = $::osfamily ? {
-    'Debian' => $::operatingsystemmajrelease ? {
+  $authorized_keys_file = $facts['osfamily'] ? {
+    'Debian' => $facts['operatingsystemmajrelease'] ? {
       '6'     => '%h/.ssh/authorized_keys',
       default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
     },
-    'RedHat' => $::operatingsystemmajrelease ? {
+    'RedHat' => $facts['operatingsystemmajrelease'] ? {
       '5'     => '%h/.ssh/authorized_keys',
       '6'     => '%h/.ssh/authorized_keys',
       default => '%h/.ssh/authorized_keys %h/.ssh/authorized_keys2',
@@ -51,7 +51,7 @@ class sshd(
   $print_motd = 'yes',
   Boolean $manage_shorewall = false,
   $shorewall_source = 'net',
-  $sshkey_ipaddress = pick($default_ipaddress,$::ipaddress),
+  $sshkey_ipaddress = pick($facts['default_ipaddress'],$facts['ipaddress']),
   Boolean $manage_client = true,
   Boolean $purge_sshkeys = true,
 ) {
@@ -65,7 +65,7 @@ class sshd(
     }
   }
 
-  case $::operatingsystem {
+  case $facts['operatingsystem'] {
     'Gentoo': { include ::sshd::gentoo }
     'RedHat','CentOS': { include ::sshd::redhat }
     'OpenBSD': { include ::sshd::openbsd }
