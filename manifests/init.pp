@@ -57,7 +57,7 @@ class sshd(
 ) {
 
   if $manage_client {
-    class{'::sshd::client':
+    class{'sshd::client':
       shared_ip        => $shared_ip,
       ensure_version   => $ensure_version,
       manage_shorewall => $manage_shorewall,
@@ -66,23 +66,23 @@ class sshd(
   }
 
   case $facts['operatingsystem'] {
-    'Gentoo': { include ::sshd::gentoo }
-    'RedHat','CentOS': { include ::sshd::redhat }
-    'OpenBSD': { include ::sshd::openbsd }
-    'Debian','Ubuntu': { include ::sshd::debian }
-    default: { include ::sshd::base }
+    'Gentoo': { include sshd::gentoo }
+    'RedHat','CentOS': { include sshd::redhat }
+    'OpenBSD': { include sshd::openbsd }
+    'Debian','Ubuntu': { include sshd::debian }
+    default: { include sshd::base }
   }
 
   if $manage_nagios {
     sshd::nagios{$ports:
-      check_hostname => $nagios_check_ssh_hostname
+      check_hostname => $nagios_check_ssh_hostname,
     }
   }
 
   if $manage_shorewall {
-    class{'::shorewall::rules::ssh':
+    class{'shorewall::rules::ssh':
       ports  => $ports,
-      source => $shorewall_source
+      source => $shorewall_source,
     }
   }
 }
