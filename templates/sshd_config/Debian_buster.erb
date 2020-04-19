@@ -127,7 +127,7 @@ PrintMotd <%= scope.lookupvar('::sshd::print_motd') %>
 DebianBanner no
 
 # Allow client to pass locale environment variables
-AcceptEnv LANG LC_*
+AcceptEnv <%= scope.lookupvar('::sshd::accept_env').join(" ") %>
 
 # override default of no subsystems
 Subsystem      sftp    <%= (s=scope.lookupvar('::sshd::sftp_subsystem')).empty? ? '/usr/lib/openssh/sftp-server' : s %>

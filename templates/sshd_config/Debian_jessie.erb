@@ -92,7 +92,7 @@ TCPKeepAlive yes
 DebianBanner no
 
 # Allow client to pass locale environment variables
-AcceptEnv LANG LC_*
+AcceptEnv <%= scope.lookupvar('::sshd::accept_env').join(" ") %>
 
 Subsystem      sftp    <%= (s=scope.lookupvar('::sshd::sftp_subsystem')).empty? ? '/usr/lib/openssh/sftp-server' : s %>
 
