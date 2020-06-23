@@ -1,0 +1,52 @@
+{
+  "name": "smash-sshd",
+  "version": "1.0.0",
+  "author": "SMASH",
+  "summary": "Manage the OpenSSH service on a host",
+  "description": "Manage OpenSSH configuration and services, host public key distribution, client key pair generation and other details related to OpenSSH.",
+  "license": "GPL-3.0",
+  "source": "https://gitlab.com/shared-puppet-modules-group/sshd",
+  "project_page": "https://gitlab.com/shared-puppet-modules-group/sshd",
+  "issues_url": "https://gitlab.com/shared-puppet-modules-group/sshd/issues",
+  "dependencies": [
+    { "name":"puppetlabs/stdlib","version_requirement":">= 2.0.0 < 5.0.0" }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.7.0 < 6.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "8",
+        "9",
+        "10"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "10.04",
+        "14.04",
+        "16.04"
+      ]
+    }
+  ]
+}
