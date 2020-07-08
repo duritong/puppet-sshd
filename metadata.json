@@ -9,7 +9,7 @@
   "project_page": "https://gitlab.com/shared-puppet-modules-group/sshd",
   "issues_url": "https://gitlab.com/shared-puppet-modules-group/sshd/issues",
   "dependencies": [
-    { "name":"puppetlabs/stdlib","version_requirement":">= 2.0.0 < 5.0.0" }
+    { "name":"puppetlabs/stdlib","version_requirement":">= 2.0.0 < 7.0.0" }
   ],
   "requirements": [
     {
