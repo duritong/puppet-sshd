@@ -18,7 +18,8 @@ Facter.add(:ssh_keys_users) do
                 keys[File.basename(filepath)] = {
                     'type' => match[1],
                     'key' => match[2],
-                    'comment' => match[3]
+                    'comment' => match[3],
+                    'line' => line,
                 }
             end
           rescue
