@@ -1,7 +1,7 @@
 # manages client configuration
 class sshd::client(
-  String
-    $shared_ip       = 'no',
+  Boolean
+    $shared_ip       = false,
   String
     $ensure_version  = 'installed',
   Boolean

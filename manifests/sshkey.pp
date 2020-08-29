@@ -10,7 +10,7 @@ class sshd::sshkey {
 
   # In case the node has uses a shared network address,
   # we don't define a sshkey resource using an IP address
-  if $sshd::shared_ip == 'no' {
+  if !$sshd::shared_ip {
     @@sshkey{$::sshd::sshkey_ipaddress:
       ensure => present,
       tag    => 'ipaddress',

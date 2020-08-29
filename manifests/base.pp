@@ -47,7 +47,7 @@ class sshd::base {
       }
       # In case the node has uses a shared network address,
       # we don't define a sshkey resource using an IP address
-      if $sshd::shared_ip == 'no' {
+      if !$sshd::shared_ip {
         @@sshkey{"${sshd::sshkey_ipaddress}-rsa":
           host_aliases => $sshd::sshkey_ipaddress,
           tag          => 'ipaddress',
@@ -65,7 +65,7 @@ class sshd::base {
       }
       # In case the node has uses a shared network address,
       # we don't define a sshkey resource using an IP address
-      if $sshd::shared_ip == 'no' {
+      if !$sshd::shared_ip {
         @@sshkey{"${sshd::sshkey_ipaddress}-ed25519":
           host_aliases => $sshd::sshkey_ipaddress,
           tag          => 'ipaddress',

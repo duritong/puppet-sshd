@@ -9,9 +9,10 @@ class sshd::client::base {
 
   # Now collect all server keys
   if $settings::storeconfigs {
-    case $sshd::client::shared_ip {
-      no:  { Sshkey <<||>> }
-      yes: { Sshkey <<| tag == fqdn |>> }
+    if $sshd::client::shared_ip {
+      Sshkey <<| tag == fqdn |>>
+    } else {
+      Sshkey <<||>>
     }
   } else {
     debug('storeconfigs is not set => skipping key collection')
