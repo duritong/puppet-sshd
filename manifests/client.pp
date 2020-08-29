@@ -1,12 +1,14 @@
-# manifests/client.pp
-
+# manages client configuration
 class sshd::client(
-  $shared_ip        = 'no',
-  $ensure_version   = 'installed',
-  $manage_shorewall = false,
-  $hardened         = false,
+  String
+    $shared_ip       = 'no',
+  String
+    $ensure_version  = 'installed',
+  Boolean
+    $manage_firewall = false,
+  Boolean
+    $hardened        = false,
 ) {
-
   case $::operatingsystem {
     debian,ubuntu: { include sshd::client::debian }
     default: {
@@ -17,7 +19,7 @@ class sshd::client(
     }
   }
 
-  if $manage_shorewall{
-    include shorewall::rules::out::ssh
+  if $manage_firewall {
+    include firewall::rules::out::ssh
   }
 }
