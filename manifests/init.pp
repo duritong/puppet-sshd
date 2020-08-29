@@ -89,7 +89,7 @@ class sshd(
   }
 
   if $manage_nagios {
-    sshd::nagios{$ports:
+    sshd::nagios{String($ports):
       check_hostname => $nagios_check_ssh_hostname,
     }
   }
