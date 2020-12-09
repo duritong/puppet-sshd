@@ -54,7 +54,7 @@ class sshd::base {
           type         => 'ssh-rsa',
           key          => $facts['sshrsakey'],
         }
-        if $sshd::sshkey_ip6address {
+        if $sshd::sshkey_ip6address and $sshd::sshkey_ip6addres =~ /^fe80/ {
           @@sshkey{"${sshd::sshkey_ip6address}-rsa":
             host_aliases => $sshd::sshkey_ip6address,
             tag          => 'ipaddress',
@@ -80,7 +80,7 @@ class sshd::base {
           type         => 'ssh-ed25519',
           key          => $facts['sshed25519key'],
         }
-        if $sshd::sshkey_ip6address {
+        if $sshd::sshkey_ip6address and $sshd::sshkey_ip6addres =~ /^fe80/ {
           @@sshkey{"${sshd::sshkey_ip6address}-ed25519":
             host_aliases => $sshd::sshkey_ip6address,
             tag          => 'ipaddress',
