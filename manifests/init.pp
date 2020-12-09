@@ -64,7 +64,8 @@ class sshd(
   Boolean
     $manage_firewall = false,
   $firewall_source = 'net',
-  $sshkey_ipaddress = pick($facts['default_ipaddress'],$facts['ipaddress']),
+  Stdlib::IP::Address::V4::Nosubnet $sshkey_ipaddress = pick($facts['default_ipaddress'],$facts['ipaddress']),
+  Optional[Stdlib::IP::Address::V6::Nosubnet] $sshkey_ip6address = $facts['networking']['ip6'],
   Boolean
     $manage_client = true,
   Boolean
