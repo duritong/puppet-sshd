@@ -25,7 +25,7 @@
 Port <%= port %>
 <% end -%>
 <% end -%>
-<% scope.lookupvar('::sshd::listen_address').to_a.each do |address| -%>
+<% scope.lookupvar('::sshd::listen_address').to_a.reject{|a| a.nil? || a.empty? }.each do |address| -%>
 ListenAddress <%= address %>
 <% end -%>
 
