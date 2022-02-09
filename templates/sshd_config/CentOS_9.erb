@@ -1,0 +1,156 @@
+#	$OpenBSD: sshd_config,v 1.104 2021/07/02 05:11:21 dtucker Exp $
+
+# This is the sshd server system-wide configuration file.  See
+# sshd_config(5) for more information.
+
+# This sshd was compiled with PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+
+# The strategy used for options in the default sshd_config shipped with
+# OpenSSH is to specify options with their default value where
+# possible, but leave them commented.  Uncommented options override the
+# default value.
+
+# To modify the system-wide sshd configuration, create a  *.conf  file under
+#  /etc/ssh/sshd_config.d/  which will be automatically included below
+Include /etc/ssh/sshd_config.d/*.conf
+<% unless (s=scope['sshd::head_additional_options']).empty? -%>
+
+<%= s %>
+<% end -%>
+
+# If you want to change the port on a SELinux system, you have to tell
+# SELinux about this change.
+# semanage port -a -t ssh_port_t -p tcp #PORTNUMBER
+#
+<% scope['sshd::ports'].to_a.each do |port| -%>
+<% if port == 'off' -%>
+#Port -- disabled by puppet
+<% else -%>
+Port <%= port %>
+<% end -%>
+<% end -%>
+<% scope['sshd::listen_address'].to_a.reject{|a| a.nil? || a.empty? }.each do |address| -%>
+ListenAddress <%= address %>
+<% end -%>
+
+HostKey /etc/ssh/ssh_host_rsa_key
+<% if scope['sshd::use_host_ecdsa_key'] -%>
+HostKey /etc/ssh/ssh_host_ecdsa_key
+<% end -%>
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Ciphers and keying
+#RekeyLimit default none
+
+# Logging
+#SyslogFacility AUTH
+SyslogFacility AUTHPRIV
+#LogLevel INFO
+
+# Authentication:
+
+#LoginGraceTime 2m
+PermitRootLogin <%= scope['sshd::permit_root_login'] %>
+StrictModes <%= scope['sshd::strict_modes'] %>
+#MaxAuthTries 6
+#MaxSessions 10
+
+PubkeyAuthentication <%= scope['sshd::pubkey_authentication'] %>
+
+# The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
+# but this is overridden so installations will only check .ssh/authorized_keys
+AuthorizedKeysFile <%= scope['sshd::authorized_keys_file'] %>
+
+#AuthorizedPrincipalsFile none
+
+#AuthorizedKeysCommand none
+#AuthorizedKeysCommandUser nobody
+
+# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+HostbasedAuthentication <%= scope['sshd::hostbased_authentication'] %>
+# Change to yes if you don't trust ~/.ssh/known_hosts for
+# HostbasedAuthentication
+#IgnoreUserKnownHosts no
+# Don't read the user's ~/.rhosts and ~/.shosts files
+IgnoreRhosts <%= scope['sshd::ignore_rhosts'] %>
+
+# To disable tunneled clear text passwords, change to no here!
+#PasswordAuthentication yes
+#PermitEmptyPasswords no
+PasswordAuthentication <%= scope['sshd::password_authentication'] %>
+PermitEmptyPasswords <%= scope['sshd::permit_empty_passwords'] %>
+
+# Change to no to disable s/key passwords
+#KbdInteractiveAuthentication <%= scope['sshd::challenge_response_authentication'] %>
+
+# Kerberos options
+#KerberosAuthentication no
+#KerberosOrLocalPasswd yes
+#KerberosTicketCleanup yes
+#KerberosGetAFSToken no
+#KerberosUseKuserok yes
+
+# GSSAPI options
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials no
+#GSSAPIStrictAcceptorCheck yes
+#GSSAPIKeyExchange no
+#GSSAPIEnablek5users no
+
+# Set this to 'yes' to enable PAM authentication, account processing,
+# and session processing. If this is enabled, PAM authentication will
+# be allowed through the KbdInteractiveAuthentication and
+# PasswordAuthentication.  Depending on your PAM configuration,
+# PAM authentication via KbdInteractiveAuthentication may bypass
+# the setting of "PermitRootLogin without-password".
+# If you just want the PAM account and session checks to run without
+# PAM authentication, then enable this but set PasswordAuthentication
+# and KbdInteractiveAuthentication to 'no'.
+# WARNING: 'UsePAM no' is not supported in Fedora and may cause several
+# problems.
+#UsePAM no
+
+#AllowAgentForwarding yes
+AllowTcpForwarding <%= scope['sshd::tcp_forwarding'] %>
+#GatewayPorts no
+X11Forwarding <%= scope['sshd::x11_forwarding'] %>
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+#PrintMotd yes
+#PrintLastLog yes
+#TCPKeepAlive yes
+#PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+UseDNS <%= scope['sshd::use_dns'] %>
+#PidFile /var/run/sshd.pid
+#MaxStartups 10:30:100
+#PermitTunnel no
+#ChrootDirectory none
+#VersionAddendum none
+
+# no default banner path
+#Banner none
+
+# override default of no subsystems
+Subsystem sftp  <%= (s=scope['sshd::sftp_subsystem']).empty? ? '/usr/libexec/openssh/sftp-server' : s %>
+
+<% unless (s=scope['sshd::allowed_users']).empty? -%>
+AllowUsers <%= s %>
+<% end -%>
+<% unless (s=scope['sshd::allowed_groups']).empty? -%>
+AllowGroups <%= s %>
+<%- end -%>
+
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#	X11Forwarding no
+#	AllowTcpForwarding no
+#	PermitTTY no
+#	ForceCommand cvs server
+<% unless (s=scope['::sshd::tail_additional_options']).empty? -%>
+
+<%= s %>
+<% end -%>
